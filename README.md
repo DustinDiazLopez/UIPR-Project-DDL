@@ -1,24 +1,19 @@
-> https://dustindiazlopez.github.io/UIPR-Project-DDL/
-
 # uiprrasdddl
 
-CMS for documents.
+The **XAMPP_SERVER_FILES** folder contains all the PHP, HTML, CSS, JS, and MySQL files.
 
-## Requirements
+## Insert .SQL file in Phpadmin
+> https://stackoverflow.com/questions/13955988/insert-sql-file-into-your-mysql-database
+
+## Tools used for 'XAMPP_SERVER_FILES' folder
+
+- PHP 7.4
+- MySQL 8.0.21
+
+## Requirements for this Application
 
 - Java 8+
-- MySQL
+- Maven
 
-```MySQL
-CREATE DATABASE UIPRDOCSDDL;
-USE UIPRDOCSDDL;
-```
-
-Installing MySQL on Ubuntu 18.04
-> https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-18-04
-
-Allow connections
-```MySQL
-GRANT ALL PRIVILEGES ON *.* TO <username>@'%' IDENTIFIED BY '<password>';
-FLUSH PRIVILEGES;
-```
+### Github Pages
+> https://dustindiazlopez.github.io/UIPR-Project-DDL/
