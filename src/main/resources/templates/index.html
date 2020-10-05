@@ -111,6 +111,19 @@
       color: red;
     }
 
+    div.inline {
+        float:left;
+        padding: 5px;
+    }
+    .clearBoth {
+        clear:both;
+    }
+
+    .inline img {
+        width:100%;
+        max-width:100px;
+    }
+
     </style>
 </head>
 
@@ -147,11 +160,21 @@
                                 class="far fa-image"></i>
                     </h4>
                     <hr>
-                    <h2>Hello, World!</h2>
-                    <h5><span class="fa fa-calendar-alt"></span> Published by John Doe, Sep 27, 1942.</h5>
-                    <h5><span class="label label-danger">Subject 1</span> <span
-                            class="label label-primary">Subject 2</span> <span class="label label-success">Lorem</span>
-                    </h5><br>
+                    <div class="inline">
+                        <img alt="" class="img-thumbnail rounded" src="images/pdf-placeholder.jpg">
+                    </div>
+
+                    <div class="inline">
+                        <h2>Hello, World!</h2>
+                        <h5><span class="fa fa-calendar-alt"></span> Published by John Doe, Sep 27, 1942.</h5>
+                        <h5><span class="label label-danger">Subject 1</span> <span
+                                class="label label-primary">Subject 2</span> <span
+                                class="label label-success">Lorem</span>
+                        </h5>
+                    </div>
+
+                    <br class="clearBoth"/>
+
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                         labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
                         laboris nisi ut aliquip ex ea
@@ -173,45 +196,6 @@
                 <br/>
             </div>
             <!-- Item END -->
-
-            <!-- Item START -->
-            <div>
-                <br/>
-                <div class="container">
-                    <h4><small>
-                        DOCUMENT TYPE</small>
-                        <i class="fas fa-book-open"></i> <i class="fas fa-book"></i> <i class="far fa-file"></i> <i
-                                class="fas fa-paint-brush"></i> <i class="far fa-newspaper"></i> <i
-                                class="far fa-image"></i>
-                    </h4>
-                    <hr>
-                    <h2>Hola, Mundo!</h2>
-                    <h5><span class="fa fa-calendar-alt"></span> Published by Jane Doe, Feb 2, 1865.</h5>
-                    <h5><span class="label label-danger">Subject 1</span> <span
-                            class="label label-primary">Subject 2</span> <span class="label label-success">Lorem</span>
-                    </h5><br>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea
-                        commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                        deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad
-                        minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat.</p>
-                    <br>
-                    <div class="overlay">
-                        <button class="icon-btn pdf" title="Open PDF in new tab."><i class="fa fa-file-pdf"></i>
-                        </button>
-                        <button class="icon-btn view" title="Open in new tab."><i class="fa fa-external-link-alt"></i>
-                        </button>
-                        <button class="icon-btn edit"><i class="fa fa-edit" title="Edit item in new tab."></i></button>
-                        <button class="icon-btn delete"><i class="fa fa-trash" title="Delete item."></i></button>
-                    </div>
-                </div>
-                <br/>
-            </div>
-            <!-- Item END -->
-
         </div>
     </div>
 </div>
