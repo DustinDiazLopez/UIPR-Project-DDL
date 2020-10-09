@@ -6,127 +6,8 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
-    .row.content {
-      height: 100% + 10px;
-    }
-
-    /* Set gray background color and 100% height */
-    .sidenav {
-      background-color: #f1f1f1;
-      height: 100%;
-    }
-
-    .container {
-      position: relative;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-      background-color: white;
-      padding: 20px;
-      width: auto;
-      /* padding-top: 10px; */
-      border: 1;
-    }
-
-    /* Set black background color, white text and some padding */
-    footer {
-      background-color: #555;
-      color: white;
-      padding: 15px;
-      height: auto;
-    }
-
-    /* On small screens, set height to 'auto' for sidenav and grid */
-    @media screen and (max-width: 767px) {
-      .sidenav {
-        height: auto;
-        padding: 15px;
-      }
-
-      .row.content {
-        height: auto;
-      }
-    }
-
-    .overlay {
-      position: absolute;
-      top: 0;
-      right: 0;
-      background: rgb(0, 0, 0);
-      background: rgba(0, 0, 0, 0.01);
-      /* Black see-through */
-      color: #f1f1f1;
-      width: 100%;
-      height: 0%;
-      transition: .5s ease;
-      opacity: 0;
-      color: white;
-      font-size: 20px;
-      /* padding: 20px; */
-      text-align: right;
-      resize: inherit;
-    }
-
-    .container:hover {
-      background-color: rgba(0, 0, 0, 0.01);
-
-    }
-
-    .container:hover .overlay {
-      opacity: 1;
-    }
-
-    .icon-btn {
-      background-color: rgba(0, 0, 0, 0);
-      border: none;
-      color: white;
-      padding: 12px 16px;
-      font-size: 20px;
-      cursor: pointer;
-      text-shadow: 2px 2px 4px #000000;
-      /* width: 100%; */
-      /* height: auto; */
-      color: white;
-      display: inline-block;
-    }
-
-    .pdf:hover {
-      color: #34d5eb;
-    }
-
-    .view:hover {
-      color: #04b800;
-    }
-
-    .edit:hover {
-      color: #dbd123;
-    }
-
-    .delete:hover {
-      color: red;
-    }
-
-    :not(div)>form {
-      color: red;
-    }
-
-    div.inline {
-        float:left;
-        padding: 5px;
-    }
-    .clearBoth {
-        clear:both;
-    }
-
-    .inline img {
-        width:100%;
-        max-width:100px;
-    }
-
-
-
-    </style>
+    <link href="css/consts.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
 </head>
 
 <body>
@@ -134,17 +15,22 @@
 <div class="container-fluid">
     <div class="row content">
         <div class="col-sm-3 sidenav">
-            <h4>HOME</h4>
-            <ul class="nav nav-pills nav-stacked">
-                <li><a href="#section2">Account</a></li>
-                <li><a href="#section3">Logout</a></li>
-            </ul>
-            <br>
             <div class="input-group">
-                <!-- FORM START -->
                 <button class="btn-primary" onclick="generateFakeElements(10)" type="submit">Duplicate Item Ten Times
                 </button>
-                <!-- FORM END -->
+                <nav>
+                  <div class="dropdown">
+                    <button type="button" name="button"><a href="#" class="home">Home</a></button>
+                    <div class="account-dropdown">
+                      <button type="button" name="button">Account</button>
+                      <ul>
+                        <li><a href="#">Users</a></li>
+                        <li><a href="#">Hello, World!</a></li>
+                        <li><a href="#">Logout</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </nav>
             </div>
         </div>
 
@@ -177,14 +63,16 @@
 
                     <br class="clearBoth"/>
 
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                         labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
                         laboris nisi ut aliquip ex ea
                         commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
                         deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor
                         incididunt ut labore et dolore magna aliqua. Ut enim ad
                         minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat.</p>
+                        consequat.
+                      </p>
                     <br>
                     <div class="overlay">
                         <button class="icon-btn pdf" title="Open PDF in new tab."><i class="fa fa-file-pdf"></i>
@@ -223,12 +111,7 @@
       for (let i = 0; i < n; i++) {
         document.getElementById('items').innerHTML += item.outerHTML;
       }
-
     }
-
-
-
-
 </script>
 </body>
 
