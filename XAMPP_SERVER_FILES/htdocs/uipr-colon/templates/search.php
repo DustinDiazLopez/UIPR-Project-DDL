@@ -2,7 +2,7 @@
 <form>
     <div class="form-group">
         <label for="exampleInputEmail1">Search:</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="e.g., Grito de Lares">
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="e.g., Grito de Lares" required aira-required>
     </div>
     <?php
     $sql = 'SELECT `type` FROM `type`';

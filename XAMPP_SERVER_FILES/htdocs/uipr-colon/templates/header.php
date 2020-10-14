@@ -1,6 +1,7 @@
 <?php
 include('connect.php');
-include('templates/utils.php');
+include('utils/utils.php');
+include('model/Item.php');
 ?>
 
 <!DOCTYPE html>
@@ -13,8 +14,21 @@ include('templates/utils.php');
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
-
+    <link href="css/fa/css/all.css" rel="stylesheet">
     <title>Library CMS - DDL</title>
+
+    <script>
+        // open pdf in new window
+        function openPDFDDL(base64URL) {
+            let win = window.open();
+            win.document.write('<style>body{margin:0;}iframe{display:block;background: white;border: none;height: 100vh;width: 100vw;}</style>');
+            win.document.write('<iframe src="' + base64URL + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen>Your browser does not support iframe. Please <a href="' + base64URL + '" download alt="link to download pdf">download the pdf</a>.</iframe>');
+        }
+
+        function openPDFPHP(item_id, download, name) {
+            window.open(`${window.location.href}file.php?id=${item_id}&download=${download}&name=${name}`);
+        }
+    </script>
 
     <style>
         a:link {
@@ -106,11 +120,11 @@ include('templates/utils.php');
             display: inline-block;
         }
 
-        .pdf:hover {
+        .blue:hover {
             color: #34d5eb;
         }
 
-        .view:hover {
+        .green:hover {
             color: #04b800;
         }
 
@@ -201,11 +215,13 @@ include('templates/utils.php');
         </div>
     </nav>
 
-    <?php 
+    <?php
     if (!$conn) {
         echo showWarn("Uh-Oh! MySQL DB Error No. $error_no:", $error);
         die("Stopped generating page due to a database error!");
     }
     ?>
 
-    <button onclick="topFunction()" id="backToTopBtn" title="Go to top">Top</button>
+    <button onclick="topFunction()" id="backToTopBtn" title="Go to the top of the page">
+        <span class="icon-btn green fas fa-long-arrow-alt-up"></span>
+    </button>
