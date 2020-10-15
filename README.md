@@ -1,19 +1,27 @@
-# uiprrasdddl
+# UIPR CMS DDL
 
-The **XAMPP_SERVER_FILES** folder contains all the PHP, HTML, CSS, JS, and MySQL files.
+The **XAMPP_SERVER_FILES** folder contains all the PHP, HTML, CSS, and files.
 
-## Insert .SQL file in Phpadmin
-> https://stackoverflow.com/questions/13955988/insert-sql-file-into-your-mysql-database
+## Expected file structure
+```
+xampp/
+├── htdocs/
+│   ├── uipr-colon/
+│   │   └── ...
+└── mysql_uiprcmsddl_config.json
+```
+The mysql configuration (`mysql_uiprcmsddl_config.json`) must be two directories back the 
+`uipr-colon` folder. If this is not possible edit the `connect.php` (`uipr-colon/connect.php`) 
+file to match the desired file structured.
 
-## Tools used for 'XAMPP_SERVER_FILES' folder
+## Requirements
 
 - PHP 7.4
-- MySQL 8.0.21
+- MySQL 5.6.49
 
-## Requirements for this Application
+## Download the SQL script
 
-- Java 8+
-- Maven
+[Download SQL](https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/main/XAMPP_SERVER_FILES/uiprcmsddl.sql)
 
-### Github Pages
-> https://dustindiazlopez.github.io/UIPR-Project-DDL/
+### Insert .SQL file in phpMyAdmin
+> https://stackoverflow.com/questions/13955988/insert-sql-file-into-your-mysql-database
