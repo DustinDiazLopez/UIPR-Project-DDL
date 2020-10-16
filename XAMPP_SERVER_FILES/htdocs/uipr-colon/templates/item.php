@@ -1,7 +1,8 @@
 <br />
+<!-- <?php echo $item['title']; ?> START -->
 <div class="container-ddl" id="<?php echo $item['id']; ?>">
-    <!-- TYPE START -->
-    <h3 style="text-transform: uppercase;" title="Type of document">
+    <!-- <?php echo $item['title']; ?> TYPE START -->
+    <h3 class="cap" title="Type of document">
         <?php
         switch (strtolower($item['type'])) {
             case "libro":
@@ -19,6 +20,9 @@
             case "revista":
                 echo '<i class="fas fa-book-open"></i>';
                 break;
+            case "document":
+                echo '<i class="fas fa-file-invoice"></i>';
+                break;
             default:
                 echo '<i class="far fa-file"></i>';
                 break;
@@ -26,26 +30,26 @@
         ?>
         <small><?php echo $item['type']; ?></small>
     </h3>
-    <!-- TYPE END -->
+    <!-- <?php echo $item['title']; ?> TYPE END -->
 
     <hr>
 
-    <!-- IMAGE START -->
+    <!-- <?php echo $item['title']; ?> IMAGE START -->
     <div class="inline">
-        <?php echo "<img alt=\"\" class=\"img-thumbnail rounded\" src=\"" . SQL_GET_IMAGE($item['image_id']) . "\">"; ?>
+        <?php echo '<img alt="" class="img-thumbnail rounded" src="' . SQL_GET_IMAGE($item['image_id']) . '">'; ?>
     </div>
-    <!-- IMAGE END -->
+    <!-- <?php echo $item['title']; ?> IMAGE END -->
 
     <div class="inline">
         <!-- TITLE START -->
         <h4 title="The name of the document"><a href="#"><?php echo $item['title']; ?></a></h4>
         <!-- TITLE END -->
 
-        <!-- AUTHORS START -->
+        <!-- <?php echo $item['title']; ?> AUTHORS START -->
         <?php
         $authors = SQL_GET_AUTHORS($item['id']);
         $icon = '<span class="fas fa-users">';
-        switch(count($authors)) {
+        switch (count($authors)) {
             case 1:
                 $icon = '<span class="fas fa-user">';
                 break;
@@ -56,69 +60,78 @@
 
         echo '<h5 title="Authors">' . $icon . '</span> ' . AUTHORS_TO_CSV($authors) . '.</h5>';
         ?>
-        <!-- AUTHORS END -->
+        <!-- <?php echo $item['title']; ?> AUTHORS END -->
 
-        <!-- PUBLISHED DATE START -->
+        <!-- <?php echo $item['title']; ?> PUBLISHED DATE START -->
         <?php echo '<h5 title="Published date"><span class="fa fa-calendar-alt"></span> ' . FORMAT_DATE($item['published_date']) . '.</h5>'; ?>
-        <!-- PUBLISHED DATE END -->
+        <!-- <?php echo $item['title']; ?> PUBLISHED DATE END -->
 
-        <!-- SUBJECTS START -->
+        <!-- <?php echo $item['title']; ?> SUBJECTS START -->
         <?php
         $subjects = SQL_GET_SUBJECTS($item['id']);
         echo '<h6 title="Subjects">';
         foreach ($subjects as $subject) echo "<span class=\"badge badge-dark\">{$subject['subject']}</span> ";
         echo '</h6>';
         ?>
-        <!-- SUBJECTS END -->
+        <!-- <?php echo $item['title']; ?> SUBJECTS END -->
     </div>
 
     <br class="clearBoth" />
 
-    <!-- DESCRIPTION START -->
-    <p title="Description of <?php echo $item['title']; ?>"><?php echo $item['description']; ?></p>
-    <!-- DESCRIPTION END -->
+    <!-- <?php echo $item['title']; ?> DESCRIPTION START -->
+    <p class="text-justify border-right-0"><?php echo $item['description']; ?></p>
+    <!-- <?php echo $item['title']; ?> DESCRIPTION END -->
 
-    <hr />
 
-    <!-- FILES START -->
-    <h5><a title="Show files of <?php echo $item['title']; ?>" data-toggle="collapse" href="#collapseFilesFor<?php echo $item['title'] . $item['id']; ?>" role="button" aria-expanded="false" aria-controls="collapseFilesFor<?php echo $item['title'] . $item['id']; ?>">Files: </a></h5>
-    <div class="collapse" id="collapseFilesFor<?php echo $item['title'] . $item['id']; ?>">
-        <div class="container-fluid">
-            <div class="row">
+    <!-- <?php echo $item['title']; ?> FILES START -->
+    <h5>Files:</h5>
+    <div class="container-fluid">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Filename</th>
+                    <th scope="col">View</th>
+                    <th scope="col">Download</th>
+                    <th scope="col">File Size</th>
+                </tr>
+            </thead>
+            <tbody>
 
-                <?php
-                $files = SQL_GET_FILES($item['id']);
-                foreach ($files as $f) {
-                    echo "<div class=\"col-sm-6\" title=\"File of {$item['title']}\">";
-                    echo '<div class="card text-center">';
-                    echo "<div class=\"card-header\">{$f['name']}</div>";
-                    echo '<div class="card-body">';
-                    echo "<a style=\"color:white\" onclick=\"openPDFPHP('{$f['id']}', 'false', '')\" class=\"btn btn-primary\" target=\"_blank\" title=\"Open {$f['name']} in new tab.\">View</a> ";
-                    echo "<a style=\"color:white\" onclick=\"openPDFPHP('{$f['id']}', 'true', '{$f['id']}-{$f['name']}')\" class=\"btn btn-primary\" title=\"Download {$f['name']}.\">Download</a>";
-                    echo '</div>';
-                    echo '</div>';
-                    echo '</div>';
+                <?php foreach (SQL_GET_FILES($item['id']) as $f) : ?>
 
-                }
+                    <tr>
+                        <th scope="row"><?php echo $f['id']; ?></th>
+                        <td scope="row"><?php echo $f['name']; ?></td>
+                        <td scope="row">
+                            <a class="font-weight-bold" href="javascript:void(0)" onclick="openPDFPHP('<?php echo $f['id']; ?>', false, '<?php echo $f['name']; ?>');" title="Open {$f['name']} in new tab.">
+                                View
+                            </a>
+                        </td>
+                        <td scope="row">
+                            <a class="font-weight-bold" href="javascript:void(0)" onclick="openPDFPHP('<?php echo $f['id']; ?>', true, '<?php echo $f['id'] . '-' . $f['name']; ?>');" title="Download <?php echo $f['name']; ?>.">
+                                Download
+                            </a>
+                        </td>
+                        <td scope="row" class="font-weight-light"><?php echo $f['size']; ?> MB</td>
+                    </tr>
 
-                unset($files);
-                ?>
-
-            </div>
-        </div>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
-    <!-- FILES END -->
+    <!-- <?php echo $item['title']; ?> FILES END -->
 
 
 
     <hr />
-    <!-- MOD DATE START -->
+    <!-- <?php echo $item['title']; ?> MOD DATE START -->
     <p class="card-text" style="position: relative;bottom:0;right:0;">
         <small class="text-muted">
             <?php echo 'Last modified on ' . FORMAT_DATE($item['create_at']); ?>
         </small>
     </p>
-    <!-- MOD DATE END -->
+    <!-- <?php echo $item['title']; ?> MOD DATE END -->
 
     <div class="overlay">
         <!-- <button class="icon-btn view" data-toggle="modal" data-target="#exampleModalLong"><i class="fa fa-external-link-alt" title="Open in new tab."></i></button> -->
@@ -131,13 +144,13 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete item</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Delete <strong><?php echo $item['title']; ?></strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    Please do keep in mind that this action is <strong title="cannot be undone"><u>irreversible</u></strong>.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -148,4 +161,5 @@
     </div>
     <!-- Delete <?php echo $item['title']; ?> Modal END -->
 </div>
+<!-- <?php echo $item['title']; ?> END -->
 <br />

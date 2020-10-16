@@ -4,8 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Icon -->
+    <link rel="icon" href="favicon.ico">
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <title>Document</title>
 
     <?php
     include('connect.php');
@@ -14,7 +18,11 @@
 
     $id = explode('=', $id_download[0])[1];
     $download = explode('=', $id_download[1])[1];
+    $name = explode('=', $id_download[2])[1];
     $file = SQL_GET_FILE($id);
+    ?>
+    <title><?php echo $name; ?></title>
+    <?php
 
     if (count($file) >= 1) {
         $file = 'data:application/pdf;base64,' . base64_encode($file[0]['file']);
@@ -23,7 +31,6 @@
     }
 
     if ($download != 'false') {
-        $name = explode('=', $id_download[2])[1];
     ?>
         <script>
             var a = document.createElement("a");

@@ -53,15 +53,17 @@ function SQL_GET_ALL_ITEMS()
 
 function SQL_GET_FILES($item_id)
 {
-    $files = query(SQL_GET_FILES . " '$item_id'");
-    $ret = array();
-    foreach ($files as $f)
-        $ret[] = [
+    $files = array();
+    foreach (query(SQL_GET_FILES . " '$item_id'") as $f) {
+        $files[] = [
             'id' => $f['id'],
             'name' => $f['id'],
-            'file' => 'data:application/pdf;base64,' . base64_encode($f['file'])
+            'file' => 'data:application/pdf;base64,' . base64_encode($f['file']),
+            'size' => strlen($f['file']) / 1e+6
         ];
-    return $ret;
+    }
+    
+    return $files;
 }
 
 function SQL_GET_FILE($file_id)
@@ -77,9 +79,11 @@ function SQL_GET_SUBJECTS($item_id)
 function SQL_GET_IMAGE($image_id)
 {
     $image = query(SQL_GET_IMAGE . " '$image_id'");
-    return count($image) >= 1
-        ? 'data:image/jpeg;base64,' . base64_encode($image[0]['image'])
-        : 'images/pdf-placeholder.jpg';
+    if (count($image) >= 1) {
+        $mime_type = finfo_buffer(finfo_open(), $image[0]['image'], FILEINFO_MIME_TYPE);
+        return "data:$mime_type;base64," . base64_encode($image[0]['image']);
+    } else return 'images/pdf-placeholder.jpg';
+
 }
 
 function SQL_GET_AUTHORS($item_id)

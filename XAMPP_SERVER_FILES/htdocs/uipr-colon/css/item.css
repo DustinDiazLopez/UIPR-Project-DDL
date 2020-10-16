@@ -1,0 +1,91 @@
+.container-ddl {
+    position: relative;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background-color: white;
+    padding: 20px;
+    width: auto;
+    /* padding-top: 10px; */
+    border: 1;
+}
+
+/* On small screens, set height to 'auto' for search and grid */
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+    .row.content {
+        height: auto;
+    }
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.01);
+    color: #f1f1f1;
+    width: 100%;
+    height: 0%;
+    transition: .5s ease;
+    opacity: 0;
+    color: white;
+    font-size: 20px;
+    text-align: right;
+    resize: inherit;
+}
+
+.container-ddl:hover {
+    background-color: rgba(0, 0, 0, 0.01);
+
+}
+
+.container-ddl:hover .overlay {
+    opacity: 1;
+}
+
+.icon-btn {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    color: white;
+    padding: 12px 16px;
+    font-size: 25px;
+    cursor: pointer;
+    text-shadow: 2px 2px 4px #000000;
+    /* width: 100%; */
+    /* height: auto; */
+    color: white;
+    display: inline-block;
+}
+
+.blue:hover {
+    color: #34d5eb;
+}
+
+.green:hover {
+    color: #04b800;
+}
+
+.edit:hover {
+    color: #dbd123;
+}
+
+.delete:hover {
+    color: red;
+}
+
+:not(div)>form {
+    color: red;
+}
+
+div.inline {
+    float: left;
+    padding: 5px;
+}
+
+.clearBoth {
+    clear: both;
+}
+
+.inline img {
+    width: 100%;
+    max-width: 100px;
+}
