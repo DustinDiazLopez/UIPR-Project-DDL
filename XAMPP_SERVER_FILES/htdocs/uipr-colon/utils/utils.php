@@ -14,7 +14,8 @@ function showSuccess($head, $msg, $footer) {
     return "<div class=\"alert alert-success\" role=\"alert\"><h4 class=\"alert-heading\">$head</h4><p>$msg</p><hr /><p class=\"mb-0\">$footer</p></div>";
 }
 
-function query($sql) {
+function query($sql) 
+{
     global $conn;
     if (!$conn) {
         $conn = connect(); 
@@ -39,12 +40,14 @@ function query($sql) {
 }
 
 define('SQL_ALL_ITEMS', 'SELECT i.id, i.title, t.`type`, i.image_id, i.description, i.meta, i.create_at, i.published_date FROM item i INNER JOIN `type` t ON i.type_id = t.id');
-define('SQL_GET_FILES', 'SELECT fi.item_id, f.id, f.`file` FROM `file` f inner join file_has_item fi inner join item i on i.id = fi.item_id and fi.file_id = f.id where i.id = ');
+define('SQL_GET_FILES', 'SELECT fi.item_id, f.id, f.`file`, f.file_name FROM `file` f inner join file_has_item fi inner join item i on i.id = fi.item_id and fi.file_id = f.id where i.id = ');
 define('SQL_GET_IMAGE', 'SELECT image FROM image where id = ');
 define('SQL_GET_FILE', 'SELECT `file` FROM `file` where id = ');
-define('SQL_GET_SUBJECTS', 'SELECT s.`subject` FROM `subject` s inner join item_has_subject `is` inner join item i on i.id = `is`.item_id and `is`.subject_id = s.id where i.id = ');
+define('SQL_GET_SUBJECTS_BY_ID', 'SELECT s.`subject` FROM `subject` s inner join item_has_subject `is` inner join item i on i.id = `is`.item_id and `is`.subject_id = s.id where i.id = ');
+define('SQL_GET_SUBJECTS', 'SELECT `subject` FROM `subject`');
 define('SQL_GET_DOC_TYPES', 'SELECT `type` FROM `type`');
-define('SQL_GET_AUTHORS', "SELECT a.author_name FROM author a inner join author_has_item ai inner join item i on i.id = ai.item_id and ai.author_id = a.id where i.id = ");
+define('SQL_GET_AUTHORS_BY_ID', "SELECT a.author_name FROM author a inner join author_has_item ai inner join item i on i.id = ai.item_id and ai.author_id = a.id where i.id = ");
+define('SQL_GET_AUTHORS', "SELECT author_name FROM author");
 
 function SQL_GET_ALL_ITEMS()
 {
@@ -57,7 +60,7 @@ function SQL_GET_FILES($item_id)
     foreach (query(SQL_GET_FILES . " '$item_id'") as $f) {
         $files[] = [
             'id' => $f['id'],
-            'name' => $f['id'],
+            'name' => $f['file_name'],
             'file' => 'data:application/pdf;base64,' . base64_encode($f['file']),
             'size' => strlen($f['file']) / 1e+6
         ];
@@ -68,12 +71,14 @@ function SQL_GET_FILES($item_id)
 
 function SQL_GET_FILE($file_id)
 {
+    global $conn;
+    $file_id = mysqli_real_escape_string($conn, $file_id);
     return query(SQL_GET_FILE . " '$file_id'");
 }
 
 function SQL_GET_SUBJECTS($item_id)
 {
-    return query(SQL_GET_SUBJECTS . " '$item_id'");
+    return query(SQL_GET_SUBJECTS_BY_ID . " '$item_id'");
 }
 
 function SQL_GET_IMAGE($image_id)
@@ -88,7 +93,7 @@ function SQL_GET_IMAGE($image_id)
 
 function SQL_GET_AUTHORS($item_id)
 {
-    return query(SQL_GET_AUTHORS . " '$item_id'");
+    return query(SQL_GET_AUTHORS_BY_ID . " '$item_id'");
 }
 
 function AUTHORS_TO_CSV($authors)

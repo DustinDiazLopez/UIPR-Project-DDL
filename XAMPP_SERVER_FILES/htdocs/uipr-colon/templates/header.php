@@ -68,7 +68,7 @@ include('utils/utils.php');
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">UIPR CMS DDL</a>
+        <a class="navbar-brand" href="index.php">UIPR CMS DDL</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -85,7 +85,7 @@ include('utils/utils.php');
                 </li>
             </ul>
             <span class="navbar-text">
-                <a href="#add"><button class="btn btn-outline-success my-2 my-sm-0" alt="">Add Item</button></a>
+                <a href="add.php"><button class="btn btn-outline-success my-2 my-sm-0" alt="">Add Item</button></a>
                 <?php
                 if (!$conn) {
                     $error_no = mysqli_connect_errno();
@@ -102,6 +102,6 @@ include('utils/utils.php');
     <?php
     if (!$conn) {
         echo showWarn("Uh-Oh! MySQL DB Error No. $error_no:", $error);
-        die("Stopped generating page due to a database error!");
+        die("");
     }
     ?>

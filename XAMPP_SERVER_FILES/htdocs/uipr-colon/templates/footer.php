@@ -21,6 +21,10 @@
     $(radioSelected).click(function() {
         document.getElementById(spanSelectedId).innerHTML = $(radioSelected + ":checked").val();
     });
+
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>
 
 </body>
