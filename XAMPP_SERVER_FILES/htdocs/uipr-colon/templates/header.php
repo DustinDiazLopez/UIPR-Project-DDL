@@ -4,7 +4,7 @@ include('utils/utils.php');
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <!-- meta tags -->
@@ -64,6 +64,22 @@ include('utils/utils.php');
         }
     </style>
 
+    <?php
+    $current = $active = 'index.php';
+
+    function current_active($input)
+    {
+        $req_uri = $_SERVER['REQUEST_URI'];
+        if (strpos($req_uri, 'index.php')) {
+            if ('index.php' === $input) {
+                echo 'active';
+            }
+        } elseif (strpos($req_uri, 'add.php')) {
+            $current = $active = 'add.php';
+        }
+    }
+    ?>
+
 </head>
 
 <body>
@@ -72,29 +88,37 @@ include('utils/utils.php');
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarText">
+        <div class="collapse navbar-collapse" id="navbarText" style="color:green;">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="index.php">Inicio
+                        <!-- <span class="sr-only">(current)</span> --></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Account</a>
+                    <a class="nav-link" href="add.php">Añadir Artículo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Editar</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">History</a>
                 </li>
             </ul>
             <span class="navbar-text">
-                <a href="add.php"><button class="btn btn-outline-success my-2 my-sm-0" alt="">Add Item</button></a>
                 <?php
                 if (!$conn) {
                     $error_no = mysqli_connect_errno();
                     $error = mysqli_connect_error();
                     echo "<button type=\"button\" class=\"btn btn-danger\" title=\"$error\">Not Connected! <span class=\"badge badge-light\">Error No. $error_no</span></button>";
                 } else {
+
                     echo '<button type="button" class="btn btn-success" title="A connection to the database was successful">Connected</button>';
                 }
+
                 ?>
+
+                <button type="button" class="btn btn-light">Añadir Artículo</button>
+                <button type="button" class="btn btn-light">Editar</button>
             </span>
         </div>
     </nav>

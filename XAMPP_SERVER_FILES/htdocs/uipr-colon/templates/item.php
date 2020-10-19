@@ -58,7 +58,7 @@
                 break;
         }
 
-        echo '<h5 title="Authors">' . $icon . '</span> ' . AUTHORS_TO_CSV($authors) . '.</h5>';
+        echo '<h5 title="Authors">' . $icon . '</span> ' . AUTHORS_TO_CSV($authors, 'author_name') . '.</h5>';
         ?>
         <!-- <?php echo $item['title']; ?> AUTHORS END -->
 

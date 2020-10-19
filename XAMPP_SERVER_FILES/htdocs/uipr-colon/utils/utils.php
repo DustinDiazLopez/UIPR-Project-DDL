@@ -96,12 +96,12 @@ function SQL_GET_AUTHORS($item_id)
     return query(SQL_GET_AUTHORS_BY_ID . " '$item_id'");
 }
 
-function AUTHORS_TO_CSV($authors)
+function AUTHORS_TO_CSV($authors, $atr)
 {
     $str = '';
     $len = count($authors);
     for ($i = 0; $i < $len; $i++) {
-        $str = $str . $authors[$i]['author_name'];
+        $str = $str . $authors[$i][$atr];
         if ($i != $len - 1) $str = $str . ', ';
     }
 
@@ -111,6 +111,18 @@ function AUTHORS_TO_CSV($authors)
 function FORMAT_DATE($date)
 {
     return date("F jS, Y", strtotime($date));
+}
+
+function listToCSV($list)
+{
+    $str = '';
+    $len = count($list);
+    for ($i = 0; $i < $len; $i++) {
+        $str = $str . $list[$i];
+        if ($i != $len - 1) $str = $str . ', ';
+    }
+
+    return $str;
 }
 
 ?>
