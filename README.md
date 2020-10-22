@@ -9,7 +9,6 @@ The **XAMPP_SERVER_FILES** folder contains all the PHP, HTML, CSS, and files.
 
 ## Expected file structure (XAMPP/LAMP)
 ```
-├── htdocs/
 xampp (or var)/
 ├── htdocs (or www)/
 │   └── uipr-colon/
