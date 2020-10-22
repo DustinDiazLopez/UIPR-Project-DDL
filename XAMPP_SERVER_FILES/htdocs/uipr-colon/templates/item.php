@@ -2,29 +2,100 @@
 <!-- <?php echo $item['title']; ?> START -->
 <div class="container-ddl" id="<?php echo $item['id']; ?>">
     <!-- <?php echo $item['title']; ?> TYPE START -->
-    <h3 class="cap" title="Type of document">
+    <h3 class="cap" title="Tipo del document">
         <?php
         switch (strtolower($item['type'])) {
             case "libro":
+            case "book":
                 echo '<i class="fas fa-book"></i>';
                 break;
+            case "novel":
+            case "novela":
+                echo '<i class="fas fa-book-reader"></i>';
+                break;
             case "arte":
+            case "art":
                 echo '<i class="fas fa-paint-brush"></i>';
                 break;
             case "foto":
+            case "photo":
+            case "picture":
                 echo '<i class="far fa-image"></i>';
                 break;
             case "periódico":
+            case "periodico":
+            case "newspaper":
                 echo '<i class="far fa-newspaper"></i>';
                 break;
             case "revista":
+            case "magazine":
                 echo '<i class="fas fa-book-open"></i>';
                 break;
             case "document":
+            case "documento":
                 echo '<i class="fas fa-file-invoice"></i>';
                 break;
+            case "word":
+            case "word document":
+            case "doc":
+            case "docx":
+                echo '<i class="far fa-file-word"></i>';
+                break;
+            case "ppt":
+            case "pptx":
+            case "powerpoint":
+            case "powerpoint presentation":
+                echo '<i class="far fa-file-powerpoint"></i>';
+                break;
+            case "excel":
+            case "xlsx":
+            case "xls":
+            case "excel spreadsheet":
+                echo '<i class="far fa-file-excel"></i>';
+                break;
+            case "csv":
+            case "comma-separated values":
+            case "comma separated values":
+                echo '<i class="fas fa-file-csv"></i>';
+                break;
+            case "pdf":
+                echo '<i class="fas fa-file-pdf"></i>';
+                break;
+            case "zip":
+            case "archive":
+                echo '<i class="fas fa-file-archive"></i>';
+                break;
+            case "code":
+            case "programming":
+                echo '<i class="fas fa-file-code"></i>';
+                break;
+            case "video":
+            case "movie":
+            case "animation":
+                echo '<i class="far fa-file-video"></i>';
+                break;
+            case "audio":
+            case "song":
+            case "music":
+                echo '<i class="far fa-file-audio"></i>';
+                break;
+            case "media":
+                echo '<i class="fas fa-photo-video"></i>';
+                break;
+            case "atlast":
+                echo '<i class="fas fa-atlas"></i>';
+                break;
+            case "bible":
+                echo '<i class="fas fa-bible"></i>';
+                break;
+            case "quran":
+                echo '<i class="fas fa-quran"></i>';
+                break;
+            case "torah":
+                echo '<i class="fas fa-torah"></i>';
+                break;
             default:
-                echo '<i class="far fa-file"></i>';
+                echo '<i class="far fa-file-alt"></i>';
                 break;
         }
         ?>
@@ -42,7 +113,7 @@
 
     <div class="inline">
         <!-- TITLE START -->
-        <h4 title="The name of the document"><a href="#"><?php echo $item['title']; ?></a></h4>
+        <h4 title="Nombre del artículo"><a href="#"><?php echo $item['title']; ?></a></h4>
         <!-- TITLE END -->
 
         <!-- <?php echo $item['title']; ?> AUTHORS START -->
@@ -58,18 +129,21 @@
                 break;
         }
 
-        echo '<h5 title="Authors">' . $icon . '</span> ' . AUTHORS_TO_CSV($authors, 'author_name') . '.</h5>';
+        echo '<h5 title="Autores">' . $icon . '</span> ' . AUTHORS_TO_CSV($authors, 'author_name') . '.</h5>';
         ?>
         <!-- <?php echo $item['title']; ?> AUTHORS END -->
 
         <!-- <?php echo $item['title']; ?> PUBLISHED DATE START -->
-        <?php echo '<h5 title="Published date"><span class="fa fa-calendar-alt"></span> ' . FORMAT_DATE($item['published_date']) . '.</h5>'; ?>
+        <?php
+
+        echo '<h5 title="Fecha de Publicación"><span class="fa fa-calendar-alt"></span> ' . FORMAT_DATE($item['published_date'], $item['year_only'] == '1') . '.</h5>'; 
+        ?>
         <!-- <?php echo $item['title']; ?> PUBLISHED DATE END -->
 
         <!-- <?php echo $item['title']; ?> SUBJECTS START -->
         <?php
         $subjects = SQL_GET_SUBJECTS($item['id']);
-        echo '<h6 title="Subjects">';
+        echo '<h6 title="Sujetos">';
         foreach ($subjects as $subject) echo "<span class=\"badge badge-dark\">{$subject['subject']}</span> ";
         echo '</h6>';
         ?>
@@ -84,36 +158,60 @@
 
 
     <!-- <?php echo $item['title']; ?> FILES START -->
-    <h5>Files:</h5>
+    <h5>Archivos:</h5>
     <div class="container-fluid">
         <table class="table table-hover">
             <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Filename</th>
-                    <th scope="col">View</th>
-                    <th scope="col">Download</th>
-                    <th scope="col">File Size</th>
+                    <th scope="col">Nombre del Archivo</th>
+                    <th scope="col">Ver</th>
+                    <th scope="col">Descargar</th>
+                    <th scope="col">Tipo de Archivo</th>
+                    <th scope="col">Tamaño del Archivo</th>
                 </tr>
             </thead>
             <tbody>
 
-                <?php foreach (SQL_GET_FILES($item['id']) as $f) : ?>
+
+                <?php
+                $path = $name = '';
+                $item_id = $item['id'];
+                foreach (SQL_GET_FILES($item['id']) as $f) :
+                    $path = FILE_FOLDER . '/' . $f['path'];
+                    $name = basename($path);
+                    $mod_name = '';
+
+                    $arr_name = explode('.', $name);
+                    $len = count($arr_name);
+                    if ($len > 2) {
+                        for ($i = 2; $i < $len; $i++) {
+                            if ($i == $len - 1) $mod_name .= '.';
+                            $mod_name .= $arr_name[$i];
+                        }
+
+                        $mod_name = '...' . $mod_name;
+                    } else
+                        $mod_name = $name;
+                ?>
 
                     <tr>
                         <th scope="row"><?php echo $f['id']; ?></th>
-                        <td scope="row"><?php echo $f['name']; ?></td>
+                        <td scope="row"><?php echo $mod_name; ?></td>
                         <td scope="row">
-                            <a class="font-weight-bold" href="javascript:void(0)" onclick="openPDFPHP('<?php echo $f['id']; ?>', false, '<?php echo $f['name']; ?>');" title="Open {$f['name']} in new tab.">
-                                View
-                            </a>
+                            <form action="file.php" method="POST" style="padding:0px;margin:0px;">
+                                <input type="hidden" id="<?php echo $name; ?>View" name="file" value="<?php echo $f['path']; ?>">
+                                <button type="submit" class="btn btn-light" name="view-file">Ver</button>
+                            </form>
                         </td>
                         <td scope="row">
-                            <a class="font-weight-bold" href="javascript:void(0)" onclick="openPDFPHP('<?php echo $f['id']; ?>', true, '<?php echo $f['id'] . '-' . $f['name']; ?>');" title="Download <?php echo $f['name']; ?>.">
-                                Download
-                            </a>
+                            <form action="file.php" method="POST" style="padding:0px;margin:0px;">
+                                <input type="hidden" id="<?php echo $name; ?>Download" name="file" value="<?php echo $f['path']; ?>">
+                                <button type="submit" class="btn btn-light" name="download-file">Descargar</button>
+                            </form>
                         </td>
-                        <td scope="row" class="font-weight-light"><?php echo $f['size']; ?> MB</td>
+                        <td scope="row" class="font-weight-light"><?php echo mime_content_type($path); ?></td>
+                        <td scope="row" class="font-weight-light"><?php echo filesize($path) / 1e+6; ?> MB</td>
                     </tr>
 
                 <?php endforeach; ?>
@@ -135,8 +233,8 @@
 
     <div class="overlay">
         <!-- <button class="icon-btn view" data-toggle="modal" data-target="#exampleModalLong"><i class="fa fa-external-link-alt" title="Open in new tab."></i></button> -->
-        <button class="icon-btn edit"><i class="fa fa-edit" title="Edit <?php echo $item['title']; ?> in new tab."></i></button>
-        <button class="icon-btn delete" data-toggle="modal" data-target="#deleteItem<?php echo $item['id']; ?>"><i class="fa fa-trash" title="Delete <?php echo $item['title']; ?>."></i></button>
+        <button class="icon-btn edit"><i class="fa fa-edit" title="Editar <?php echo $item['title']; ?>."></i></button>
+        <button class="icon-btn delete" data-toggle="modal" data-target="#deleteItem<?php echo $item['id']; ?>"><i class="fa fa-trash" title="Borrar <?php echo $item['title']; ?>."></i></button>
     </div>
 
     <!-- Delete <?php echo $item['title']; ?> Modal START -->
@@ -144,17 +242,20 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete <strong><?php echo $item['title']; ?></strong></h5>
+                    <h5 class="modal-title" id="modalLabel<?php echo $item['id']; ?>">Borrar <strong><?php echo $item['title']; ?></strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    Please do keep in mind that this action is <strong title="cannot be undone"><u>irreversible</u></strong>.
+                    Tenga en cuenta que esta acción es <strong title="no se puede deshacer"><u>irreversible</u></strong>.
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger">Delete</button>
+                    <form action="delete.php" method="POST" style="padding:0px;margin:0px;">
+                        <input type="hidden" id="<?php echo $item['title'] . $item['id']; ?>" name="item-to-delete" value="<?php echo $item['id']; ?>">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger" name="delete-item">Borrar</button>
+                    </form>
                 </div>
             </div>
         </div>

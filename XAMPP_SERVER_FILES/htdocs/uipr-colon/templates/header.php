@@ -62,6 +62,26 @@ include('utils/utils.php');
             display: inline;
             float: none;
         }
+
+
+        :target {
+            border-radius: 3px;
+            animation: highlight 1000ms ease-out;
+        }
+
+        @keyframes highlight {
+            0% {
+                background-color: green;
+            }
+
+            100 {
+                background-color: inherit;
+            }
+        }
+
+        .highlight {
+            background-color: green;
+        }
     </style>
 
     <?php

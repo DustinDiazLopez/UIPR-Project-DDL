@@ -9,9 +9,9 @@
         <!-- SEARCH END -->
 
         <!-- ITEMS START -->
-        <div class="col-sm-9">
+        <div class="col-sm-9" id="items">
             <?php
-            $items = SQL_GET_ALL_ITEMS();
+            $items = SQL_GET_ALL_ITEMS('ORDER BY i.create_at DESC');
             // IF NOTHING IS FOUND
             if (count($items) == 0) {
                 echo '<div class="center-div"><p>I couldn\'t find anything...<p></div>';
