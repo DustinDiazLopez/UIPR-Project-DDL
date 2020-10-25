@@ -1,6 +1,6 @@
 # UIPR CMS DDL
 
-The **XAMPP_SERVER_FILES** folder contains all the PHP, HTML, CSS, and files.
+The **`xampp`** folder contains all the PHP, HTML, and CSS files.
 
 ## Written With
 
@@ -44,7 +44,7 @@ define('DDL_PATH', '../../colon-uipr-cms-ddl-files-and-config');
 
 ## Download the SQL script
 
-[Download SQL](https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/main/XAMPP_SERVER_FILES/uiprcmsddl.sql), and 
+[Download SQL](https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/xampp/colon-uipr-cms-ddl-files-and-config/uiprcmsddl.sql), and 
 for inserting the `.sql` script refere to this 
 [link](https://stackoverflow.com/questions/13955988/insert-sql-file-into-your-mysql-database)
 
