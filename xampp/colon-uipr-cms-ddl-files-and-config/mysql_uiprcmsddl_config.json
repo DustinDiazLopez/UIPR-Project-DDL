@@ -1,1 +1,9 @@
-{ "host": "localhost", "port": "3306", "username": "dustin", "password": "password", "database": "UIPRCMSDDL" }
+{ 
+    "host": "localhost", 
+    "port": "3306", 
+    "username": "dustin", 
+    "password": "password", 
+    "database": "UIPRCMSDDL", 
+    "salt": "$6$rounds=5000$epIHEZHeJQyBIry$",
+    "code": "450887"
+}

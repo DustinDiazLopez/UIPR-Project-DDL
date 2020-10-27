@@ -1,11 +1,7 @@
 <?php
 include_once('templates/header.php');
-set_time_limit(0);
 
-function hint($msg = 'hint', $color = 'green')
-{
-    echo "<a style=\"color:$color;\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"$msg\"><i class=\"far fa-question-circle\"></i></a>";
-}
+set_time_limit(0);
 
 $errors = $item = ['title' => '', 'type' => '', 'published_date' => '', 'authors' => '', 'subjects' => '', 'description' => '', 'metadata' => '', 'image' => '', 'files' => ''];
 $valid_title = $valid_type = $valid_date = $valid_authors = $valid_subjects = $valid_description = $valid_image = $valid_files = '';

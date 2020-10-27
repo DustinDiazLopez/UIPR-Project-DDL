@@ -1,6 +1,12 @@
 <?php
     include_once('connect.php');
     mysqli_close($conn);
+    session_start();
+    
+    if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE) {
+        header('Location: login.php');
+    }
+
 
     function DownloadFile($file)
     { 
@@ -23,8 +29,9 @@
     function ViewFile($file)
     {
         if (file_exists($file)) {
-            header('Content-Description: View PDF');
-            header('Content-Type: application/pdf');
+            $mime_content_type = mime_content_type($file);
+            header('Content-Description: View File');
+            header("Content-Type: $mime_content_type");
             header('Content-Disposition: inline; filename=' . basename($file));
             header('Content-Transfer-Encoding: binary');
             header('Expires: 0');
@@ -48,5 +55,5 @@
         // $data = 'data:application/pdf;base64,' . base64_encode(file_get_contents($file));
     }
 
-    header('Location: index.php');
+    header('Location: index.php?error=file');
 ?>

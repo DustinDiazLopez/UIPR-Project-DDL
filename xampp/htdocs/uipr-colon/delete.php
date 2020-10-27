@@ -2,6 +2,12 @@
 include_once('connect.php');
 include_once('utils/utils.php');
 
+session_start();
+
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE) {
+    header('Location: login.php');
+}
+
 $errors = array();
 function exe_sql($sql) {
     global $conn;
@@ -22,16 +28,10 @@ function exe_sql($sql) {
 if (isset($_POST['delete-item'])) {
     $id = intval($_POST['item-to-delete']);
     if (is_int($id)) {
-        $sql_files = "SELECT `file_id` FROM `file_has_item` WHERE `item_id` = $id";
-        $sql_subjects = "SELECT `subject_id` FROM `item_has_subject` WHERE `item_id` = $id";
-        $sql_authors = "SELECT `author_id` FROM `author_has_item` WHERE `item_id` = $id";
-        $sql_image = "SELECT `image_id` FROM `item` WHERE `id` = $id";
-
-        $query_files = query($sql_files);
-        $query_subjects = query($sql_subjects);
-        $query_authors = query($sql_authors);
-        $query_image = query($sql_image);
-
+        $query_files = query(SQL_FILES_ID_BY_ITEM_ID($id));
+        $query_subjects = query(SQL_SUBJECTS_ID_BY_ITEM_ID($id));
+        $query_authors = query(SQL_AUTHORS_ID_BY_ITEM_ID($id));
+        $query_image = query(SQL_IMAGE_ID_BY_ITEM_ID($id));
 
         $sql = '';
         // DELETE AUTHORS REL
@@ -41,8 +41,6 @@ if (isset($_POST['delete-item'])) {
                 exe_sql($sql);
             }
         }
-
-        $query_authors = NULL;
         
         // DELETE SUBJECT REL
         if (count($query_subjects) >= 1) {
@@ -52,8 +50,6 @@ if (isset($_POST['delete-item'])) {
             }
         }
 
-        $query_subjects = NULL;
-
         // DELETE FILES REL
         if (count($query_files) >= 1) {
             foreach ($query_files as $obj) {
@@ -61,8 +57,6 @@ if (isset($_POST['delete-item'])) {
                 exe_sql($sql);
             }
         }
-
-        $query_files = NULL;
 
         //DELETE ITEM
         $sql = sql_delete_item($id);
@@ -76,17 +70,15 @@ if (isset($_POST['delete-item'])) {
             }
         }
 
-        $query_image = NULL;
-        $sql = NULL;
-
         mysqli_close($conn);
 
         if (array_filter($errors)) {
             echo showWarn("SQL ERROR: ", "Errors were detected");
         } else {
-            header('Location: index.php');
+            header("Location: index.php");
         }
 
-    } else die("error parsing id of item \"{$_POST['item-to-delete']}\" is not an integer.");
+    } else {
+        die("error parsing id of item \"{$_POST['item-to-delete']}\" is not an integer.");
+    }
 }
-?>

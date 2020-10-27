@@ -1,6 +1,12 @@
 <?php
-include('connect.php');
-include('utils/utils.php');
+include_once('connect.php');
+include_once('utils/utils.php');
+
+session_start();
+
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE) {
+    header('Location: login.php');
+}
 ?>
 
 <!DOCTYPE html>
@@ -58,11 +64,11 @@ include('utils/utils.php');
             padding: 20px;
         }
 
-        .center-div {
-            display: inline;
-            float: none;
+        .center-content {
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
-
 
         :target {
             border-radius: 3px;
@@ -74,13 +80,20 @@ include('utils/utils.php');
                 background-color: green;
             }
 
-            100 {
+            100% {
                 background-color: inherit;
             }
         }
 
         .highlight {
             background-color: green;
+        }
+
+        .limit-des {
+            white-space: nowrap;
+            width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     </style>
 
@@ -108,12 +121,8 @@ include('utils/utils.php');
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarText" style="color:green;">
+        <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="index.php">Inicio
-                        <!-- <span class="sr-only">(current)</span> --></a>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="add.php">Añadir Artículo</a>
                 </li>
@@ -130,15 +139,10 @@ include('utils/utils.php');
                     $error_no = mysqli_connect_errno();
                     $error = mysqli_connect_error();
                     echo "<button type=\"button\" class=\"btn btn-danger\" title=\"$error\">Not Connected! <span class=\"badge badge-light\">Error No. $error_no</span></button>";
-                } else {
-
-                    echo '<button type="button" class="btn btn-success" title="A connection to the database was successful">Connected</button>';
                 }
-
                 ?>
 
-                <button type="button" class="btn btn-light">Añadir Artículo</button>
-                <button type="button" class="btn btn-light">Editar</button>
+                <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:black;"> Cerrar sesión </a>
             </span>
         </div>
     </nav>
