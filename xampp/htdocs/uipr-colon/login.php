@@ -20,11 +20,13 @@ if (isset($_POST['submit'])) {
         $errors[] = 'Provee una contraseña.';
     }
 
-    if (!array_filter($errors)) {
+    if (!array_filter($errors) && isset($conn)) {
         $id = SQL_GET_USER_ID_BY_UE(mysqli_real_escape_string($conn, $email));
         if (count($id) >= 1) {
             if (ddl_comp_pwd($_POST['pwd'], $id[0]['id'])) {
-                $_SESSION['email'] = $email;
+                $_SESSION['id'] = $id;
+                $_SESSION['email'] = $id[0]['email'];
+                $_SESSION['username'] = $id[0]['username'];
                 $_SESSION['authenticated'] = TRUE;
                 header('Location: index.php');
             } else {
@@ -37,8 +39,6 @@ if (isset($_POST['submit'])) {
         }
     }
 }
-
-
 
 ?>
 
@@ -98,4 +98,6 @@ if (isset($_POST['submit'])) {
 
 
 <?php
-mysqli_close($conn);
+if (isset($conn)) {
+    mysqli_close($conn);
+}

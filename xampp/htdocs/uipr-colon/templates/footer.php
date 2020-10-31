@@ -14,6 +14,35 @@
 <script charset="utf-8" src="js/open.pdf.js"></script>
 <script charset="utf-8" src="js/generic.js"></script>
 
+<?php
+// highlight search query
+if (isset($_GET['q']) && isset($only) && !empty($only)) {
+    $str = htmlspecialchars($_GET['q']);
+    switch ($only) {
+        case 'title':
+            ?>
+            <script> highlightTitles('<?php echo $str; ?>')</script>
+            <?php
+            break;
+        case 'description':
+            ?>
+            <script> highlightDescriptions('<?php echo $str; ?>')</script>
+            <?php
+            break;
+        case 'file':
+            ?>
+            <script> highlightFiles('<?php echo $str; ?>')</script>
+            <?php
+            break;
+        default:
+            ?>
+            <script> highlightAll('<?php echo $str; ?>')</script>
+            <?php
+            break;
+    }
+}
+?>
+
 <script>
     // Changes the span in the search field
     const radioSelected = 'input[name=restrictSearchRadio]'
@@ -30,4 +59,4 @@
 </body>
 
 </html>
-<?php mysqli_close($conn); ?>
+<?php if (isset($conn)) mysqli_close($conn); ?>

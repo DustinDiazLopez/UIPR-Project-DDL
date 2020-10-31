@@ -1,9 +1,9 @@
 <br />
-<!-- <?php echo $item['title']; ?> START -->
+<!-- <?php if (isset($item)) echo $item['title']; ?> START -->
 <div class="container-ddl" id="<?php echo $item['id']; ?>">
     <!-- TYPE START -->
     <h3 class="cap" title="Tipo del document">
-        <?php echo icon($item['type']) . " <small>{$item['type']}</small>"; ?>
+        <?php echo icon($item['type']) . " <small class='type'>{$item['type']}</small>"; ?>
     </h3>
     <!-- TYPE END -->
 
@@ -17,7 +17,7 @@
 
     <div class="inline">
         <!-- TITLE START -->
-        <h4 title="Nombre del artículo"><a href="#"><?php echo $item['title']; ?></a></h4>
+        <h4 title="Nombre del artículo" class="title"><a href="#"><?php echo $item['title']; ?></a></h4>
         <!-- TITLE END -->
 
         <!-- AUTHORS START -->
@@ -34,13 +34,13 @@
                 break;
         }
 
-        echo '<h5 title="Autores">' . $icon . '</span> ' . AUTHORS_TO_CSV($authors, 'author_name') . '.</h5>';
+        echo '<h5 title="Autores">' . $icon . '</span> <span class="authors">' . authorsToCSV($authors, 'author_name') . '</span>.</h5>';
         ?>
         <!-- AUTHORS END -->
 
         <!-- PUBLISHED DATE START -->
         <h5 title="Fecha de Publicación"><span class="fa fa-calendar-alt"></span>
-            <?php echo FORMAT_DATE($item['published_date'], $item['year_only'] == '1'); ?>
+            <?php echo formatDate($item['published_date'], $item['year_only'] == '1'); ?>
         </h5>
         <!-- PUBLISHED DATE END -->
 
@@ -48,7 +48,7 @@
         <?php
         $subjects = SQL_GET_SUBJECTS($item['id']);
         echo '<h6 title="Sujetos">';
-        foreach ($subjects as $subject) echo "<span class=\"badge badge-dark\">{$subject['subject']}</span> ";
+        foreach ($subjects as $subject) echo "<span class=\"badge badge-dark subject\">{$subject['subject']}</span> ";
         echo '</h6>';
         ?>
         <!-- SUBJECTS END -->
@@ -57,7 +57,7 @@
     <br class="clearBoth" />
 
     <!-- DESCRIPTION START -->
-    <p class="border-right-0"><?php echo $item['description']; ?></p>
+    <p class="border-right-0 description"><?php echo $item['description']; ?></p>
     <!-- DESCRIPTION END -->
 
 
@@ -101,7 +101,7 @@
 
                     <tr>
                         <th scope="row"><?php echo $f['id']; ?></th>
-                        <td scope="row"><?php echo $mod_name; ?></td>
+                        <td scope="row" class="file"><?php echo $mod_name; ?></td>
                         <td scope="row">
                             <form action="file.php" method="POST" style="padding:0px;margin:0px;" target="_blank">
                                 <input type="hidden" id="<?php echo $name; ?>View" name="file" value="<?php echo $f['path']; ?>">
@@ -134,15 +134,18 @@
     <!-- MOD DATE START -->
     <p class="card-text" style="position: relative;bottom:0;right:0;">
         <small class="text-muted">
-            <?php echo 'Últimamente editado el ' . FORMAT_DATE($item['create_at']); ?>
+            <?php echo 'Últimamente editado el ' . formatDate($item['create_at']); ?>
         </small>
     </p>
     <!-- MOD DATE END -->
 
-    <div class="overlay">
-        <button class="icon-btn edit"><i class="fa fa-edit" title="Editar <?php echo $item['title']; ?>." alt="Editar <?php echo $item['title']; ?>."></i><span class="sr-only"><?php echo 'Editar ' . $item['title']; ?></span></button>
-        <button class="icon-btn delete" data-toggle="modal" data-target="#deleteItem<?php echo $item['id']; ?>"><i class="fa fa-trash" title="Borrar <?php echo $item['title']; ?>."></i><span class="sr-only"><?php echo 'Borrar ' . $item['title']; ?></span></button>
-    </div>
+    <form action="edit.item.php" method="POST" style="padding:0px;margin:0px;">
+        <div class="overlay">
+            <input type="hidden" value="<?php echo $item['id']; ?>" id="editItem" name="editItem">
+            <button class="icon-btn edit" type="submit"><i class="fa fa-edit" title="Editar <?php echo $item['title']; ?>."></i><span class="sr-only"><?php echo 'Editar ' . $item['title']; ?></span></button>
+            <button class="icon-btn delete" type="button" data-toggle="modal" data-target="#deleteItem<?php echo $item['id']; ?>"><i class="fa fa-trash" title="Borrar <?php echo $item['title']; ?>."></i><span class="sr-only"><?php echo 'Borrar ' . $item['title']; ?></span></button>
+        </div>
+    </form>
 
     <!-- Delete Modal START -->
     <div class="modal fade" id="deleteItem<?php echo $item['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="confirm deletion" aria-hidden="true">
@@ -155,7 +158,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Tenga en cuenta que esta acción es <strong title="no se puede deshacer"><u>irreversible</u></strong>.
+                    Tenga en cuenta que esta acción es <strong title="no se puede deshacer"><u>irreversible</u></strong>, pero todavía tendrá acceso a los PDFs relacionado con este articulo <a href="adminpanel.php">a través de este enlace</a>.
                 </div>
                 <div class="modal-footer">
                     <form action="delete.php" method="POST" style="padding:0px;margin:0px;">

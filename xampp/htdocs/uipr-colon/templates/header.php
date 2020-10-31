@@ -1,12 +1,7 @@
 <?php
 include_once('connect.php');
 include_once('utils/utils.php');
-
-session_start();
-
-if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE) {
-    header('Location: login.php');
-}
+authenticate();
 ?>
 
 <!DOCTYPE html>
@@ -85,9 +80,11 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE) 
             }
         }
 
-        .highlight {
-            background-color: green;
+        .highlight{
+            color: green;
+            background-color: yellow;
         }
+
 
         .limit-des {
             white-space: nowrap;
@@ -96,22 +93,6 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE) 
             text-overflow: ellipsis;
         }
     </style>
-
-    <?php
-    $current = $active = 'index.php';
-
-    function current_active($input)
-    {
-        $req_uri = $_SERVER['REQUEST_URI'];
-        if (strpos($req_uri, 'index.php')) {
-            if ('index.php' === $input) {
-                echo 'active';
-            }
-        } elseif (strpos($req_uri, 'add.php')) {
-            $current = $active = 'add.php';
-        }
-    }
-    ?>
 
 </head>
 
@@ -127,28 +108,37 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE) 
                     <a class="nav-link" href="add.php">Añadir Artículo</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Editar</a>
+                    <a class="nav-link" href="adminpanel.php">Panel de Administrador</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">History</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Documentación</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item disabled" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL/wiki/User-Doc">Usuario</a>
+                        <a class="dropdown-item disabled" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL/wiki/Dev-Doc">Desarrolladores</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" target="_blank" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL">Código Fuente</a>
+                        <a class="dropdown-item" target="_blank" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL#readme">README</a>
+                        <a class="dropdown-item" target="_blank" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/main/LICENSE">LICENSE</a>
+                    </div>
                 </li>
             </ul>
             <span class="navbar-text">
                 <?php
-                if (!$conn) {
+                $error_no = $error = '';
+                if (!isset($conn) || !$conn) {
                     $error_no = mysqli_connect_errno();
                     $error = mysqli_connect_error();
                     echo "<button type=\"button\" class=\"btn btn-danger\" title=\"$error\">Not Connected! <span class=\"badge badge-light\">Error No. $error_no</span></button>";
                 }
                 ?>
 
-                <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:black;"> Cerrar sesión </a>
+                <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:black;"><?php echo $_SESSION['username']; ?>, cerrar sesión. </a>
             </span>
         </div>
     </nav>
 
     <?php
-    if (!$conn) {
+    if (!isset($conn) || !$conn) {
         echo showWarn("Uh-Oh! MySQL DB Error No. $error_no:", $error);
         die("");
     }

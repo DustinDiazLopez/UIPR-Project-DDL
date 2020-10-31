@@ -1,5 +1,9 @@
 <?php
-include_once('templates/header.php');
+
+include_once('connect.php');
+include_once('utils/utils.php');
+
+authenticate();
 
 set_time_limit(0);
 
@@ -8,7 +12,10 @@ $valid_title = $valid_type = $valid_date = $valid_authors = $valid_subjects = $v
 $warning = false;
 
 if (isset($_POST['submit'])) {
+    // checks to see if the used checked year only button
     $yearOnly = isset($_POST['yearOnly']);
+
+    //inits the values for the item with the inputs of the user
     $item = [
         'title' => htmlspecialchars($_POST['title']),
         'type' => htmlspecialchars($_POST['type']),
@@ -21,6 +28,7 @@ if (isset($_POST['submit'])) {
         'files' => array(),
     ];
 
+    //validates that the title is not empty
     if (empty($item['title'])) {
         $errors['title'] = 'Favor de proveer un titulo.';
         $valid_title = false;
@@ -56,7 +64,7 @@ if (isset($_POST['submit'])) {
 
     //image
     $img_tmp_path = '';
-    echo $_FILES["image"]["tmp_name"];
+    $image_size = 0;
     if (isset($_FILES["image"]["tmp_name"]) && !empty($_FILES["image"]["tmp_name"])) {
         $target_dir = "uploads/";
         $target_file = $target_dir . basename($_FILES["image"]["name"]);
@@ -64,10 +72,7 @@ if (isset($_POST['submit'])) {
         if ($check !== false) {
             $name = $_FILES["image"]['name'];
             $type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
             $item['image'] = file_get_contents($_FILES["image"]['tmp_name']);
-            //echo $contents == $item['image'];
-
             $image_size = strlen($item['image']) / 1e+6;
 
             //bytes to MB
@@ -86,66 +91,69 @@ if (isset($_POST['submit'])) {
 
     //image end
 
-    //files
-    $valid_files = TRUE;
-    $large_file = FALSE;
-    for ($i = 0; $i < count($_FILES['files']['name']); $i++) {
+    if (isset($_POST['number-of-files'])) {
+        $file_count = intval($_POST['number-of-files']);
+        if ($file_count > 0) {
+            $file_names = [];
 
-        //Get the temp file path
-        $tmpFilePath = $_FILES['files']['tmp_name'][$i];
-        echo $tmpFilePath;
-        //Make sure we have a file path
-        if (!empty($tmpFilePath) && (filesize($tmpFilePath) < 41943040)) {
-            $item['files'][] = [
-                'file_name' => $_FILES['files']['name'][$i],
-                'tmp_path' => $tmpFilePath,
-                'file' => file_get_contents($tmpFilePath)
-            ];
-
-            if (filesize($tmpFilePath) > 41943040) $large_file = TRUE;
-        } else {
-            if (filesize($tmpFilePath) > 41943040) {
-                $errors['files'] = $errors['files'] . 'Uno de los archivos es muy grande #' . ($i + 1) . ')<br />';
-                $large_file = TRUE;
-            } else {
-                $valid_files = false;
+            for ($i = 1; $i <= $file_count; $i++) {
+                $file_names[] = "file-{$i}";
             }
-            echo 'Error con archivo numero ' . ($i + 1);
-            $valid_files = false;
+
+            $tmpPath = $name = $size = $type = '';
+            for ($i = 0; $i < count($file_names); $i++) {
+                //Get the temp file path
+                $tmpFilePath = $_FILES[$file_names[$i]]['tmp_name'];
+                $name = $_FILES[$file_names[$i]]['name'];
+                $size = $_FILES[$file_names[$i]]['size'];
+                $type = $_FILES[$file_names[$i]]['type'];
+                //Make sure we have a file path
+                if (!empty($tmpFilePath)) {
+                    $item['files'][] = [
+                        'file_name' => $name,
+                        'tmp_path' => $tmpFilePath,
+                        'size' => $size,
+                        'type' => $type,
+                        'file' => file_get_contents($tmpFilePath)
+                    ];
+                } else {
+                    echo 'Empty file path ' . ($i + 1);
+                    echo '<hr>';
+                }
+            }
+        } else {
+            die('Number of files is less than zero');
         }
+    } else {
+        die('Number of files is not set, provide an input with the name of number-of-files.');
     }
 
-    if (!$valid_files) {
-        echo showWarn('INVALID FILES', 'A file is not valid.');
-    }
-
-    //files end
-    echo '<hr />';
-
-
-    if (array_filter($errors) && !$valid_files && $large_file) {
+    if (array_filter($errors)) {
         echo showWarn('Error:', 'Errores se detectaron en la forma.');
     } else {
         $sql_errors = ['item' => '', 'authors' => '', 'type' => '', 'image' => '', 'files' => ''];
 
-        $upload_item = [
-            'title' => mysqli_real_escape_string($conn, $item['title']),
-            'type' => mysqli_real_escape_string($conn, $item['type']),
-            'published_date' => mysqli_real_escape_string($conn, $item['published_date']),
-            'authors' => explode(',', trim(preg_replace('/\s\s+/', ' ', mysqli_real_escape_string($conn, $_POST['authors'])))),
-            'subjects' => explode(',', trim(preg_replace('/\s\s+/', ' ', mysqli_real_escape_string($conn, $_POST['subjects'])))),
-            'description' => mysqli_real_escape_string($conn, $item['description']),
-            'metadata' => mysqli_real_escape_string($conn, $item['metadata'])
-        ];
+        if (isset($conn)) {
+            $upload_item = [
+                'title' => mysqli_real_escape_string($conn, $item['title']),
+                'type' => mysqli_real_escape_string($conn, $item['type']),
+                'published_date' => mysqli_real_escape_string($conn, $item['published_date']),
+                'authors' => explode(',', trim(preg_replace('/\s\s+/', ' ', mysqli_real_escape_string($conn, $_POST['authors'])))),
+                'subjects' => explode(',', trim(preg_replace('/\s\s+/', ' ', mysqli_real_escape_string($conn, $_POST['subjects'])))),
+                'description' => mysqli_real_escape_string($conn, $item['description']),
+                'metadata' => mysqli_real_escape_string($conn, $item['metadata'])
+            ];
+        } else die("Connection to database has not been established");
 
         $error = "";
 
+        echo '<hr>INSERT TYPE START<br>';
         //insert type
         $sql_type = "INSERT INTO `type` (`type`) VALUES('{$upload_item['type']}')";
         $type_id = NULL;
         if (mysqli_query($conn, $sql_type)) {
             $type_id = mysqli_insert_id($conn);
-            echo 'success type ' . $upload_item['type'] . ' id: ' . $type_id . '<br />';
+            echo htmlspecialchars('success type ' . $upload_item['type'] . ' id: ' . $type_id) . '<br />';
         } else {
             $error = mysqli_error($conn);
             if (strpos($error, 'Duplicate entry') === false) {
@@ -154,13 +162,15 @@ if (isset($_POST['submit'])) {
                 $qt = query("Select id from `type` where `type` = '{$upload_item['type']}'");
                 if (count($qt) > 0) {
                     $type_id = $qt[0]['id'];
-                    echo 'type already exists ' . $upload_item['type'] . ' id: ' . $type_id . '<br />';
+                    echo htmlspecialchars('type already exists ' . $upload_item['type'] . ' id: ' . $type_id) . '<br />';
                 }
             }
         }
+        echo 'INSERT TYPE END';
 
         echo '<hr />';
 
+        echo '<hr>INSERT AUTHORS START<br>';
         //insert author (multi)
         $sql_author = "INSERT INTO `author` (`author_name`) VALUES";
         $author_ids = array();
@@ -168,7 +178,7 @@ if (isset($_POST['submit'])) {
             if (mysqli_query($conn, $sql_author . "('$author')")) {
                 $id = mysqli_insert_id($conn);
                 $author_ids[] = $id;
-                echo 'success author ' . $author . ' id: ' . $id;
+                echo htmlspecialchars('success author ' . $author . ' id: ' . $id) . ' <br />';
             } else {
                 $error = mysqli_error($conn);
                 if (strpos($error, 'Duplicate entry') === false) {
@@ -178,15 +188,17 @@ if (isset($_POST['submit'])) {
                     if (count($qt) > 0) {
                         $id = $qt[0]['id'];
                         $author_ids[] = $id;
-                        echo 'author already exists ' . $author . ' id: ' . $id . '<br />';
+                        echo htmlspecialchars('author already exists ' . $author . ' id: ' . $id) . '<br />';
                     }
                 }
             }
         }
+        echo 'INSERT AUTHORS END';
 
         if (count($author_ids) <= 0) $author_ids = NULL;
         echo '<hr />';
 
+        echo '<hr>INSERT IMAGE START<br>';
         //insert image
         $data = $name = $id = $q = $img_id = null;
         if (isset($item['image']) && !empty($item['image'])) {
@@ -195,15 +207,17 @@ if (isset($_POST['submit'])) {
             $q = mysqli_query($conn, $sql_image);
             if (isset($q)) {
                 $img_id = mysqli_insert_id($conn);
-                echo 'success image : ' . $name . ' id: ' . $img_id . '<br />';
+                echo htmlspecialchars('success image : ' . $name . ' id: ' . $img_id) . '<br />';
             } else {
                 $error = mysqli_error($conn);
-                echo $error;
+                echo htmlspecialchars($error);
                 $sql_errors['image'] = 'Unexpected error ' . $error;
             }
         }
-        echo '<hr /> image id: ' . $img_id . '<hr/>';
+        echo '<hr /> image id: ' . htmlspecialchars($img_id) . '<hr/>';
+        echo 'INSERT IMAGE END<hr>';
 
+        echo '<hr>INSERT SUBJECTS START<br>';
         //insert subject (multi)
         $sql_subject = "INSERT INTO `subject` (`subject`) VALUES";
         $subject_ids = array();
@@ -211,7 +225,7 @@ if (isset($_POST['submit'])) {
             if (mysqli_query($conn, $sql_subject . "('$subject')")) {
                 $id = mysqli_insert_id($conn);
                 $subject_ids[] = $id;
-                echo 'success subject ' . $subject . ' id: ' . $id . '<br />';
+                echo htmlspecialchars('success subject ' . $subject . ' id: ' . $id) . '<br />';
             } else {
                 $error = mysqli_error($conn);
                 if (strpos($error, 'Duplicate entry') === false) {
@@ -221,15 +235,15 @@ if (isset($_POST['submit'])) {
                     if (count($qt) > 0) {
                         $id = $qt[0]['id'];
                         $author_ids[] = $id;
-                        echo 'subject already exists ' . $author . ' id: ' . $id . '<br />';
+                        echo htmlspecialchars('subject already exists ' . $author . ' id: ' . $id) . '<br />';
                     }
                 }
             }
         }
-        echo '<hr /> subject: ';
-        print_r($subject_ids);
+        echo 'INSERT SUBJECT END';
         echo  '<hr/>';
 
+        echo 'INSERT ITEM START<br>';
         //insert item
         $sql_item = "INSERT INTO `item` (`title`, `type_id`, `image_id`, `published_date`, `year_only`, `description`, `meta`) VALUES ";
         $title = $upload_item['title'];
@@ -245,15 +259,18 @@ if (isset($_POST['submit'])) {
             $path = $path . "/$id";
             mkdir($path);
             $item_id = $id;
-            echo 'success item ' . $title . ' id: ' . $id . '<br />';
+            echo htmlspecialchars('success item ' . $title . ' id: ' . $id) . '<br />';
             echo mysqli_error($conn);
         } else {
             $error = mysqli_error($conn);
             $sql_errors['item'] = $error;
-            echo '<b>' . $error . '</b>';
+            echo '<b>' . htmlspecialchars($error) . '</b>';
         }
 
-        // gen file ------------------------------------------------------------------------------------------------------------------------
+        echo 'INSERT ITEM END';
+
+        echo '<hr>INSERT FILE START<br>';
+        // gen file 
         $file_paths = array();
         $file_name = $path;
         foreach ($item['files'] as $file) {
@@ -261,6 +278,7 @@ if (isset($_POST['submit'])) {
             file_put_contents("$path/$file_name", $file['file']);
             $file_paths[] = "$id/$file_name";
         }
+
 
         // insert paths
         $file_ids = array();
@@ -270,16 +288,21 @@ if (isset($_POST['submit'])) {
             if (isset($q)) {
                 $id = mysqli_insert_id($conn);
                 $file_ids[] = $id;
-                echo "File with $id was created.";
+                echo htmlspecialchars("File with $id was created.");
             } else {
                 $error = mysqli_error($conn);
-                echo 'ERROR: ' . $error;
+                echo htmlspecialchars('ERROR: ' . $error);
             }
         }
+        echo '<hr>';
+        echo 'file ids: ';
+        print_r($file_ids);
+        echo '<hr>';
 
         echo (count($file_ids) == count($file_paths) ? "CHECK PASSED!" : "CHECK FAILED");
-        echo '<hr/>';
+        echo 'INSERT FILE END<hr/>';
 
+        echo '<hr>INSERT ITEM_HAS_SUBJECT START<br>';
         //insert item_has_subject
         $sql_item_has_subject = "INSERT INTO `item_has_subject` (`item_id`, `subject_id`) VALUES";
         foreach ($subject_ids as $subject_id) {
@@ -292,40 +315,49 @@ if (isset($_POST['submit'])) {
                 echo '<b>' . $error . '</b>';
             }
         }
-
+        echo 'INSERT ITEM_HAS_SUBJECT END<hr>';
+        $error = "";
+        echo '<hr>INSERT FILE_HAS_ITEM START<br>';
         //insert file_has_item
         $sql_file_has_item = "INSERT INTO `file_has_item` (`file_id`, `item_id`) VALUES";
         foreach ($file_ids as $file_id) {
             $q = mysqli_query($conn, $sql_file_has_item . "($file_id, $item_id)");
 
             if (isset($q)) {
-                echo "<br>Relation created file [$file_id] -> item [$item_id]<br>";
+                echo "<br>" . htmlspecialchars("Relation created file [$file_id] -> item [$item_id]") . "<br>";
             } else {
                 $error = mysqli_error($conn);
 
-                echo '<b>' . $error . '</b>';
+                echo '<b>' . htmlspecialchars($error) . '</b>';
             }
         }
+        echo htmlspecialchars('File has item sql error: ' . $error);
+        echo '<hr>INSERT FILE_HAS_ITEM END<hr>';
+
+        echo '<hr>INSERT AUTHOR_HAS_ITEM START<br>';
         //insert author_has_item
         $sql_author_has_item = "INSERT INTO `author_has_item` (`item_id`, `author_id`) VALUES";
         foreach ($author_ids as $author_id) {
             $q = mysqli_query($conn, $sql_author_has_item . "($item_id, $author_id)");
 
             if (isset($q)) {
-                echo "<br>Relation created author [$author_id] -> item [$item_id]<br>";
+                echo "<br>" . htmlspecialchars("Relation created author [$author_id] -> item [$item_id]") . "<br>";
             } else {
                 $error = mysqli_error($conn);
-                echo '<b>' . $error . '</b>';
+                echo '<b>' . htmlspecialchars($error) . '</b>';
             }
         }
+        echo 'INSERT AUTHOR_HAS_ITEM END<hr>';
 
+        echo '<hr>SQL ERROR CHECK START<br>';
         if (array_filter($errors)) {
             echo showWarn('SQL ERROR:', 'There were unexpected insertion errors. Last error: ' . $error);
             print_r($sql_errors);
         } else {
-            mysqli_close($conn);
+            //mysqli_close($conn);
             header("Location: index.php#$item_id");
         }
+        echo 'SQL ERROR CHECK END<hr>';
     }
 }
 
@@ -340,10 +372,8 @@ function echo_invalid_feedback($boolean = false, $msg = 'Invalido')
     if ($boolean) echo "<div class=\"invalid-feedback\">$msg</div>";
 }
 
-// is-valid class for green
-// <div class="valid-feedback">text</div>
-// is-invalid class for red
-//<div class="invalid-feedback">text</div>
+include_once('templates/header.php');
+
 ?>
 
 <link rel="stylesheet" href="css/autocomplete.css">
@@ -393,7 +423,7 @@ function echo_invalid_feedback($boolean = false, $msg = 'Invalido')
                     <input name="yearOnly" id="yearOnly" onclick="changePubDateToYear('pub-date-label')" type="checkbox" aria-label="Checkbox for para demostrar en el articulo el año de publicacion solamente.">
                 </div>
             </div>
-            <input type="date" name="published_date" id="published_date" class="form-control <?php not_valid_class($valid_date); ?>" name="published_date" value="<?php echo $item['published_date']; ?>" required>
+            <input type="date" name="published_date" id="published_date" class="form-control <?php not_valid_class($valid_date); ?>" value="<?php echo $item['published_date']; ?>" required>
             <?php echo_invalid_feedback(!$valid_date, $errors['published_date']); ?>
         </div>
 
@@ -476,7 +506,7 @@ function echo_invalid_feedback($boolean = false, $msg = 'Invalido')
             <?php hint('El máximo tamaño para la imagen es de 16 megabytes (MB).'); ?>
         </label>
         <div class="col-xs-1">
-            <input class="form-control <?php not_valid_class($valid_image); ?>" type="file" class="btn" id="image" name="image">
+            <input class="form-control btn <?php not_valid_class($valid_image); ?>" type="file" id="image" name="image">
             <?php echo_invalid_feedback(!$valid_image, $errors['image']); ?>
         </div>
     </div>
@@ -491,152 +521,43 @@ function echo_invalid_feedback($boolean = false, $msg = 'Invalido')
                 (php.ini -> upload_max_filesize y post_max_size, Requerirá un reinicio de XAMPP).'
             ); ?>
         </label>
-        <div class="col-xs-1 text-center">
-            <input class="form-control <?php not_valid_class($valid_files); ?>" type="file" class="btn" id="files" name="files[]" multiple="multiple" required>
+        <div id="file-view list-group">
+            <!-- <input class="btn form-control <?php not_valid_class($valid_files); ?>" type="file" id="files" name="files[]" multiple="multiple" required> -->
+            <input type="hidden" value="0" name="number-of-files" id="number-of-files">
+            <div class="col-xs-1 text-center">
+                <input class="form-control btn <?php not_valid_class($valid_files); ?>" type="file" id="files" multiple="multiple" required>
+            </div>
             <?php echo_invalid_feedback(!$valid_files, $errors['files']); ?>
         </div>
+
     </div>
     <hr />
+
+    <div class="form-row">
+        <div class="col-xs-1 container-fluid">
+            <p id="file-info"></p>
+            <ul id="fileList" class="list-group">
+            </ul>
+        </div>
+    </div>
+    <hr>
+
+    <div class="form-row">
+        <div class="col-xs-1 container-fluid" id="size-warning"></div>
+    </div>
 
     <button class="btn btn-success" type="submit" name="submit" onclick="allowreload=true;addAllToReadonly('authorInput', 'authors');addAllToReadonly('subjectsInput', 'subjects');">Agregar Artículo</button>
 </form>
 
 <script charset="utf-8" src="js/jquery-3.2.1.slim.min.js"></script>
 <script src="js/autocomplete.js"></script>
-
 <script>
-    /*An array containing all the country names in the world:*/
+    /*An array containing all the article types*/
     const types = [
         <?php foreach (query(SQL_GET_DOC_TYPES) as $type) echo '"' . htmlspecialchars($type['type']) . '",'; ?>
     ];
-
-    let allowReload = false;
-
-    /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
-    autocomplete(document.getElementById("type"), types);
-
-    function deleteLastReadonly(input, output) {
-        const field = document.getElementById(input);
-        const readonly = document.getElementById(output);
-        if (readonly.value.trim() === "") return;
-        let arr = readonly.value.trim().split(",");
-        let popped = arr.pop().trim();
-        readonly.value = (arr + "").trim();
-        if (field.value === "") {
-            field.value = popped;
-        } else {
-            field.value += `, ${popped}`;
-        }
-    }
-
-    function deleteReadonly(input, output) {
-        const values = document.getElementById(output).value;
-        document.getElementById(output).value = "";
-        const field = document.getElementById(input);
-        if (field.value === "") {
-            field.value = values.trim();
-        } else {
-            field.value += `, ${values.trim()}`;
-        }
-    }
-
-    function addAllToReadonly(input, output) {
-        const field = document.getElementById(input);
-        const readonly = document.getElementById(output);
-        let fieldVal = field.value.trim();
-
-        if (fieldVal === "") {
-            field.value = "";
-            return;
-        }
-
-        let arr = fieldVal.split(",");
-
-        for (i = 0; i < arr.length; i++) {
-            if (readonly.value === "") {
-                readonly.value += `${arr[i].trim()}`
-            } else {
-                readonly.value += `, ${arr[i].trim()}`
-            }
-        }
-
-        readonly.value = titleCase(readonly.value.trim());
-        readonly.title = readonly.value;
-        field.value = "";
-
-        function titleCase(str) {
-            let splitStr = str.toLowerCase().split(' ');
-            for (i = 0; i < splitStr.length; i++)
-                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-
-            return splitStr.join(' ');
-        }
-    }
-
-    function addToReadonly(input, output) {
-        const field = document.getElementById(input);
-        const readonly = document.getElementById(output);
-        let fieldVal = field.value.trim();
-        if (fieldVal === "") {
-            field.value = "";
-            return;
-        } else if (fieldVal.includes(',')) {
-            field.value = field.value.replaceAll(",", "");
-            return;
-        }
-
-        if (readonly.value === "") {
-            readonly.value += `${fieldVal.trim()}`
-        } else {
-            readonly.value += `, ${fieldVal.trim()}`
-        }
-
-        readonly.value = titleCase(readonly.value.trim());
-        readonly.title = readonly.value.trim();
-        field.value = "";
-
-        function titleCase(str) {
-            let splitStr = str.toLowerCase().split(' ');
-            for (i = 0; i < splitStr.length; i++)
-                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-
-            return splitStr.join(' ');
-        }
-    }
-
-    function changePubDateToYear(id) {
-        const label = document.getElementById(id);
-        const input = document.getElementById('yearOnly');
-        const from = 'Fecha';
-        const to = 'Año';
-
-        if (input.checked) {
-            label.innerHTML = label.innerHTML.replace(from, to).trim();
-        } else {
-            label.innerHTML = label.innerHTML.replace(to, from).trim();
-        }
-    }
-
-    $(document).ready(function() {
-        $(window).keydown(function(event) {
-            if (event.keyCode == 13) {
-                event.preventDefault();
-                return false;
-            }
-        });
-    });
-
-    window.onbeforeunload = function(e) {
-        if (!allowReload) {
-            e = e || window.event;
-
-            // For IE and Firefox prior to version 4
-            if (e) e.returnValue = 'Sure?';
-
-            // For Safari
-            return 'Sure?';
-        }
-    };
 </script>
+
+<script src="js/add.js"></script>
 
 <?php include_once('templates/footer.php'); ?>

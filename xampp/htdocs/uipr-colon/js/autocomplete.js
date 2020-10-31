@@ -1,3 +1,8 @@
+/**
+ * Enables autocompletion for an input element
+ * @param {Node} inp input element node
+ * @param {string[]} arr arrays of values to be suggested
+ */
 function autocomplete(inp, arr) {
     let currentFocus;
     inp.addEventListener("input", function(e) {
@@ -10,7 +15,7 @@ function autocomplete(inp, arr) {
         a.setAttribute("class", "autocomplete-items");
         this.parentNode.appendChild(a);
         for (i = 0; i < arr.length; i++) {
-            if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+            if (arr[i].substr(0, val.length).toUpperCase() === val.toUpperCase()) {
                 b = document.createElement("DIV");
                 b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
                 b.innerHTML += arr[i].substr(val.length);
@@ -27,13 +32,13 @@ function autocomplete(inp, arr) {
     inp.addEventListener("keydown", function(e) {
         let x = document.getElementById(this.id + "autocomplete-list");
         if (x) x = x.getElementsByTagName("div");
-        if (e.keyCode == 40) {
+        if (e.keyCode === 40) {
             currentFocus++;
             addActive(x);
-        } else if (e.keyCode == 38) {
+        } else if (e.keyCode === 38) {
             currentFocus--;
             addActive(x);
-        } else if (e.keyCode == 13) {
+        } else if (e.keyCode === 13) {
             e.preventDefault();
             if (currentFocus > -1) {
                 if (x) x[currentFocus].click();
@@ -54,10 +59,10 @@ function autocomplete(inp, arr) {
             x[i].classList.remove("autocomplete-active");
     }
 
-    function closeAllLists(elmnt) {
+    function closeAllLists(element) {
         let x = document.getElementsByClassName("autocomplete-items");
         for (let i = 0; i < x.length; i++) 
-            if (elmnt != x[i] && elmnt != inp) 
+            if (element !== x[i] && element !== inp)
                 x[i].parentNode.removeChild(x[i]);   
     }
 

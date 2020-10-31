@@ -33,12 +33,13 @@ define('DDL_PATH', '../../colon-uipr-cms-ddl-files-and-config');
 
 ### mysql_uiprcmsddl_config.json
 ```json
-{
-    "host": "localhost",
-    "port": "3306",
-    "username": "exapleuser",
-    "password": "examplepwd",
-    "database": "UIPRCMSDDL"
+{ 
+    "host": "localhost", 
+    "port": "3306", 
+    "username": "root", 
+    "password": "password", 
+    "database": "UIPRCMSDDL", 
+    "salt": "$6$rounds=5000$exampleSalt$"
 }
 ```
 

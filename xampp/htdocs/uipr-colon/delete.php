@@ -2,11 +2,7 @@
 include_once('connect.php');
 include_once('utils/utils.php');
 
-session_start();
-
-if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE) {
-    header('Location: login.php');
-}
+authenticate();
 
 $errors = array();
 function exe_sql($sql) {
@@ -65,17 +61,54 @@ if (isset($_POST['delete-item'])) {
         //DELETE IMAGE
         if (count($query_image) >= 1) {
             foreach ($query_image as $obj) {
-                $sql = sql_delete_file($id, $obj['image_id']);
-                exe_sql($sql);
+                if (isset($obj['image_id']) && !empty($obj['image_id'])) {
+                    $sql = sql_delete_image($obj['image_id']);
+                    exe_sql($sql);
+                }
             }
         }
 
-        mysqli_close($conn);
+        //CHECKS for any images that have no item
+        $arr = SQL_GET_ORPHANED_IMAGES();
+        // and deletes them
+        if (count($arr) > 0) {
+            foreach ($arr as $obj) {
+                if (isset($obj['id'])) {
+                    exe_sql(sql_delete_image($obj['id']));
+                }
+            }
+        }
+
+        //CHECKS for any authors that have no item
+        $arr = SQL_GET_ORPHANED_AUTHORS();
+        // and deletes them
+        if (count($arr) > 0) {
+            foreach ($arr as $obj) {
+                if (isset($obj['id'])) {
+                    exe_sql(sql_delete_author_id($obj['id']));
+                }
+            }
+        }
+
+        //CHECKS for any subjects that have no item
+        $arr = SQL_GET_ORPHANED_SUBJECTS();
+        // and deletes them
+        if (count($arr) > 0) {
+            foreach ($arr as $obj) {
+                if (isset($obj['id'])) {
+                    exe_sql(sql_delete_subject_id($obj['id']));
+                }
+            }
+        }
+
+        if (isset($conn)) {
+            mysqli_close($conn);
+        } else die("Not connected to database");
 
         if (array_filter($errors)) {
             echo showWarn("SQL ERROR: ", "Errors were detected");
         } else {
-            header("Location: index.php");
+            header("Location: index.php?deleted");
         }
 
     } else {

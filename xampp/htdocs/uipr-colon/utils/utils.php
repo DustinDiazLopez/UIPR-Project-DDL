@@ -1,17 +1,77 @@
 <?php
-include('timepassed.php');
+
+include_once('sql.const.php');
+include_once('sql.operations.php');
+include_once('sql.utils.php');
+
+$current_path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
 /**
- * Returns html elements to display a warning
- * 
+ * Checks to see if the user has logged in, if not redirects to the login page.
+ */
+function authenticate()
+{
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE || !SQL_ADMIN_USERNAME_AND_EMAIL_EXIST($_SESSION['email'], $_SESSION['username'])) {
+        session_destroy();
+        if (isset($current_path)) {
+            header("Location: login.php?noauth=$current_path");
+        } else {
+            header("Location: login.php");
+        }
+    }
+}
+
+/**
+ * Tests weather the variable is an integer.
+ * @param string|integer $id variable to test
+ * @return bool returns true if the input is an integer
+ */
+function is_valid_int($id)
+{
+    return (isset($id) && !empty($id)) && gettype(intval($id)) === "integer";
+}
+
+/**
+ * Tests if this string starts with the specified prefix.
+ *
+ * @param string $string the string to test
+ * @param string $prefix the prefix.
+ * @return bool TRUE if the prefix exists in the string.
+ */
+function strStartsWith($string, $prefix)
+{
+    return substr($string, 0, strlen($prefix)) === $prefix;
+}
+
+/**
+ * Tests if this string ends with the specified suffix.
+ *
+ * @param string $string the string to test
+ * @param string $suffix the suffix.
+ * @return bool TRUE if the suffix exists in the string.
+ */
+function strEndsWith($string, $suffix)
+{
+    $length = strlen($suffix);
+    if (!$length)  return true;
+    return substr($string, -$length) === $suffix;
+}
+
+/**
+ * Get the html string to display a warning message.
+ *
  * @param string $title title of the warning message
  * @param string $msg message of the warning
- * @param bool $showCloseBtn shows a close button (not implemented)
+ * @param bool $showCloseBtn (optional) weather to show a close button (needs to be enabled with JS).
+ * @return string Returns html elements to display a warning
  */
 function showWarn($title, $msg, $showCloseBtn = false) 
 {
-    $ret = "<div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\">
-        <strong>$title</strong> $msg";
+    $ret = "<div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\"><strong>$title</strong> $msg";
     if ($showCloseBtn) {
        return $ret . "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button></div>";
     } else {
@@ -20,17 +80,44 @@ function showWarn($title, $msg, $showCloseBtn = false)
 }
 
 /**
- * Returns html elements to display a success message
- * 
- * @param string $head title of the message
- * @param string $msg message
- * @param bool $footer buttom text of the message
+ * Get the html string to display the danger message.
+ *
+ * @param string $title title of the warning message
+ * @param string $msg message of the danger
+ * @param bool $showCloseBtn (optional) weather to show a close button (needs to be enabled with JS).
+ * @return string Returns html elements to display the danger
  */
-function showSuccess($head, $msg, $footer) 
+function showDanger($title, $msg, $showCloseBtn = false)
 {
-    return "<div class=\"alert alert-success\" role=\"alert\"><h4 class=\"alert-heading\">$head</h4><p>$msg</p><hr /><p class=\"mb-0\">$footer</p></div>";
+    $ret = "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+        <strong>$title</strong> $msg";
+    if ($showCloseBtn) {
+        return $ret . "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button></div>";
+    } else {
+        return $ret . "</div>";
+    }
 }
 
+/**
+ * Returns html elements to display a success message
+ *
+ * @param string $head title of the message
+ * @param string $msg message
+ * @param string $footer buttom text of the message
+ * @return string Returns html elements to display the success
+ */
+function showSuccess($head, $msg="", $footer="") 
+{
+    $foot = "";
+    if (!empty($footer)) $foot = "<hr /><p class=\"mb-0\">$footer</p>";
+    return "<div class=\"alert alert-success\" role=\"alert\"><h4 class=\"alert-heading\">$head</h4><p>$msg</p>$foot</div>";
+}
+
+/**
+ * Executes the SQL command inputted (uses global $conn).
+ * @param string $sql SQL command or script.
+ * @return array|null returns an associative array of the results, or NULL if something went wrong.
+ */
 function query($sql) 
 {
     global $conn;
@@ -39,7 +126,6 @@ function query($sql)
 
         if (!$conn) {
             die("Failed to connect to database...");
-            return null;
         } else {
             $result = mysqli_query($conn, $sql);
             $fetched = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -60,130 +146,13 @@ function query($sql)
     }
 }
 
-define('SQL_ALL_ITEMS', 'SELECT i.id, i.title, t.`type`, i.image_id, i.description, i.create_at, i.published_date, i.year_only FROM item i INNER JOIN `type` t ON i.type_id = t.id ');
-define('SQL_GET_FILES', 'SELECT fi.item_id, f.id, f.`path` FROM `file` f inner join file_has_item fi inner join item i on i.id = fi.item_id AND fi.file_id = f.id WHERE i.id = ');
-define('SQL_GET_IMAGE', 'SELECT image FROM image where id = ');
-define('SQL_GET_FILE', 'SELECT `file` FROM `file` where id = ');
-define('SQL_GET_SUBJECTS_BY_ID', 'SELECT s.`subject` FROM `subject` s inner join item_has_subject `is` inner join item i on i.id = `is`.item_id AND `is`.subject_id = s.id WHERE i.id = ');
-define('SQL_GET_SUBJECTS', 'SELECT `subject` FROM `subject`');
-define('SQL_GET_DOC_TYPES', 'SELECT `id`, `type` FROM `type`');
-define('SQL_GET_AUTHORS_BY_ID', "SELECT a.author_name FROM author a inner join author_has_item ai inner join item i on i.id = ai.item_id AND ai.author_id = a.id WHERE i.id = ");
-define('SQL_GET_AUTHORS', "SELECT id, author_name FROM author");
-define('SQL_GET_AUTHOR_ITEMS', 'SELECT i.id, i.title, t.`type`, i.image_id, i.description, i.meta, i.create_at, i.published_date, i.year_only FROM author_has_item ai INNER JOIN author a INNER JOIN item i INNER JOIN `type` t ON i.type_id = t.id WHERE a.id = author_id AND i.id = item_id AND a.id = ');
-
-define('SQL_GET_PWD_BY_ID', "SELECT `password` FROM `admin` WHERE `id` = ");
-
-define("SQL_FILES_ID_BY_ITEM_ID", "SELECT `file_id` FROM `file_has_item` WHERE `item_id` = ");
-define("SQL_SUBJECTS_ID_BY_ITEM_ID", "SELECT `subject_id` FROM `item_has_subject` WHERE `item_id` = ");
-define("SQL_AUTHORS_ID_BY_ITEM_ID", "SELECT `author_id` FROM `author_has_item` WHERE `item_id` = ");
-define("SQL_IMAGE_ID_BY_ITEM_ID", "SELECT `image_id` FROM `item` WHERE `id` = ");
-
-define("SQL_GET_USER_ID_BY_UE", "SELECT `id` FROM `admin` WHERE ");
-define('GET_FILES_ITEM_ID', 'SELECT i.id, i.title, t.`type`, i.image_id, i.description, i.create_at, i.published_date, i.year_only FROM `file` f inner join file_has_item fi ON fi.file_id = f.id inner join item i on fi.item_id = i.id INNER JOIN `type` t ON i.type_id = t.id ');
-
-function GET_FILES_ITEM_ID(){
-    return query(GET_FILES_ITEM_ID);
-}
-
-function SQL_GET_AUTHOR_ITEMS($author_id) {
-    return query(SQL_GET_AUTHOR_ITEMS . $author_id);
-}
-function SQL_FILES_ID_BY_ITEM_ID($id) 
-{
-    return SQL_FILES_ID_BY_ITEM_ID . $id;
-}
-
-function SQL_SUBJECTS_ID_BY_ITEM_ID($id)
-{
-    return SQL_SUBJECTS_ID_BY_ITEM_ID . $id;
-}
-
-function SQL_AUTHORS_ID_BY_ITEM_ID($id)
-{
-    return SQL_AUTHORS_ID_BY_ITEM_ID . $id;
-}
-
-function SQL_IMAGE_ID_BY_ITEM_ID($id)
-{
-    return SQL_IMAGE_ID_BY_ITEM_ID . $id;
-}
-
-function SQL_GET_ALL_ITEMS($append = '')
-{
-    return query(SQL_ALL_ITEMS . $append);
-}
-
-function SQL_GET_FILES($item_id)
-{
-    $files = array();
-    foreach (query(SQL_GET_FILES . " '$item_id'") as $f) {
-        $files[] = [
-            'id' => $f['id'],
-            'path' => $f['path']
-        ];
-    }
-    
-    return $files;
-}
-
-function SQL_GET_FILE($file_id)
-{
-    global $conn;
-    $file_id = mysqli_real_escape_string($conn, $file_id);
-    return query(SQL_GET_FILE . " '$file_id'");
-}
-
-function SQL_GET_SUBJECTS($item_id)
-{
-    return query(SQL_GET_SUBJECTS_BY_ID . " '$item_id'");
-}
-
-function SQL_GET_PWD_BY_ID($id)
-{
-    return query(SQL_GET_PWD_BY_ID . $id);
-}
-
-function SQL_GET_IMAGE($image_id)
-{
-    $image = query(SQL_GET_IMAGE . " '$image_id'");
-    if (count($image) >= 1) {
-        $mime_type = finfo_buffer(finfo_open(), $image[0]['image'], FILEINFO_MIME_TYPE);
-        return "data:$mime_type;base64," . base64_encode($image[0]['image']);
-    } else return 'images/pdf-placeholder.jpg';
-
-}
-
-function SQL_GET_AUTHORS($item_id)
-{
-    return query(SQL_GET_AUTHORS_BY_ID . " '$item_id'");
-}
-
-function sql_delete_author($item_id, $author_id)
-{
-    return "DELETE FROM `author_has_item` WHERE `author_has_item`.`item_id` = $item_id AND `author_has_item`.`author_id` = $author_id";
-}
-
-function sql_delete_subject($item_id, $subject_id)
-{
-    return "DELETE FROM `item_has_subject` WHERE `item_has_subject`.`item_id` = $item_id AND `item_has_subject`.`subject_id` = $subject_id";
-}
-
-function sql_delete_file($item_id, $file_id)
-{
-    return "DELETE FROM `file_has_item` WHERE `file_has_item`.`file_id` = $file_id AND `file_has_item`.`item_id` = $item_id";
-}
-
-function sql_delete_image($image_id)
-{
-    return "DELETE FROM `image` WHERE `image`.`id` = $image_id";
-}
-
-function sql_delete_item($item_id)
-{
-    return "DELETE FROM `item` WHERE `item`.`id` = $item_id";
-}
-
-function AUTHORS_TO_CSV($authors, $atr)
+/**
+ * Returns the csv of a associative array by default for the authors table in the db, but an attribute (key) can be specified.
+ * @param array $authors the associative array.
+ * @param string $atr (optional) the key value
+ * @return string returns the csv of the associative array
+ */
+function authorsToCSV($authors, $atr='author_name')
 {
     $str = '';
     $len = count($authors);
@@ -195,10 +164,17 @@ function AUTHORS_TO_CSV($authors, $atr)
     return $str;
 }
 
-function FORMAT_DATE($date, $yearOnly = false, $locale = 'es', $format = "%e de %B de %Y")
+/**
+ * Formats an inputted date into a easily (intuitively) readable format.
+ * @param string $date date to format (e.g., 10-30-2020, could also be in another format).
+ * @param false $yearOnly (optional) shows the year only
+ * @param string $locale (optional) language to use (e.g., en, es, etc.)
+ * @param string $format (optional) format of the date to return
+ * @return string returns the formatted date as a string.
+ */
+function formatDate($date, $yearOnly = false, $locale = 'es', $format = "%e de %B de %Y")
 {
     $currentLocale = setlocale(LC_ALL, 0);
-    $re = '';
     setlocale(LC_ALL, $locale);
     if ($yearOnly === true || $yearOnly == '1') {
         $re = strftime("%Y", strtotime($date));
@@ -209,6 +185,11 @@ function FORMAT_DATE($date, $yearOnly = false, $locale = 'es', $format = "%e de 
     return $re;
 }
 
+/**
+ * Returns the array as a csv.
+ * @param array $list the array.
+ * @return string returns an array as a csv.
+ */
 function listToCSV($list)
 {
     $str = '';
@@ -221,16 +202,88 @@ function listToCSV($list)
     return $str;
 }
 
-function hint($msg = 'hint', $color = 'green')
+/**
+ * Shows a hint via a tooltip on a icon question mark (needs to be handled, refer to adminpanel.php)
+ * @param string $msg The message of the tooltip.
+ * @param string $color (optional) the color of the icon.
+ */
+function hint($msg, $color = 'green')
 {
     echo "<a style=\"color:$color;\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"$msg\"><i class=\"far fa-question-circle\"></i></a>";
 }
 
+/**
+ * Redirects back to a location with messages on the url (needs to be handled, refer to adminpanel.php)
+ * @param string $title title of the error
+ * @param string $msg the message
+ * @param string $location location to redirect
+ */
+function redir_fatal_error($title, $msg, $location='adminpanel.php')
+{
+    header("Location: $location?fatalerror=$title&msg=$msg");
+}
 
 /**
- * Returns html element with an icon corresponding to the inputted text.
- * 
- * @param string $icon_name name of the icon
+ * Redirects back to a location with messages on the url (needs to be handled, refer to adminpanel.php)
+ * @param string $title title of the error
+ * @param string $msg the message
+ * @param string $location location to redirect
+ */
+function redir_warn_error($title, $msg, $location='adminpanel.php')
+{
+    header("Location: $location?error=$title&msg=$msg");
+}
+
+/**
+ * Redirects back to a location with messages on the url
+ * @param string $title title of the error
+ * @param string $msg the message
+ * @param string $location location to redirect
+ */
+function redir_success_error($title, $msg, $location='adminpanel.php')
+{
+    header("Location: $location?success=$title&msg=$msg");
+}
+
+
+/**
+ * Applies a one-way hash to the inputted text, and removes the salt information.
+ * (The salt is specified in the config folder)
+ *
+ * @param string $text the text to hash.
+ * @return string|string[]|null returns the hashed version of the text, and returns anything else if something went wrong.
+ */
+function ddl_hash($text)
+{
+    global $config;
+    return str_replace($config['salt'], '', crypt($text, $config['salt']));
+}
+
+/**
+ * Applies a one-way hash to the inputted text, and removes the salt information.
+ * (The salt is specified in the config folder)
+ *
+ * @param string $pwd non-hashed password
+ * @param int $user_id The id of the user in the database
+ * @return bool|null returns weather the passwords match or NULL if the user does not exist.
+ */
+function ddl_comp_pwd($pwd, $user_id)
+{
+    global $config;
+    $query = SQL_GET_PWD_BY_ID($user_id);
+    if (count($query) > 0 && isset($query[0]['password'])) {
+        $hashed_password = $config['salt'] . $query[0]['password'];
+        return hash_equals($hashed_password, crypt($pwd, $hashed_password));
+    } else {
+        return NULL;
+    }
+}
+
+/**
+ * Returns html string with an icon corresponding to the inputted text (look at source code for the options).
+ *
+ * @param string $icon_name (optional) name of the icon
+ * @return string returns an italic tag with the appropriate font
  */
 function icon($icon_name='') 
 {
@@ -327,171 +380,4 @@ function icon($icon_name='')
         default:
             return '<i class="far fa-file-alt"></i>';
     }
-}
-
-function SQL_GET_USER_ID_BY_UE($user_or_email)
-{
-    return query(SQL_GET_USER_ID_BY_UE . "`email` = '$user_or_email' OR `username` = '$user_or_email'");
-
-}
-
-/**
- * Applies a one-way hash to the inputted text, and removes the salt information. 
- * (The salt is specified in the config folder)
- * 
- * @param string $text the text to hash. 
- */
-function ddl_hash($text) {
-    global $config;
-    return str_replace($config['salt'], '', crypt($text, $config['salt']));
-}
-
-/**
- * Applies a one-way hash to the inputted text, and removes the salt information. 
- * (The salt is specified in the config folder)
- * 
- * @param string $pwd non-hashed password 
- * @param int $user_id The id of the user in the database
- */
-function ddl_comp_pwd($pwd, $user_id) {
-    global $config;
-    $query = SQL_GET_PWD_BY_ID($user_id);
-    if (count($query) > 0 && isset($query[0]['password'])) {
-        $hashed_password = $config['salt'] . $query[0]['password'];
-        return hash_equals($hashed_password, crypt($pwd, $hashed_password));
-    } else {
-        return FALSE;
-    }
-}
-
-function str_replace_first($from, $to, $content)
-{
-    $from = '/' . preg_quote($from, '/') . '/';
-
-    return preg_replace($from, $to, $content, 1);
-}
-
-function clean($string)
-{
-    return str_replace('~~~', ' ', preg_replace('/[^A-Za-z0-9\-]/', ' ', str_replace(' ', '~~~', $string))); // Removes special chars.
-}
-
-function search($conn, $q, $only='all') {
-
-    $keyword = mysqli_real_escape_string($conn, $q);
-    $clean_keyword = clean($keyword);
-    $clean_sep = explode(' ', $clean_keyword);
-
-
-    $only = strtolower($only);
-
-    $q_types = query(SQL_GET_DOC_TYPES);
-    $types = '';
-    foreach ($q_types as $type) {
-        if (isset($_GET[$type['type']])) {
-            $types .= ' OR (`t`.`id` = ' . $type['id'] . ') ';
-        }
-    }
-
-    $types = empty($types) ? "" : str_replace_first('OR', 'WHERE (', $types . ') ');
-    $sql = SQL_ALL_ITEMS . $types;
-
-    $query = array();
-    switch (strtolower($only)) {
-        case 'título':
-        case 'titulo':
-        case 'title':
-            $query = query($sql . " AND (`i`.`title` LIKE '%{$keyword}%')");
-
-            if (count($query) == 0) {
-                $query = query($sql . " AND (`i`.`title` LIKE '%{$clean_keyword}%')");
-            }
-            break;
-        case 'meta':
-        case 'metadata':
-        case 'description':
-        case 'descripcion':
-        case 'descripción':
-            $query = query($sql . " AND (`i`.`description` LIKE '%{$keyword}%' OR `i`.`meta` LIKE '%{$keyword}%')");
-
-            if (count($query) == 0) {
-                $query = query($sql . " AND (`i`.`description` LIKE '%{$clean_keyword}%' OR `i`.`meta` LIKE '%{$clean_keyword}%')");
-            }
-            break;
-        case 'archivo':
-        case 'file':
-            $query = query(GET_FILES_ITEM_ID . $types . " AND (`f`.`path` LIKE '%{$keyword}%')");
-
-            if (count($query) == 0) {
-                $query = query(GET_FILES_ITEM_ID . $types . " AND (`f`.`path` LIKE '%{$clean_keyword}%')");
-            }
-
-            $query = array_unique($query);
-
-            break;
-        default:
-            $query =
-                query($sql . " AND 
-            (`i`.`description` LIKE '%{$keyword}%' 
-            OR `i`.`meta` LIKE '%{$keyword}%' 
-            OR `i`.`title` LIKE '%{$keyword}%'
-            OR `i`.`id` LIKE '%{$keyword}%'
-            OR `i`.`create_at` LIKE '%{$keyword}%'
-            OR `i`.`published_date` LIKE '%{$keyword}%'
-            OR `i`.`year_only` LIKE '%{$keyword}%'
-            )");
-
-            if (count($query) == 0) {
-                $query = query($sql . " AND 
-            (`i`.`description` LIKE '%{$clean_keyword}%' 
-            OR `i`.`meta` LIKE '%{$clean_keyword}%' 
-            OR `i`.`title` LIKE '%{$clean_keyword}%'
-            OR `i`.`id` LIKE '%{$clean_keyword}%'
-            OR `i`.`create_at` LIKE '%{$clean_keyword}%'
-            OR `i`.`published_date` LIKE '%{$clean_keyword}%'
-            OR `i`.`year_only` LIKE '%{$clean_keyword}%'
-            )");
-            }
-
-            if (count($query) == 0) {
-                $query = array();
-                $sql_2 = $sql . ' AND (';
-                $clean_sep = array_unique($clean_sep);
-
-                for ($i = 0; $i < count($clean_sep); $i++) {
-                    if (empty($clean_sep[$i])) {
-                        unset($clean_sep[$i]);
-                    }
-                }
-
-                var_dump($clean_sep);
-                echo '<hr>';
-
-                foreach ($clean_sep as $word) {
-                    $sql_2 .= "
-                        (`i`.`description` LIKE '%{$word}%' 
-                        OR `i`.`meta` LIKE '%{$word}%' 
-                        OR `i`.`title` LIKE '%{$word}%'
-                        OR `i`.`id` LIKE '%{$word}%'
-                        OR `i`.`create_at` LIKE '%{$word}%'
-                        OR `i`.`published_date` LIKE '%{$word}%'
-                        OR `i`.`year_only` LIKE '%{$word}%'
-                        ) OR";
-                }
-
-                $sql_2 = rtrim($sql_2, 'OR') . ')';
-
-                $query = query($sql_2);
-
-            }
-            
-            break;
-    }
-
-    if (count($query) == 0) {
-        return NULL;
-    }
-
-    echo '<p style="color:red;">' . mysqli_error($conn) . '</p>';
-    return $query;
 }

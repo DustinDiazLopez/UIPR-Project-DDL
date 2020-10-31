@@ -12,11 +12,14 @@ if (!is_dir(FILE_FOLDER))
     mkdir(FILE_FOLDER);
 
 if (!file_exists(PATH_TO_CONFIG)) 
-    file_put_contents(PATH_TO_CONFIG, '{ "host": "localhost", "port": "3306", "username": "dustin", "password": "password", "database": "UIPRCMSDDL", "salt": "", "code": "" }');
+    file_put_contents(PATH_TO_CONFIG, '{ "host": "localhost", "port": "3306", "username": "dustin", "password": "password", "database": "UIPRCMSDDL", "salt": "$6$rounds=5000$exampleSalt$" }');
 
 
 $config = json_decode(file_get_contents(PATH_TO_CONFIG), true);
 
+/**
+ * @return false|mysqli
+ */
 function connect() 
 {
     global $config;
@@ -36,4 +39,3 @@ function connect_obj()
 }
 
 $conn = connect();
-?>

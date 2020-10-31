@@ -4,6 +4,5 @@
     "username": "dustin", 
     "password": "password", 
     "database": "UIPRCMSDDL", 
-    "salt": "$6$rounds=5000$epIHEZHeJQyBIry$",
-    "code": "450887"
+    "salt": "$6$rounds=5000$epIHEZHeJQyBIry$"
 }
