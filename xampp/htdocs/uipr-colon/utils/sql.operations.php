@@ -2,6 +2,36 @@
 // this file is included in utils.php
 
 /**
+ * @param array $file array containing the file_name, type, tmp_path, and size (binary)
+ * @return mixed returns the insert id
+ */
+function SQL_SEND_LONG_BLOB($file)
+{
+    $mysqli = connect_obj();
+    $stmt = $mysqli->prepare(SQL_INSERT_FILE_CONTENT);
+    $null = NULL;
+    $stmt->bind_param("b", $null);
+    echo 'Opening file ' . $file['tmp_path'] . '<br>';
+    $fp = fopen($file['tmp_path'], "r");
+    while (!feof($fp)) {
+        $stmt->send_long_data(0, fread($fp, 8192));
+    }
+    fclose($fp);
+    $stmt->execute();
+    return $mysqli->insert_id;
+}
+
+/**
+ * @param array $file array containing the file_name, type, tmp_path, and size
+ * @param integer $id (optional) id of the file, default is NULL (i.e., will autoincrement)
+ * @return string returns the sql script to insert a file
+ */
+function SQL_FILE_INSERT($id, $file)
+{
+    return "UPDATE `file` SET `filename` = '{$file['file_name']}', `type` = '{$file['type']}', `size` = '{$file['size']}' WHERE `file`.`id` = $id;";
+}
+
+/**
  * Queries the database for all the files that do not have an item associated with them.
  * @return array|null returns the associative array of the files (id, and path), or NULL if something went wrong.
  */
@@ -420,14 +450,19 @@ function SQL_GET_ALL_ITEMS($append = '')
 /**
  * Queries the database for the files matching an item id.
  * @param integer $item_id the item id.
+ * @param bool $ignore_content
  * @return array returns the associative array of the files matching the item id.
  */
-function SQL_GET_FILES($item_id)
+function SQL_GET_FILES($item_id, $ignore_content=true)
 {
     $files = array();
     foreach (query(SQL_GET_FILES . " '$item_id'") as $f) {
         $files[] = [
             'id' => $f['id'],
+            'filename' => $f['filename'],
+            'content' => $ignore_content ? '' : $f['content'],
+            'type' => $f['type'],
+            'size' => intval($f['size']),
             'path' => $f['path']
         ];
     }

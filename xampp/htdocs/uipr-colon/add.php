@@ -17,13 +17,13 @@ if (isset($_POST['submit'])) {
 
     //inits the values for the item with the inputs of the user
     $item = [
-        'title' => htmlspecialchars($_POST['title']),
-        'type' => htmlspecialchars($_POST['type']),
-        'published_date' => htmlspecialchars($_POST['published_date']),
-        'authors' => explode(',', trim(preg_replace('/\s\s+/', ' ', htmlspecialchars($_POST['authors'])))),
-        'subjects' => explode(',', trim(preg_replace('/\s\s+/', ' ', htmlspecialchars($_POST['subjects'])))),
-        'description' => htmlspecialchars($_POST['description']),
-        'metadata' => htmlspecialchars($_POST['metadata']),
+        'title' => trim(htmlspecialchars($_POST['title'])),
+        'type' => trim(htmlspecialchars($_POST['type'])),
+        'published_date' => trim(htmlspecialchars($_POST['published_date'])),
+        'authors' => explode(',', trim(preg_replace('/\s\s+/', ' ', trim(htmlspecialchars($_POST['authors']))))),
+        'subjects' => explode(',', trim(preg_replace('/\s\s+/', ' ', trim(htmlspecialchars($_POST['subjects']))))),
+        'description' => trim(htmlspecialchars($_POST['description'])),
+        'metadata' => trim(htmlspecialchars($_POST['metadata'])),
         'image' => '',
         'files' => array(),
     ];
@@ -42,7 +42,7 @@ if (isset($_POST['submit'])) {
     if (empty($item['published_date'])) {
         $errors['published_date'] = 'Favor de proveer un tipo.';
         $valid_date = false;
-    } elseif (!preg_match('/^[0-9]*\-[0-9]*\-[0-9]*$/', $item['published_date'])) {
+    } elseif (!preg_match('/^[0-9]*-[0-9]*-[0-9]*$/', $item['published_date'])) {
         $errors['published_date'] = 'Fecha invalida tiene que ser, por ejemplo, yyyy/mm/dd';
         $valid_date = false;
     } else $valid_date = true;
@@ -114,8 +114,9 @@ if (isset($_POST['submit'])) {
                         'tmp_path' => $tmpFilePath,
                         'size' => $size,
                         'type' => $type,
-                        'file' => file_get_contents($tmpFilePath)
+                        'file' => $tmpFilePath
                     ];
+
                 } else {
                     echo 'Empty file path ' . ($i + 1);
                     echo '<hr>';
@@ -257,7 +258,7 @@ if (isset($_POST['submit'])) {
         if (isset($q)) {
             $id = mysqli_insert_id($conn);
             $path = $path . "/$id";
-            mkdir($path);
+            //mkdir($path);
             $item_id = $id;
             echo htmlspecialchars('success item ' . $title . ' id: ' . $id) . '<br />';
             echo mysqli_error($conn);
@@ -270,36 +271,25 @@ if (isset($_POST['submit'])) {
         echo 'INSERT ITEM END';
 
         echo '<hr>INSERT FILE START<br>';
-        // gen file 
-        $file_paths = array();
-        $file_name = $path;
-        foreach ($item['files'] as $file) {
-            $file_name = uniqid('uipr', true) . '.' . $file['file_name'];
-            file_put_contents("$path/$file_name", $file['file']);
-            $file_paths[] = "$id/$file_name";
-        }
-
 
         // insert paths
         $file_ids = array();
-        $sql_file = "INSERT INTO `file` (`path`) VALUES ";
-        foreach ($file_paths as $file_path) {
-            $q = mysqli_query($conn, $sql_file . "('$file_path')");
-            if (isset($q)) {
-                $id = mysqli_insert_id($conn);
-                $file_ids[] = $id;
-                echo htmlspecialchars("File with $id was created.");
-            } else {
-                $error = mysqli_error($conn);
-                echo htmlspecialchars('ERROR: ' . $error);
+        if (count($item['files']) > 0) {
+            $insert_id = -1;
+            foreach ($item['files'] as $file) {
+                $insert_id = SQL_SEND_LONG_BLOB($file);
+                $file_ids[] = $insert_id;
+                query(SQL_FILE_INSERT($insert_id, $file));
             }
+        } else {
+            $sql_errors['files'] = "No files were submitted";
         }
+
         echo '<hr>';
         echo 'file ids: ';
         print_r($file_ids);
         echo '<hr>';
 
-        echo (count($file_ids) == count($file_paths) ? "CHECK PASSED!" : "CHECK FAILED");
         echo 'INSERT FILE END<hr/>';
 
         echo '<hr>INSERT ITEM_HAS_SUBJECT START<br>';
@@ -487,7 +477,8 @@ include_once('templates/header.php');
     <!-- DESCRIPTION -->
     <div class="form-group">
         <label for="description">Descripción del artículo</label>
-        <textarea class="form-control <?php not_valid_class($valid_description); ?>" id="description" name="description" rows="3" required><?php echo $item['description']; ?></textarea>
+        <textarea class="form-control <?php not_valid_class($valid_description); ?>" id="description" name="description" aria-describedby="descriptionHelp" rows="3" required><?php echo $item['description']; ?></textarea>
+        <small id="descriptionHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
         <?php echo_invalid_feedback(!$valid_description, $errors['description']); ?>
     </div>
 
@@ -496,7 +487,8 @@ include_once('templates/header.php');
         <label for="metadata">Metadata
             <?php hint('Información que no será visible, pero que se utilizará en la búsqueda (por ejemplo, texto completo del artículo, otros títulos, etc.). En otras palabras, cualquier información relacionada con el artículo.'); ?>
         </label>
-        <textarea class="form-control" id="metadata" name="metadata" rows="3"><?php echo $item['metadata']; ?></textarea>
+        <textarea class="form-control" id="metadata" name="metadata" rows="3" aria-describedby="metaHelp"><?php echo $item['metadata']; ?></textarea>
+        <small id="metaHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
     </div>
 
     <hr />

@@ -6,7 +6,7 @@ authenticate();
 
 if (isset($_POST['editItem']) && !empty($_POST['editItem'])) {
     print_r($_POST);
-    die('stopped');
+    die('Not implemented');
 }
 
 header('Location: index.php');

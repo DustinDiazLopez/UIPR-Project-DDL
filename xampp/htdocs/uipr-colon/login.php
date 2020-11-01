@@ -69,6 +69,15 @@ if (isset($_POST['submit'])) {
             <div class="form-group">
                 <h1>Iniciar Sesión</h1>
             </div>
+            <?php if (isset($_GET['se'])): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?php echo 'Se ha cerrado la sesión por inactividad.'; ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php endif; ?>
+
             <?php if (isset($_POST['submit']) && array_filter($errors)) : ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <?php foreach ($errors as $error) echo "$error"; ?>

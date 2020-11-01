@@ -11,7 +11,7 @@
 
     <!-- IMAGE START -->
     <div class="inline">
-        <?php echo '<img alt="" class="img-thumbnail rounded" src="' . SQL_GET_IMAGE($item['image_id']) . '">'; ?>
+        <?php echo '<img loading="lazy" alt="" class="img-thumbnail rounded" src="' . SQL_GET_IMAGE($item['image_id']) . '">'; ?>
     </div>
     <!-- IMAGE END -->
 
@@ -79,49 +79,33 @@
             <tbody>
 
                 <?php
-                $path = $name = '';
                 $item_id = $item['id'];
                 foreach (SQL_GET_FILES($item['id']) as $f) :
-                    $path = FILE_FOLDER . '/' . $f['path'];
-                    $name = basename($path);
-                    $mod_name = '';
-
-                    $arr_name = explode('.', $name);
-                    $len = count($arr_name);
-                    if ($len > 2) {
-                        for ($i = 2; $i < $len; $i++) {
-                            if ($i == $len - 1) $mod_name .= '.';
-                            $mod_name .= $arr_name[$i];
-                        }
-
-                        $mod_name = '...' . $mod_name;
-                    } else
-                        $mod_name = $name;
                 ?>
 
                     <tr>
                         <th scope="row"><?php echo $f['id']; ?></th>
-                        <td scope="row" class="file"><?php echo $mod_name; ?></td>
+                        <td scope="row" class="file"><?php echo $f['filename']; ?></td>
                         <td scope="row">
                             <form action="file.php" method="POST" style="padding:0px;margin:0px;" target="_blank">
-                                <input type="hidden" id="<?php echo $name; ?>View" name="file" value="<?php echo $f['path']; ?>">
+                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;">Ver</button>
                             </form>
                         </td>
                         <td scope="row">
-                            <form action="file.php" method="POST" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-<?php $mod_name; ?>", "width=800,height=600,resizable=yes")' target="open-pdf-view-<?php $mod_name; ?>">
-                                <input type="hidden" id="<?php echo $name; ?>View" name="file" value="<?php echo $f['path']; ?>">
+                            <form action="file.php" method="POST" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")' target="open-pdf-view-">
+                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;">Abrir</button>
                             </form>
                         </td>
                         <td scope="row">
                             <form action="file.php" method="POST" style="padding:0px;margin:0px;">
-                                <input type="hidden" id="<?php echo $name; ?>Download" name="file" value="<?php echo $f['path']; ?>">
+                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>Download" name="file" value="<?php echo $f['id']; ?>">
                                 <button type="submit" class="btn btn-light" name="download-file" style="width:100%;height:100%;">Descargar</button>
                             </form>
                         </td>
-                        <td scope="row" class="font-weight-light"><?php echo mime_content_type($path); ?></td>
-                        <td scope="row" class="font-weight-light"><?php echo filesize($path) / 1e+6; ?> MB</td>
+                        <td scope="row" class="font-weight-light"><?php echo $f['type']; ?></td>
+                        <td scope="row" class="font-weight-light"><?php echo $f['size'] / 1e+6; ?> MB</td>
                     </tr>
 
                 <?php endforeach; ?>
@@ -139,7 +123,7 @@
     </p>
     <!-- MOD DATE END -->
 
-    <form action="edit.item.php" method="POST" style="padding:0px;margin:0px;">
+    <form action="edit.php" method="POST" style="padding:0;margin:0;">
         <div class="overlay">
             <input type="hidden" value="<?php echo $item['id']; ?>" id="editItem" name="editItem">
             <button class="icon-btn edit" type="submit"><i class="fa fa-edit" title="Editar <?php echo $item['title']; ?>."></i><span class="sr-only"><?php echo 'Editar ' . $item['title']; ?></span></button>

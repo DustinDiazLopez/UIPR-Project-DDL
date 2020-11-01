@@ -10,6 +10,53 @@ let filesInput = document.getElementById('files');
 let fileList = document.getElementById('fileList');
 const emptyFilesInput = filesInput.cloneNode(true);
 
+const descriptionTextAreaField = document.getElementById('description');
+const descriptionHelp = document.getElementById('descriptionHelp');
+const metadataTextAreaField = document.getElementById('metadata');
+const metadataHelp = document.getElementById('metaHelp');
+const helpText = `Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor`;
+const helpText2 = `Presione <code>CONTROL</code> y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor`;
+const helpText3 = `Presione <code>CONTROL</code> y <code>ENTER</code>) (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor`;
+
+addNewLineCapability(descriptionTextAreaField);
+addNewLineCapability(metadataTextAreaField);
+
+/**
+ * Adds new line capability to textarea, by hitting ctrl+enter.
+ * @param {Node} textarea the textarea to add new line capability
+ */
+function addNewLineCapability(textarea) {
+    textarea.addEventListener('keydown', function(e) {
+        const isDes = textarea.id === 'description';
+        const isMeta = textarea.id === 'metadata';
+        if (e.ctrlKey) {
+            if (isDes) {
+                descriptionHelp.innerHTML = helpText2;
+            } else if (isMeta) {
+                metadataHelp.innerHTML = helpText2;
+            }
+        }
+
+        if(e.ctrlKey && e.keyCode === 13) {
+            if (isDes) {
+                descriptionHelp.innerHTML = helpText3;
+            } else if (isMeta) {
+                metadataHelp.innerHTML = helpText3;
+            }
+
+            const position = this.selectionEnd;
+            this.value = this.value.substring(0, position) + '\n' + this.value.substring(position);
+            this.focus();
+            this.selectionEnd = position + 1; // moves cursor to newline
+        }
+    });
+
+    textarea.addEventListener('keyup', function(e) {
+        descriptionHelp.innerHTML = helpText;
+        metadataHelp.innerHTML = helpText;
+    });
+}
+
 /**
  * Creates a FileList object for the dynamic uploading files system.
  * @param items File objects

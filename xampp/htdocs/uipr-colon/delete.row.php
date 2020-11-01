@@ -16,15 +16,9 @@ if (isset($conn)) {
             if (count($file) > 0) {
                 // delete row from database
                 query(sql_delete_file_by_id($id));
-
                 // delete database row
                 if (mysqli_affected_rows($conn) > 0) {
-                    $path = FILE_FOLDER . '/' . $file[0]['path'];
-                    if (unlink($path)) {
-                        redir_success_error($redirTitle, "El archivo $path fue borrado!");
-                    } else {
-                        redir_fatal_error($redirTitle, "El archivo $path fue borrado de la base de datos, pero no se pudo borrar en el sistema.");
-                    }
+                    redir_success_error($redirTitle, "El archivo fue borrado!");
                 } else {
                     redir_warn_error($redirTitle, "El archivo no se pudo borrar de la base de datos " . mysqli_error($conn));
                 }
@@ -86,6 +80,3 @@ if (isset($conn)) {
         redir_warn_error("Redirigida(o):", "No proporcionó ningun tipo de información para eliminar algun tipo de dato.");
     }
 } else die("No esta conectado a la base de datos");
-
-
-

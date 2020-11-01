@@ -7,15 +7,23 @@ include_once('sql.utils.php');
 $current_path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
 /**
- * Checks to see if the user has logged in, if not redirects to the login page.
+ * Checks to see if the user has logged in, if not redirects to the login page, or if
+ * @param float|int $secondsOfInactivity (optional) seconds to wait to log out user (default: 30 minutes)
  */
-function authenticate()
+function authenticate($secondsOfInactivity=60*30)
 {
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+    if (session_status() == PHP_SESSION_NONE) session_start();
+    if (isset($_SESSION['session_started'])){
+        if ((mktime() - $_SESSION['session_started'] - $secondsOfInactivity) > 0){
+            header("Location: logout.php?se");
+        } else {
+            $_SESSION['session_started'] = mktime();
+        }
+    } else {
+        $_SESSION['session_started'] = mktime();
     }
 
-    if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE || !SQL_ADMIN_USERNAME_AND_EMAIL_EXIST($_SESSION['email'], $_SESSION['username'])) {
+    if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE) {
         session_destroy();
         if (isset($current_path)) {
             header("Location: login.php?noauth=$current_path");

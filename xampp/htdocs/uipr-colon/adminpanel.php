@@ -25,20 +25,18 @@ $files = SQL_GET_ORPHANED_FILES();
         position: sticky;
         top: 0;
         background-color: white;
-        margin: 0px;
-        padding: 0px;
+        margin: 0;
+        padding: 0;
     }
 
     .dialog-window {
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
+        height: 450px;
+        width: auto;
         overflow: hidden;
     }
 
     .scrollable-content {
-        height: 100%;
+        height: 450px;
         overflow: auto;
     }
 </style>
@@ -97,8 +95,8 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <th scope="col">ID</th>
                                         <th scope="col">Nombre de Usuario</th>
                                         <th scope="col">Correo Electrónico</th>
-                                        <th scope="col">Editar <?php echo hint('Como notará, no puede editar el usuario root.'); ?></th>
-                                        <th scope="col">Borrar <?php echo hint('Como notará, no puede borrar el usuario root, ni su propia cuenta, tendrá que eliminar su propia cuenta a través de otra cuenta.'); ?></th>
+                                        <th scope="col">Editar <?php hint('Como notará, no puede editar el usuario root.'); ?></th>
+                                        <th scope="col">Borrar <?php hint('Como notará, no puede borrar el usuario root, ni su propia cuenta, tendrá que eliminar su propia cuenta a través de otra cuenta.'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -141,7 +139,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
                                                                 </div>
-                                                                <form action="edit.row.php" method="POST" style="padding:0px;margin:0px;">
+                                                                <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
                                                                     <div class="modal-body">
                                                                         <div class="form-group">
                                                                             <input type="hidden" id="userid" name="userid" aria-describedby="userid" value="<?php echo $obj['id']; ?>" required>
@@ -202,7 +200,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                                                         Tenga en cuenta que esta acción es <strong title="no se puede deshacer">irreversible</strong> y el usuario no tendra accesso al sistema.
                                                                     </div>
                                                                     <div class="modal-footer">
-                                                                        <form action="delete.row.php" method="POST" style="padding:0px;margin:0px;">
+                                                                        <form action="delete.row.php" method="POST" style="padding:0;margin:0;">
                                                                             <input type="hidden" id="confirmAdminDelete<?php echo $obj['id']; ?>" name="admin-to-delete" value="<?php echo $obj['id']; ?>">
                                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                                                                             <button type="submit" class="btn btn-danger" name="delete-admin">Entiendo Borrar</button>
@@ -264,7 +262,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-                                                <form action="edit.row.php" method="POST" style="padding:0px;margin:0px;">
+                                                <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
                                                     <div class="modal-body">
                                                         <div class="form-group">
                                                             <label for="edit-author-name">Nombre del Autor(a):</label>
@@ -325,7 +323,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-                                                <form action="edit.row.php" method="POST" style="padding:0px;margin:0px;">
+                                                <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
                                                     <div class="modal-body">
                                                         <div class="form-group">
                                                             <label for="edit-subject-name">Sujeto:</label>
@@ -386,7 +384,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-                                                <form action="edit.row.php" method="POST" style="padding:0px;margin:0px;">
+                                                <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
                                                     <div class="modal-body">
                                                         <div class="form-group">
                                                             <label for="edit-type-name">Tipo:</label>
@@ -451,7 +449,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-                                                <form action="edit.row.php" method="POST" style="padding:0px;margin:0px;">
+                                                <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
                                                     <div class="modal-body">
                                                         <div class="form-group">
                                                             <label for="edit-o-type-name">Tipo:</label>
@@ -522,40 +520,23 @@ $files = SQL_GET_ORPHANED_FILES();
                         <tbody>
                             <?php
                             if (count($files) > 0) :
-                                $path = $name = $mod_name = $arr_name = $len = '';
                                 foreach ($files as $f) :
-                                    $path = FILE_FOLDER . '/' . $f['path'];
-                                    $name = basename($path);
-                                    $mod_name = '';
-
-                                    $arr_name = explode('.', $name);
-                                    $len = count($arr_name);
-                                    if ($len > 2) {
-                                        for ($i = 2; $i < $len; $i++) {
-                                            if ($i == $len - 1) $mod_name .= '.';
-                                            $mod_name .= $arr_name[$i];
-                                        }
-
-                                        $mod_name = '...' . $mod_name;
-                                    } else
-                                        $mod_name = $name;
                             ?>
-
                                     <!-- FILE ROW START -->
                                     <tr>
                                         <th scope="row"><?php echo $f['id']; ?></th>
-                                        <td scope="row"><?php echo $mod_name; ?></td>
-                                        <td scope="row" class="font-weight-light"><?php echo mime_content_type($path); ?></td>
-                                        <td scope="row" class="font-weight-light"><?php echo filesize($path) / 1e+6; ?> MB</td>
+                                        <td scope="row" class="file"><?php echo $f['filename']; ?></td>
+                                        <td scope="row" class="font-weight-light"><?php echo $f['type']; ?></td>
+                                        <td scope="row" class="font-weight-light"><?php echo $f['size'] / 1e+6; ?> MB</td>
                                         <td scope="row">
                                             <form action="file.php" method="POST" style="padding:0px;margin:0px;" target="_blank">
-                                                <input type="hidden" id="<?php echo $name; ?>View" name="file" value="<?php echo $f['path']; ?>">
+                                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
                                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;">Ver</button>
                                             </form>
                                         </td>
                                         <td scope="row">
-                                            <form action="file.php" method="POST" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-<?php $mod_name; ?>", "width=800,height=600,resizable=yes")' target="open-pdf-view-<?php $mod_name; ?>">
-                                                <input type="hidden" id="<?php echo $name; ?>View" name="file" value="<?php echo $f['path']; ?>">
+                                            <form action="file.php" method="POST" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")' target="open-pdf-view-">
+                                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
                                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;">Abrir</button>
                                             </form>
                                         </td>
