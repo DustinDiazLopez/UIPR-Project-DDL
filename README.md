@@ -15,11 +15,10 @@ xampp (or var)/
 │      ├── connect.php
 │      └── ...   
 └── colon-uipr-cms-ddl-files-and-config
-    ├── files/
     └── mysql_uiprcmsddl_config.json
 ```
 
-You can run everything once, and it'll generate the config folder (w/ files folder, and the sample json file).
+You can run everything once, and it'll generate the config folder (w/ the sample json file), if the system allows it.
 
 The mysql configuration (`mysql_uiprcmsddl_config.json`) must be two directories back the
 `uipr-colon` folder and inside the `colon-uipr-cms-ddl-files-and-config` folder. If this is not possible edit the first
@@ -31,7 +30,7 @@ line in `connect.php` (`uipr-colon/connect.php`) file to match the desired file 
 define('DDL_PATH', '../../colon-uipr-cms-ddl-files-and-config');
 ```
 
-### mysql_uiprcmsddl_config.json
+### mysql_uiprcmsddl_config.json example
 ```json
 { 
     "host": "localhost", 
@@ -46,5 +45,5 @@ define('DDL_PATH', '../../colon-uipr-cms-ddl-files-and-config');
 ## Download the SQL script
 
 [Download SQL](https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/main/xampp/colon-uipr-cms-ddl-files-and-config/uiprcmsddl.sql), and 
-for inserting the `.sql` script refere to this
+for inserting the `.sql` script refer to this
 [link](https://stackoverflow.com/questions/13955988/insert-sql-file-into-your-mysql-database)
