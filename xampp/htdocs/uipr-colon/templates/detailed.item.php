@@ -61,8 +61,9 @@
     <!-- DESCRIPTION END -->
 
 
+    <?php $files = SQL_GET_FILES($item['id']); ?>
     <!-- FILES START -->
-    <h5>Archivos:</h5>
+    <h5>Archivo<?php echo count($files) == 1 ? '' : 's'; ?>:</h5>
     <div class="container-fluid">
         <table class="table table-hover">
             <thead>
@@ -80,7 +81,7 @@
 
                 <?php
                 $item_id = $item['id'];
-                foreach (SQL_GET_FILES($item['id']) as $f) :
+                foreach ($files as $f) :
                 ?>
 
                     <tr>

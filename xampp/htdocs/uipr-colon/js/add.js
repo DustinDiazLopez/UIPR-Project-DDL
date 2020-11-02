@@ -1,3 +1,5 @@
+//const PDFJS = require("./js/pdf");
+PDFJS.disableWorker = true;
 let allowReload = false;
 
 /*initiate the autocomplete function on the "type" element, and pass along the types array as possible autocomplete values:*/
@@ -9,6 +11,11 @@ let fileInfo = document.getElementById('file-info');
 let filesInput = document.getElementById('files');
 let fileList = document.getElementById('fileList');
 const emptyFilesInput = filesInput.cloneNode(true);
+
+const showImage = document.getElementById('show');
+const inputImageShow = document.getElementById('image');
+const canvasImageShow = document.getElementById('the-canvas');
+let imageSet = false;
 
 const descriptionTextAreaField = document.getElementById('description');
 const descriptionHelp = document.getElementById('descriptionHelp');
@@ -97,8 +104,51 @@ filesInput.onchange = function(e) {
         li.appendChild(document.createElement("span"));
         fileList.appendChild(li);
     }
+
     updateFilesData();
+
+    if (!imageSet) {
+        file = filesInput.files[0];
+        if (file) {
+            fileReader = new FileReader();
+            fileReader.onload = function(ev) {
+                console.log(ev);
+                PDFJS.getDocument(fileReader.result).then(function getPdfHelloWorld(pdf) {
+                    //
+                    // Fetch the first page
+                    //
+                    console.log(pdf)
+                    pdf.getPage(1).then(function getPageHelloWorld(page) {
+                        const scale = 1.5;
+                        const viewport = page.getViewport(scale);
+
+                        //
+                        // Prepare canvas using PDF page dimensions
+                        //
+                        const context = canvasImageShow.getContext('2d');
+                        canvasImageShow.height = viewport.height;
+                        canvasImageShow.width = viewport.width;
+
+                        //
+                        // Render PDF page into canvas context
+                        //
+                        const task = page.render({canvasContext: context, viewport: viewport});
+                        task.promise.then(function(){
+                            let data = canvasImageShow.toDataURL('image/jpeg') + "";
+                            showImage.src = data;
+                            inputImageShow.value = data;
+                            imageSet = true;
+                        });
+                    });
+                }, function(error){
+                    console.log(error);
+                });
+            };
+            fileReader.readAsArrayBuffer(file);
+        }
+    }
 }
+
 
 /**
  * Updates the listView (ul element) in the interface, and other data related to the files.
@@ -137,6 +187,7 @@ function updateFilesData(handleListView = true) {
                 if (len === 0) {
                     fileInfo.innerHTML = "";
                     filesInput.files = emptyFilesInput.files;
+                    imageSet = false;
                 } else {
                     let s = "";
                     if (len > 1) s = "s";
@@ -164,6 +215,7 @@ function remove(idx) {
         if (len === 0) {
             fileInfo.innerHTML = "";
             filesInput.files = emptyFilesInput.files;
+            imageSet = false;
         } else {
             let s = "";
             if (len > 1) s = "s";

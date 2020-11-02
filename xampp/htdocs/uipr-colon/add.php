@@ -63,32 +63,13 @@ if (isset($_POST['submit'])) {
     } else $valid_description = true;
 
     //image
-    $img_tmp_path = '';
-    $image_size = 0;
-    if (isset($_FILES["image"]["tmp_name"]) && !empty($_FILES["image"]["tmp_name"])) {
-        $target_dir = "uploads/";
-        $target_file = $target_dir . basename($_FILES["image"]["name"]);
-        $check = getimagesize($_FILES["image"]["tmp_name"]);
-        if ($check !== false) {
-            $name = $_FILES["image"]['name'];
-            $type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-            $item['image'] = file_get_contents($_FILES["image"]['tmp_name']);
-            $image_size = strlen($item['image']) / 1e+6;
-
-            //bytes to MB
-            if ($image_size > 16) {
-                $errors['image'] = "La imagen es muy grande: " . $image_size . " MB > 16 MB";
-                $valid_image = false;
-            }
-        } else {
-            $errors['image'] = "No es una imagen.";
-            $valid_image = false;
-        }
-        $img_tmp_path = $_FILES["image"]['tmp_name'];
+    if (isset($_POST['image']) && !empty($_POST['image'])) {
+        $image_type = 'image/jpeg';
+        $item['image'] = base64_decode(str_replace("data:$image_type;base64,", '', $_POST['image']));
+        $image_size = strlen($item['image']);
+    } else {
+        $item['image'] = NULL;
     }
-
-    if (empty($img_tmp_path)) $img_tmp_path = false;
-
     //image end
 
     if (isset($_POST['number-of-files'])) {
@@ -202,9 +183,9 @@ if (isset($_POST['submit'])) {
         echo '<hr>INSERT IMAGE START<br>';
         //insert image
         $data = $name = $id = $q = $img_id = null;
-        if (isset($item['image']) && !empty($item['image'])) {
+        if (isset($item['image']) && !empty($item['image']) && $item['image'] !== NULL) {
             $data = mysqli_real_escape_string($conn, $item['image']);
-            $sql_image = "INSERT INTO `image` (`type`, `size`, `image`) VALUES ('$type', $image_size, '$data')";
+            $sql_image = "INSERT INTO `image` (`type`, `size`, `image`) VALUES ('$image_type', $image_size, '$data')";
             $q = mysqli_query($conn, $sql_image);
             if (isset($q)) {
                 $img_id = mysqli_insert_id($conn);
@@ -254,11 +235,8 @@ if (isset($_POST['submit'])) {
         $img = $img_id === NULL ? 'null' : $img_id;
         $q = mysqli_query($conn, $sql_item . "('$title', $type_id, $img, '$date', '$yearOnly', '$des', '$meta')");
         $item_id = NULL;
-        $path = FILE_FOLDER;
         if (isset($q)) {
             $id = mysqli_insert_id($conn);
-            $path = $path . "/$id";
-            //mkdir($path);
             $item_id = $id;
             echo htmlspecialchars('success item ' . $title . ' id: ' . $id) . '<br />';
             echo mysqli_error($conn);
@@ -494,11 +472,13 @@ include_once('templates/header.php');
     <hr />
     <!-- IMAGE -->
     <div class="form-row">
-        <label for="image">Subir una Imagen
-            <?php hint('El máximo tamaño para la imagen es de 16 megabytes (MB).'); ?>
+        <label for="image">Imagen
+            <?php hint('La imagen será la primera página del primer documento PDF.'); ?>
         </label>
         <div class="col-xs-1">
-            <input class="form-control btn <?php not_valid_class($valid_image); ?>" type="file" id="image" name="image">
+            <canvas id="the-canvas" style="display:none;"></canvas>
+            <input type="hidden" id='image' name="image" value="">
+            <img id="show" class="img-thumbnail rounded" src="" alt="">
             <?php echo_invalid_feedback(!$valid_image, $errors['image']); ?>
         </div>
     </div>
@@ -550,6 +530,7 @@ include_once('templates/header.php');
     ];
 </script>
 
+<script type="text/javascript" src="js/pdf.js"></script>
 <script src="js/add.js"></script>
 
 <?php include_once('templates/footer.php'); ?>
