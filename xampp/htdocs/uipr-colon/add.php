@@ -472,13 +472,13 @@ include_once('templates/header.php');
     <hr />
     <!-- IMAGE -->
     <div class="form-row">
-        <label for="image">Imagen
+        <label for="image">Imágen
             <?php hint('La imagen será la primera página del primer documento PDF.'); ?>
         </label>
         <div class="col-xs-1">
             <canvas id="the-canvas" style="display:none;"></canvas>
             <input type="hidden" id='image' name="image" value="">
-            <img id="show" class="img-thumbnail rounded" src="" alt="">
+            <img id="show" class="img-thumbnail rounded" src="images/pdf-placeholder.jpg" alt="">
             <?php echo_invalid_feedback(!$valid_image, $errors['image']); ?>
         </div>
     </div>
@@ -520,6 +520,39 @@ include_once('templates/header.php');
 
     <button class="btn btn-success" type="submit" name="submit" onclick="allowreload=true;addAllToReadonly('authorInput', 'authors');addAllToReadonly('subjectsInput', 'subjects');">Agregar Artículo</button>
 </form>
+
+<style>
+    .floatCenter {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-top: -50px;
+        margin-left: -50px;
+        width: 100%;
+        height: 100%;
+    }
+
+    #overlay {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255,255,255,0.5);
+        z-index: 2;
+        cursor: pointer;
+    }
+</style>
+
+<div id="overlay"></div>
+<div class="floatCenter" id="loading-splash">
+    <object data="images/processing.svg" type="image/svg+xml" id="loading-image" style="display: none;">
+        <img alt="procesando" src="images/processing.gif"/>
+    </object>
+</div>
 
 <script charset="utf-8" src="js/jquery-3.2.1.slim.min.js"></script>
 <script src="js/autocomplete.js"></script>

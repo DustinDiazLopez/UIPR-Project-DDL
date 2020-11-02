@@ -1,6 +1,7 @@
 //const PDFJS = require("./js/pdf");
 PDFJS.disableWorker = true;
 let allowReload = false;
+const loadingImg = document.getElementById('loading-splash');
 
 /*initiate the autocomplete function on the "type" element, and pass along the types array as possible autocomplete values:*/
 autocomplete(document.getElementById("type"), types);
@@ -89,6 +90,20 @@ function _FileList(items) {
     return dt.files;
 }
 
+/**
+ * Turns on overlay on body
+ */
+function on() {
+    loadingImg.style.display = 'block';
+}
+
+/**
+ * Turns off overlay on body
+ */
+function off() {
+    loadingImg.style.display = 'none';
+}
+
 filesInput.onchange = function(e) {
     for (let i = 0; i < e.target.files.length; i++) {
         let li = document.createElement("li");
@@ -110,6 +125,7 @@ filesInput.onchange = function(e) {
     if (!imageSet) {
         file = filesInput.files[0];
         if (file) {
+            on();
             fileReader = new FileReader();
             fileReader.onload = function(ev) {
                 console.log(ev);
@@ -140,11 +156,12 @@ filesInput.onchange = function(e) {
                             imageSet = true;
                         });
                     });
-                }, function(error){
+                }, function(error) {
                     console.log(error);
                 });
             };
             fileReader.readAsArrayBuffer(file);
+            off();
         }
     }
 }

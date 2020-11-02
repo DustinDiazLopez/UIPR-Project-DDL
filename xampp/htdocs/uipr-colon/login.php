@@ -88,11 +88,11 @@ if (isset($_POST['submit'])) {
             <?php endif; ?>
             <div class="form-group">
                 <label for="email">Correo Electrónico <strong>o</strong> Nombre de Usuario</label>
-                <input type="text" class="form-control" id="email" name="email" placeholder="su" value="<?php echo htmlspecialchars($email); ?>" required>
+                <input type="text" class="form-control" id="email" name="email" placeholder="su" value="<?php echo $email === '' ? 'colon' : htmlspecialchars($email); ?>" required>
             </div>
             <div class="form-group">
                 <label for="pwd">Contraseña</label>
-                <input type="password" class="form-control" name="pwd" id="pwd" placeholder="password" required>
+                <input type="password" class="form-control" name="pwd" id="pwd" placeholder="password" value="hello-password" required>
             </div>
             <button type="submit" name="submit" value="submit" class="btn btn-outline-success my-2 my-sm-0" style="width:100%;height:100%;">Iniciar Sesión</button>
         </form>
