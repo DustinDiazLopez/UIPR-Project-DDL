@@ -92,10 +92,10 @@ function search($conn, $q, $only='all') {
             break;
         case 'archivo':
         case 'file':
-            $query = query(GET_FILES_ITEM_ID . $types . " AND (`f`.`path` LIKE '%{$keyword}%')");
+            $query = query(GET_FILES_ITEM_ID . $types . " AND (`f`.`filename` LIKE '%{$keyword}%')");
 
             if (count($query) == 0) {
-                $query = query(GET_FILES_ITEM_ID . $types . " AND (`f`.`path` LIKE '%{$clean_keyword}%')");
+                $query = query(GET_FILES_ITEM_ID . $types . " AND (`f`.`filename` LIKE '%{$clean_keyword}%')");
             }
 
             break;

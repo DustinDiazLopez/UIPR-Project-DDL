@@ -43,6 +43,12 @@ function is_valid_int($id)
     return (isset($id) && !empty($id)) && gettype(intval($id)) === "integer";
 }
 
+function clean($string, $replace='')
+{
+    $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+    return preg_replace('/[^A-Za-z0-9\-]/', $replace, $string); // Removes special chars.
+}
+
 /**
  * Tests if this string starts with the specified prefix.
  *

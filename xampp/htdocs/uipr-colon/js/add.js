@@ -1,7 +1,7 @@
 //const PDFJS = require("./js/pdf");
 PDFJS.disableWorker = true;
 let allowReload = false;
-const loadingImg = document.getElementById('loading-splash');
+const loadingImg = document.getElementById('overlay');
 
 /*initiate the autocomplete function on the "type" element, and pass along the types array as possible autocomplete values:*/
 autocomplete(document.getElementById("type"), types);
@@ -15,7 +15,10 @@ const emptyFilesInput = filesInput.cloneNode(true);
 
 const showImage = document.getElementById('show');
 const inputImageShow = document.getElementById('image');
+const customImage = document.getElementById('customImage');
 const canvasImageShow = document.getElementById('the-canvas');
+const fileInputForThumbnail = document.getElementById('selectedFileInput');
+const pageNumberInput = document.getElementById('pageNumber');
 let imageSet = false;
 
 const descriptionTextAreaField = document.getElementById('description');
@@ -31,7 +34,7 @@ addNewLineCapability(metadataTextAreaField);
 
 /**
  * Adds new line capability to textarea, by hitting ctrl+enter.
- * @param {Node} textarea the textarea to add new line capability
+ * @param {HTMLElement} textarea the textarea to add new line capability
  */
 function addNewLineCapability(textarea) {
     textarea.addEventListener('keydown', function(e) {
@@ -103,6 +106,21 @@ function on() {
 function off() {
     loadingImg.style.display = 'none';
 }
+let data;
+function insertCustomImage(event) {
+    if (event.files && event.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+          showImage.src = e.target.result;
+          inputImageShow.value = showImage.src;
+          imageSet = true;
+
+        }
+        reader.readAsDataURL(event.files[0]);
+    }
+
+
+}
 
 filesInput.onchange = function(e) {
     for (let i = 0; i < e.target.files.length; i++) {
@@ -113,8 +131,7 @@ filesInput.onchange = function(e) {
         input.id = `file-${++counter}`;
         input.type = "file";
         input.files = new _FileList(e.target.files[i]);
-        input.className = "form-control btn <?php not_valid_class($valid_files); ?>";
-        // input.disabled = "disabled";
+        input.className = "form-control btn hide-overflow";
         li.appendChild(input);
         li.appendChild(document.createElement("span"));
         fileList.appendChild(li);
@@ -122,56 +139,97 @@ filesInput.onchange = function(e) {
 
     updateFilesData();
 
-    if (!imageSet) {
-        file = filesInput.files[0];
-        if (file) {
-            on();
-            fileReader = new FileReader();
-            fileReader.onload = function(ev) {
-                console.log(ev);
-                PDFJS.getDocument(fileReader.result).then(function getPdfHelloWorld(pdf) {
-                    //
-                    // Fetch the first page
-                    //
-                    console.log(pdf)
-                    pdf.getPage(1).then(function getPageHelloWorld(page) {
-                        const scale = 1.5;
-                        const viewport = page.getViewport(scale);
+    if (!imageSet) updateImage();
+}
 
-                        //
-                        // Prepare canvas using PDF page dimensions
-                        //
-                        const context = canvasImageShow.getContext('2d');
-                        canvasImageShow.height = viewport.height;
-                        canvasImageShow.width = viewport.width;
+/**
+ * Clears everything related to the image.
+ * @param {boolean} [clear=true] if true clears the image data else does nothing.
+ */
+function clearImage(clear=true) {
+    if (clear === true) {
+        showImage.src = "images/pdf-placeholder.jpg";
+        inputImageShow.value = "";
+        imageSet = false;
+    }
+}
 
-                        //
-                        // Render PDF page into canvas context
-                        //
-                        const task = page.render({canvasContext: context, viewport: viewport});
-                        task.promise.then(function(){
-                            let data = canvasImageShow.toDataURL('image/jpeg') + "";
-                            showImage.src = data;
-                            inputImageShow.value = data;
-                            imageSet = true;
-                        });
+function changeImage(fileId, filePage, resetPageNumber=false) {
+    if (resetPageNumber) pageNumberInput.value = 1;
+    updateImage(document.getElementById(fileId), 0, parseInt(filePage));
+}
+
+function generateFileInputForImage() {
+
+    //clears fileInputForThumbnail input
+    fileInputForThumbnail.innerHTML = '';
+
+    // generates new view
+    let element, name, fileId;
+    for (let i = 1; i <= counter; i++) {
+        try {
+            fileId = `file-${i}`;
+            element = document.getElementById(fileId);
+            name = element.files[0].name;
+            console.log(element.files[0])
+            if (name.endsWith('.pdf')) {
+                fileInputForThumbnail.innerHTML += `<option value='${fileId}'>${name}</option>`
+            }
+        } catch (ignored) {}
+    }
+
+    pageNumberInput.value = 1;
+}
+
+/**
+ * <p>Updates the image.
+ * <ul>
+ * <li>Needs a canvas HTMLElement (canvasImageShow) to generate the thumbnail and get the dataUrl</li>
+ * <li>Needs a img HTMLElement (showImage) to show the base64 image</li>
+ * <li>Needs a input HTMLElement (inputImageShow) to save the base64 data value (in the input's value) for POST</li>
+ * </ul>
+ * @param {HTMLElement} [id=filesInput] ID of the file html element
+ * @param {number} [fileIdx=0] the index of the file in the element
+ * @param {number} [pageNumber=1] the page number for the image
+ */
+function updateImage(id = filesInput, fileIdx = 0, pageNumber=1) {
+    file = id.files[fileIdx];
+    if (file) {
+        fileReader = new FileReader();
+        fileReader.onload = function(ev) {
+            PDFJS.getDocument(fileReader.result).then(function getPdfHelloWorld(pdf) {
+                pdf.getPage(pageNumber).then(function getPageHelloWorld(page) {
+                    const scale = 1.5;
+                    const viewport = page.getViewport(scale);
+                    const context = canvasImageShow.getContext('2d');
+                    canvasImageShow.height = viewport.height;
+                    canvasImageShow.width = viewport.width;
+                    const task = page.render({canvasContext: context, viewport: viewport});
+                    task.promise.then(function(){
+                        clearImage();
+                        showImage.src = canvasImageShow.toDataURL('image/jpeg');
+                        inputImageShow.value = showImage.src;
+                        imageSet = true;
+
                     });
-                }, function(error) {
-                    console.log(error);
                 });
-            };
-            fileReader.readAsArrayBuffer(file);
-            off();
-        }
+            }, function(error) {
+                console.log(error);
+                clearImage();
+                updateImage(id, ++fileIdx, pageNumber); //recurse to next file if it fails (i.e., not a valid PDF structure)
+            });
+
+        };
+        fileReader.readAsArrayBuffer(file);
     }
 }
 
 
 /**
  * Updates the listView (ul element) in the interface, and other data related to the files.
- * @param {boolean} [handleListView=true] Whether to handle the updating of the files data.
+ * @param {boolean} [updateListView=true] Whether to handle the updating of the files data.
  */
-function updateFilesData(handleListView = true) {
+function updateFilesData(updateListView = true) {
     counter = fileList.children.length;
     document.getElementById('number-of-files').value = counter;
 
@@ -199,22 +257,7 @@ function updateFilesData(handleListView = true) {
                     break;
             }
 
-            if (handleListView === true) {
-                const len = fileList.children.length;
-                if (len === 0) {
-                    fileInfo.innerHTML = "";
-                    filesInput.files = emptyFilesInput.files;
-                    imageSet = false;
-                } else {
-                    let s = "";
-                    if (len > 1) s = "s";
-                    fileInfo.innerHTML = `Los Archivos Selccionados (${len} archivo${s} - ${totalFileSize()}):`;
-                    let warnDiv = document.getElementById('size-warning');
-                    if (size > 4e+7) {
-                        warnDiv.innerHTML = `<?php echo showWarn('Precaución:', 'Se ha pasado del tamaño máximo total (40MB). Vea el hint de seleccionar los archivos. Puede subir un archivo primero y luego editar el articulo para añadir otro documento.') ?>`;
-                    } else warnDiv.innerHTML = "";
-                }
-            }
+            handleListView(updateListView);
         }
     }
 }
@@ -228,23 +271,50 @@ function remove(idx) {
     if (idx >= 0 && idx <= fileListChildren.length) {
         fileListChildren[idx].parentNode.removeChild(fileListChildren[idx]);
         updateFilesData(false);
+        handleListView()
+    } else {
+        console.log(idx + ' does not exist in fileList...');
+    }
+}
+
+/**
+ * Updates the list view and image.
+ * @param {boolean} [handle=true] weather to handle the view (i.e., execute the code)
+ */
+function handleListView(handle = true) {
+    if (handle === true) {
+
         const len = fileList.children.length;
         if (len === 0) {
             fileInfo.innerHTML = "";
             filesInput.files = emptyFilesInput.files;
-            imageSet = false;
+            clearImage();
         } else {
             let s = "";
             if (len > 1) s = "s";
-            fileInfo.innerHTML = `Los Archivos Selccionados (${len} archivo${s} - ${totalFileSize()}):`;
-
+            fileInfo.innerHTML = `${s === "" ? 'El' : 'Los'} Archivo${s} Selccionado${s} (${len} archivo${s} - ${totalFileSize()}):`;
             let warnDiv = document.getElementById('size-warning');
+            clearImage();
+
+            let element = undefined;
+            for (let i = 1; i <= counter; i++) {
+                element = document.getElementById(`file-${i}`);
+                try {
+                    if (element.files[0].name.endsWith('.pdf')) {
+                        updateImage(element);
+                        break;
+                    }
+                } catch (e) {
+                    clearImage();
+                }
+            }
+
             if (size > 4e+7) {
                 warnDiv.innerHTML = `<?php echo showWarn('Precaución:', 'Se ha pasado del tamaño máximo total (40MB). Vea el hint de seleccionar los archivos. Puede subir un archivo primero y luego editar el articulo para añadir otro documento.') ?>`;
             } else warnDiv.innerHTML = "";
         }
-    } else {
-        console.log(idx + ' does not exist in fileList...');
+
+        generateFileInputForImage();
     }
 }
 

@@ -126,7 +126,7 @@ function SQL_GET_ADMIN_BY_EMAIL($email)
 /**
  * Tests whether the email exists
  * @param string $email the email of the admin.
- * @return bool
+ * @return bool true if a user exists with the specified email
  */
 function SQL_ADMIN_EMAIL_EXIST($email)
 {
@@ -136,7 +136,7 @@ function SQL_ADMIN_EMAIL_EXIST($email)
 /**
  * Tests whether the username exists
  * @param string $username the username of the admin.
- * @return bool
+ * @return bool true if a user exists with the specified username
  */
 function SQL_ADMIN_USERNAME_EXIST($username)
 {
@@ -147,7 +147,7 @@ function SQL_ADMIN_USERNAME_EXIST($username)
  * Tests whether the username and email exists
  * @param string $email the email of the admin.
  * @param string $username the username of the admin.
- * @return bool
+ * @return bool true if a user exists with the specified email or username
  */
 function SQL_ADMIN_USERNAME_AND_EMAIL_EXIST($email, $username)
 {
@@ -251,9 +251,9 @@ function SQL_UPDATE_TYPE($id, $old_type, $new_type)
 }
 
 /**
- * @param $id
- * @param $old_user
- * @param $updated_user
+ * @param integer $id the id of the user
+ * @param array $old_user the old user
+ * @param array $updated_user the new user
  * @return integer|null|string if old_user is missing information or id mismatch it will return null, it will return
  * the number of affected rows, or a string indicating the field that already exists (email, username).
  */
@@ -472,7 +472,7 @@ function SQL_GET_FILES($item_id, $ignore_content=true)
 
 /**
  * Queries the database for the file matching an id.
- * @param integer $file_id
+ * @param integer $file_id the file id
  * @return array|null returns the associative array of the files, or NULL if something went wrong.
  */
 function SQL_GET_FILE($file_id)
@@ -592,6 +592,7 @@ function sql_delete_file($item_id, $file_id)
     return "DELETE FROM `file_has_item` WHERE `file_has_item`.`file_id` = $file_id AND `file_has_item`.`item_id` = $item_id";
 }
 
+
 /**
  * Generates the SQL command needed to delete a file.
  * @param integer $file_id the file id
@@ -602,6 +603,18 @@ function sql_delete_file_by_id($file_id)
     global $conn;
     $file_id = mysqli_real_escape_string($conn, $file_id);
     return SQL_DELETE_FILE_BY_ID . $file_id;
+}
+
+/**
+ * Generates the SQL command needed to delete a type.
+ * @param integer $type_id the type id
+ * @return string returns the SQL script to delete a type
+ */
+function sql_delete_type_by_id($type_id)
+{
+    global $conn;
+    $type_id = mysqli_real_escape_string($conn, $type_id);
+    return SQL_DELETE_TYPE_BY_ID . $type_id;
 }
 
 

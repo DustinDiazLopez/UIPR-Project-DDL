@@ -64,7 +64,8 @@ if (isset($_POST['submit'])) {
 
     //image
     if (isset($_POST['image']) && !empty($_POST['image'])) {
-        $image_type = 'image/jpeg';
+        $image_info = getimagesize($_POST['image']);
+        $image_type = (isset($image_info["mime"]) ? $image_info["mime"] : "image/jpeg");
         $item['image'] = base64_decode(str_replace("data:$image_type;base64,", '', $_POST['image']));
         $image_size = strlen($item['image']);
     } else {
@@ -346,181 +347,6 @@ include_once('templates/header.php');
 
 <link rel="stylesheet" href="css/autocomplete.css">
 
-<form autocomplete="off" style="color:black;" action="#" method="POST" enctype="multipart/form-data">
-    <div class="form-row" style="text-align: center;">
-        <h1>Añadir un Artículo</h1>
-    </div>
-    <!-- TITLE AND TYPE -->
-    <div class="form-row">
-        <div class="col-md-7 mb-3">
-            <label for="title">Título</label>
-            <input type="text" id="title" name="title" title="Título del artículo." placeholder="Don Quijote de la Mancha" class="form-control <?php not_valid_class($valid_title); ?>" value="<?php echo $item['title']; ?>" required>
-            <?php echo_invalid_feedback(!$valid_title, $errors['title']); ?>
-        </div>
-        <div class="col-md-5 mb-3 autocomplete">
-            <label for="type">Tipo de Documento
-                <?php
-                $str = '';
-                $types = query(SQL_GET_DOC_TYPES);
-                $len = count($types);
-                for ($i = 0; $i < $len; $i++) {
-                    $str = $str . $types[$i]['type'];
-                    if ($i != $len - 1) $str = $str . ', ';
-                }
-
-                hint('Los tipos disponibles son: ' . $str . '. Si no existe uno cual describe su artículo lo puede añadir y luego estará como opción en el sistema.');
-
-                unset($types);
-                unset($len);
-                ?>
-
-            </label>
-            <input type="text" id="type" name="type" placeholder="<?php echo $str; ?>" title="Por ejemplo, <?php echo $str; ?>" class="form-control <?php not_valid_class($valid_type); ?>" value="<?php echo $item['type']; ?>" required>
-            <?php echo_invalid_feedback(!$valid_type, $errors['type']); ?>
-
-        </div>
-    </div>
-
-
-    <!-- PUB DATE -->
-    <div class="form-row">
-        <label for="published_date" class="col-5 col-form-label" id='pub-date-label'>Fecha de Publicación:</label>
-        <div class="col-7 input-group">
-            <div class="input-group-prepend">
-                <div class="input-group-text">
-                    <input name="yearOnly" id="yearOnly" onclick="changePubDateToYear('pub-date-label')" type="checkbox" aria-label="Checkbox for para demostrar en el articulo el año de publicacion solamente.">
-                </div>
-            </div>
-            <input type="date" name="published_date" id="published_date" class="form-control <?php not_valid_class($valid_date); ?>" value="<?php echo $item['published_date']; ?>" required>
-            <?php echo_invalid_feedback(!$valid_date, $errors['published_date']); ?>
-        </div>
-
-    </div>
-
-    <hr />
-    <!-- AUTHORS -->
-    <div class="form-row">
-        <label for="authors">Autores
-            <?php hint('Favor no utilizar commas, especificar el nombre completo sin commas. Si se detectan commas, se eliminarán.'); ?>
-        </label>
-        <div class="input-group mb-3">
-            <input class="form-control <?php not_valid_class($valid_authors); ?>" type="text" placeholder="" id="authors" name="authors" value="<?php
-                                                                                                                                                if ($item['authors'] !== '') {
-                                                                                                                                                    echo listToCSV($item['authors']);
-                                                                                                                                                }
-                                                                                                                                                ?>" readonly required>
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('authorInput', 'authors')" title="Borrar todos los autores."><i class="fas fa-users-slash"></i></button>
-                <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('authorInput', 'authors')" title="Borrar el último autor/a entrado/a."><i class="fas fa-user-minus"></i></button>
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control <?php not_valid_class($valid_authors); ?>" placeholder="Miguel de Cervante" aria-label="Nombre del autor" id="authorInput">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('authorInput', 'authors')" title="Añadir autor"><i class="fas fa-users"></i></button>
-                <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('authorInput', 'authors')" title="Añadir autor"><i class="fas fa-user-plus"></i></button>
-            </div>
-            <?php echo_invalid_feedback(!$valid_authors, $errors['authors']); ?>
-        </div>
-    </div>
-    <hr />
-
-    <!-- SUBJECTS -->
-    <div class="form-row">
-        <label for="subjects">Sujetos
-            <?php hint('Favor no utilizar commas, especificar el sujeto sin commas. Si se detectan commas, se eliminarán.'); ?>
-        </label>
-        <div class="input-group mb-3">
-            <input class="form-control <?php not_valid_class($valid_subjects); ?>" type="text" placeholder="" id="subjects" name="subjects" value="<?php
-                                                                                                                                                    if ($item['subjects'] !== '') {
-                                                                                                                                                        echo listToCSV($item['subjects']);
-                                                                                                                                                    }
-                                                                                                                                                    ?>" readonly required>
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('subjectsInput', 'subjects')" title="Borrar todos los sujetos."><i class="far fa-trash-alt"></i></button>
-                <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('subjectsInput', 'subjects')" title="Borrar el último sujeto entrado."><i class="fas fa-minus"></i></button>
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control <?php not_valid_class($valid_subjects); ?>" placeholder="Caballerias" aria-label="Sujetos del articulo" id="subjectsInput">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('subjectsInput', 'subjects')" title="Añadir sujeto"><i class="fas fa-reply-all"></i></button>
-                <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('subjectsInput', 'subjects')" title="Añadir sujeto"><i class="fas fa-plus"></i></button>
-            </div>
-            <?php echo_invalid_feedback(!$valid_subjects, $errors['subjects']); ?>
-        </div>
-    </div>
-    <hr />
-
-    <!-- DESCRIPTION -->
-    <div class="form-group">
-        <label for="description">Descripción del artículo</label>
-        <textarea class="form-control <?php not_valid_class($valid_description); ?>" id="description" name="description" aria-describedby="descriptionHelp" rows="3" required><?php echo $item['description']; ?></textarea>
-        <small id="descriptionHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
-        <?php echo_invalid_feedback(!$valid_description, $errors['description']); ?>
-    </div>
-
-    <!-- METADATA -->
-    <div class="form-group">
-        <label for="metadata">Metadata
-            <?php hint('Información que no será visible, pero que se utilizará en la búsqueda (por ejemplo, texto completo del artículo, otros títulos, etc.). En otras palabras, cualquier información relacionada con el artículo.'); ?>
-        </label>
-        <textarea class="form-control" id="metadata" name="metadata" rows="3" aria-describedby="metaHelp"><?php echo $item['metadata']; ?></textarea>
-        <small id="metaHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
-    </div>
-
-    <hr />
-    <!-- IMAGE -->
-    <div class="form-row">
-        <label for="image">Imágen
-            <?php hint('La imagen será la primera página del primer documento PDF.'); ?>
-        </label>
-        <div class="col-xs-1">
-            <canvas id="the-canvas" style="display:none;"></canvas>
-            <input type="hidden" id='image' name="image" value="">
-            <img id="show" class="img-thumbnail rounded" src="images/pdf-placeholder.jpg" alt="">
-            <?php echo_invalid_feedback(!$valid_image, $errors['image']); ?>
-        </div>
-    </div>
-    <hr />
-    <!-- FILES -->
-    <div class="form-row">
-        <label for="files">Seleccionar los Archivos
-            <?php hint(
-                'Puede seleccionar más de un archivo. 
-                El máximo tamaño combinado es de 40 megabytes. Este limite esta expuesto por el servidor
-                Si desea un tamaño mas grande habla con el webmaster para que edite la configuración de PHP 
-                (php.ini -> upload_max_filesize y post_max_size, Requerirá un reinicio de XAMPP).'
-            ); ?>
-        </label>
-        <div id="file-view list-group">
-            <!-- <input class="btn form-control <?php not_valid_class($valid_files); ?>" type="file" id="files" name="files[]" multiple="multiple" required> -->
-            <input type="hidden" value="0" name="number-of-files" id="number-of-files">
-            <div class="col-xs-1 text-center">
-                <input class="form-control btn <?php not_valid_class($valid_files); ?>" type="file" id="files" multiple="multiple" required>
-            </div>
-            <?php echo_invalid_feedback(!$valid_files, $errors['files']); ?>
-        </div>
-
-    </div>
-    <hr />
-
-    <div class="form-row">
-        <div class="col-xs-1 container-fluid">
-            <p id="file-info"></p>
-            <ul id="fileList" class="list-group">
-            </ul>
-        </div>
-    </div>
-    <hr>
-
-    <div class="form-row">
-        <div class="col-xs-1 container-fluid" id="size-warning"></div>
-    </div>
-
-    <button class="btn btn-success" type="submit" name="submit" onclick="allowreload=true;addAllToReadonly('authorInput', 'authors');addAllToReadonly('subjectsInput', 'subjects');">Agregar Artículo</button>
-</form>
-
 <style>
     .floatCenter {
         position: fixed;
@@ -547,11 +373,239 @@ include_once('templates/header.php');
     }
 </style>
 
-<div id="overlay"></div>
-<div class="floatCenter" id="loading-splash">
-    <object data="images/processing.svg" type="image/svg+xml" id="loading-image" style="display: none;">
-        <img alt="procesando" src="images/processing.gif"/>
-    </object>
+<div class="container-fluid">
+    <form autocomplete="off" style="color:black;" action="#" method="POST" enctype="multipart/form-data">
+        <div class="form-row" style="text-align: center;">
+            <h1>Añadir un Artículo</h1>
+        </div>
+
+        <!-- COL 1 START -->
+        <div>
+            <div>
+                <!-- TITLE AND TYPE -->
+                <div class="form-row">
+                    <div class="col-md-7 mb-3">
+                        <label for="title">Título</label>
+                        <input type="text" id="title" name="title" title="Título del artículo." placeholder="Don Quijote de la Mancha" class="form-control <?php not_valid_class($valid_title); ?>" value="<?php echo $item['title']; ?>" required>
+                        <?php echo_invalid_feedback(!$valid_title, $errors['title']); ?>
+                    </div>
+                    <div class="col-md-5 mb-3 autocomplete">
+                        <label for="type">Tipo de Documento
+                            <?php
+                            $str = '';
+                            $types = query(SQL_GET_DOC_TYPES);
+                            $len = count($types);
+                            for ($i = 0; $i < $len; $i++) {
+                                $str = $str . $types[$i]['type'];
+                                if ($i != $len - 1) $str = $str . ', ';
+                            }
+
+                            hint('Los tipos disponibles son: ' . $str . '. Si no existe uno cual describe su artículo lo puede añadir y luego estará como opción en el sistema.');
+
+                            unset($types);
+                            unset($len);
+                            ?>
+
+                        </label>
+                        <input type="text" id="type" name="type" placeholder="<?php echo $str; ?>" title="Por ejemplo, <?php echo $str; ?>" class="form-control <?php not_valid_class($valid_type); ?>" value="<?php echo $item['type']; ?>" required>
+                        <?php echo_invalid_feedback(!$valid_type, $errors['type']); ?>
+
+                    </div>
+                </div>
+
+
+                <!-- PUB DATE -->
+                <div class="form-row">
+                    <label for="published_date" class="col-5 col-form-label" id='pub-date-label'>Fecha de Publicación:</label>
+                    <div class="col-7 input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input name="yearOnly" id="yearOnly" onclick="changePubDateToYear('pub-date-label')" type="checkbox" aria-label="Checkbox for para demostrar en el articulo el año de publicacion solamente.">
+                            </div>
+                        </div>
+                        <input type="date" name="published_date" id="published_date" class="form-control <?php not_valid_class($valid_date); ?>" value="<?php echo $item['published_date']; ?>" required>
+                        <?php echo_invalid_feedback(!$valid_date, $errors['published_date']); ?>
+                    </div>
+
+                </div>
+
+                <hr />
+                <!-- AUTHORS -->
+                <div class="form-row">
+                    <label for="authors">Autores
+                        <?php hint('Favor no utilizar commas, especificar el nombre completo sin commas. Si se detectan commas, se eliminarán.'); ?>
+                    </label>
+                    <div class="input-group mb-3">
+                        <input class="form-control <?php not_valid_class($valid_authors); ?>" type="text" placeholder="" id="authors" name="authors" value="<?php
+                        if ($item['authors'] !== '') {
+                            echo listToCSV($item['authors']);
+                        }
+                        ?>" readonly required>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('authorInput', 'authors')" title="Borrar todos los autores."><i class="fas fa-users-slash"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('authorInput', 'authors')" title="Borrar el último autor/a entrado/a."><i class="fas fa-user-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control <?php not_valid_class($valid_authors); ?>" placeholder="Miguel de Cervante" aria-label="Nombre del autor" id="authorInput">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('authorInput', 'authors')" title="Añadir autor"><i class="fas fa-users"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('authorInput', 'authors')" title="Añadir autor"><i class="fas fa-user-plus"></i></button>
+                        </div>
+                        <?php echo_invalid_feedback(!$valid_authors, $errors['authors']); ?>
+                    </div>
+                </div>
+                <hr />
+
+                <!-- SUBJECTS -->
+                <div class="form-row">
+                    <label for="subjects">Sujetos
+                        <?php hint('Favor no utilizar commas, especificar el sujeto sin commas. Si se detectan commas, se eliminarán.'); ?>
+                    </label>
+                    <div class="input-group mb-3">
+                        <input class="form-control <?php not_valid_class($valid_subjects); ?>" type="text" placeholder="" id="subjects" name="subjects" value="<?php
+                        if ($item['subjects'] !== '') {
+                            echo listToCSV($item['subjects']);
+                        }
+                        ?>" readonly required>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('subjectsInput', 'subjects')" title="Borrar todos los sujetos."><i class="far fa-trash-alt"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('subjectsInput', 'subjects')" title="Borrar el último sujeto entrado."><i class="fas fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control <?php not_valid_class($valid_subjects); ?>" placeholder="Caballerias" aria-label="Sujetos del articulo" id="subjectsInput">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('subjectsInput', 'subjects')" title="Añadir sujeto"><i class="fas fa-reply-all"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('subjectsInput', 'subjects')" title="Añadir sujeto"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <?php echo_invalid_feedback(!$valid_subjects, $errors['subjects']); ?>
+                    </div>
+                </div>
+                <hr />
+
+                <!-- DESCRIPTION -->
+                <div class="form-group">
+                    <label for="description">Descripción del artículo</label>
+                    <textarea class="form-control <?php not_valid_class($valid_description); ?>" id="description" name="description" aria-describedby="descriptionHelp" rows="3" required><?php echo $item['description']; ?></textarea>
+                    <small id="descriptionHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
+                    <?php echo_invalid_feedback(!$valid_description, $errors['description']); ?>
+                </div>
+
+                <!-- METADATA -->
+                <div class="form-group">
+                    <label for="metadata">Metadata
+                        <?php hint('Información que no será visible, pero que se utilizará en la búsqueda (por ejemplo, texto completo del artículo, otros títulos, etc.). En otras palabras, cualquier información relacionada con el artículo.'); ?>
+                    </label>
+                    <textarea class="form-control" id="metadata" name="metadata" rows="3" aria-describedby="metaHelp"><?php echo $item['metadata']; ?></textarea>
+                    <small id="metaHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
+                </div>
+            </div>
+            <!-- COL 1 END -->
+
+            <hr />
+
+            <!-- COL 2 START -->
+            <div >
+
+                <!-- FILES -->
+                <div class="form-row">
+                    <label for="files">Seleccionar los Archivos
+                        <?php hint(
+                            'Puede seleccionar más de un archivo. 
+                El máximo tamaño combinado es de 40 megabytes. Este limite esta expuesto por el servidor
+                Si desea un tamaño mas grande habla con el webmaster para que edite la configuración de PHP 
+                (php.ini -> upload_max_filesize y post_max_size, Requerirá un reinicio de XAMPP).'
+                        ); ?>
+                    </label>
+                    <div id="file-view list-group">
+                        <!-- <input class="btn form-control <?php not_valid_class($valid_files); ?>" type="file" id="files" name="files[]" multiple="multiple" required> -->
+                        <input type="hidden" value="0" name="number-of-files" id="number-of-files">
+                        <div class="col-xs-1 text-center">
+                            <input class="form-control btn <?php not_valid_class($valid_files); ?>" type="file" id="files" multiple="multiple" accept=".pdf" required>
+                        </div>
+                        <?php echo_invalid_feedback(!$valid_files, $errors['files']); ?>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="col-xs-1 container-fluid">
+                            <hr />
+                            <p id="file-info"></p>
+                            <ul id="fileList" class="list-group">
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-xs-1 container-fluid" id="size-warning"></div>
+                    </div>
+                </div>
+                <!-- FILES END -->
+                <hr />
+                <!-- IMAGE -->
+                <div class="form-row">
+                    <label for="image">Imágen
+                        <?php hint('La imagen será la primera página del primer documento PDF.'); ?>
+                    </label>
+                    <div class="form-row">
+                        <small id="customImage" class="form-text text-muted">Déjelo en blanco si desea utilizar una página del archivo.</small>
+                        <input type="file" id="customImage" onchange="insertCustomImage(this)" accept="image/*">
+                    </div>
+
+                    <div class="col-xs-1">
+                        <canvas id="the-canvas" style="display:none;"></canvas>
+                        <input type="hidden" id='image' name="image" value="">
+
+                        <img id="show" class="img-thumbnail rounded" src="images/pdf-placeholder.jpg" alt="">
+                        <?php echo_invalid_feedback(!$valid_image, $errors['image']); ?>
+                    </div>
+                </div>
+                <div class="form-row" style="padding-top: 10px;">
+                    <div class="input-group">
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="selectedFileInput">Archivo</label>
+                        </div>
+                        <select class="custom-select" id="selectedFileInput"
+                                onchange="changeImage(
+                                            document.getElementById('selectedFileInput').value,
+                                            document.getElementById('pageNumber').value,
+                                            true
+                                        );">
+
+                        </select>
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="pageNumber">Página #</label>
+                        </div>
+                        <input type="number" class="form-control" min="1" value="1" id="pageNumber" onchange="changeImage(
+                                            document.getElementById('selectedFileInput').value,
+                                            document.getElementById('pageNumber').value
+                                        );">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-danger" type="button"
+                                    onclick="clearImage();" alt="borrar">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- IMAGE END -->
+            </div>
+            <!-- COL 2 END -->
+        </div>
+
+        <hr>
+
+        <button class="btn btn-success" type="submit" name="submit" style="width:100%;height:auto;" onclick="allowreload=true;addAllToReadonly('authorInput', 'authors');addAllToReadonly('subjectsInput', 'subjects');">Agregar Artículo</button>
+    </form>
+</div>
+
+<div id="overlay">
+    <div class="floatCenter" id="loading-splash">
+        <object data="images/processing.svg" type="image/svg+xml">
+            <img alt="procesando" src="images/processing.gif"/>
+        </object>
+    </div>
 </div>
 
 <script charset="utf-8" src="js/jquery-3.2.1.slim.min.js"></script>
@@ -567,3 +621,4 @@ include_once('templates/header.php');
 <script src="js/add.js"></script>
 
 <?php include_once('templates/footer.php'); ?>
+

@@ -76,7 +76,43 @@ if (isset($conn)) {
         } else {
             redir_warn_error($redirTitle, "$id no es un id válido.");
         }
+    } elseif (isset($_POST['delete-all-orphaned-files'])) {
+        $redirTitle = 'Borrar todos los Archivos Huérfanos';
+        $arr = SQL_GET_ORPHANED_FILES();
+        $count = 0;
+        $total = count($arr);
+        // and deletes them
+        if ($total > 0) {
+            foreach ($arr as $obj) {
+                if (isset($obj['id'])) {
+                    query(sql_delete_file_by_id($obj['id']));
+                    $count += mysqli_affected_rows($conn);
+                }
+            }
+
+            redir_success_error($redirTitle, "$count de $total archivos huérfanos fueron borrados.");
+        } else {
+            redir_warn_error('No hay archivos huérfanos', '');
+        }
+    } elseif (isset($_POST['delete-all-orphaned-types'])) {
+        $redirTitle = 'Borrar todos los Tipos Huérfanos';
+        $arr = SQL_GET_ORPHANED_TYPES();
+        $count = 0;
+        $total = count($arr);
+        // and deletes them
+        if ($total > 0) {
+            foreach ($arr as $obj) {
+                if (isset($obj['id'])) {
+                    query(sql_delete_type_by_id($obj['id']));
+                    $count += mysqli_affected_rows($conn);
+                }
+            }
+
+            redir_success_error($redirTitle, "$count de $total tipos huérfanos fueron borrados.");
+        } else {
+            redir_warn_error('No hay tipos huérfanos', '');
+        }
     } else {
-        redir_warn_error("Redirigida(o):", "No proporcionó ningun tipo de información para eliminar algun tipo de dato.");
+        redir_warn_error("Redirigido(a):", "No proporcionó ningun tipo de información para eliminar algun tipo de dato.");
     }
 } else die("No esta conectado a la base de datos");

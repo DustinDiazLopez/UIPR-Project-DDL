@@ -92,6 +92,10 @@ authenticate();
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
+        .hide-overflow {
+            overflow: hidden;
+        }
     </style>
 
 </head>

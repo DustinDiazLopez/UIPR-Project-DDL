@@ -72,7 +72,6 @@
                     <th scope="col">Nombre del Archivo</th>
                     <th scope="col">En una Pestaña Nueva</th>
                     <th scope="col">En Ventana Emergente</th>
-                    <th scope="col">Descargar</th>
                     <th scope="col">Tipo de Archivo</th>
                     <th scope="col">Tamaño del Archivo</th>
                 </tr>
@@ -90,19 +89,13 @@
                         <td scope="row">
                             <form action="file.php" method="POST" style="padding:0px;margin:0px;" target="_blank">
                                 <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
-                                <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;">Ver</button>
+                                <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="fas fa-external-link-alt"></i></button>
                             </form>
                         </td>
                         <td scope="row">
                             <form action="file.php" method="POST" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")' target="open-pdf-view-">
                                 <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
-                                <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;">Abrir</button>
-                            </form>
-                        </td>
-                        <td scope="row">
-                            <form action="file.php" method="POST" style="padding:0px;margin:0px;">
-                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>Download" name="file" value="<?php echo $f['id']; ?>">
-                                <button type="submit" class="btn btn-light" name="download-file" style="width:100%;height:100%;">Descargar</button>
+                                <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="far fa-window-restore"></i></button>
                             </form>
                         </td>
                         <td scope="row" class="font-weight-light"><?php echo $f['type']; ?></td>
