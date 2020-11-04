@@ -1,4 +1,3 @@
-//const PDFJS = require("./js/pdf");
 PDFJS.disableWorker = true;
 let allowReload = false;
 const loadingImg = document.getElementById('overlay');

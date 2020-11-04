@@ -374,7 +374,7 @@ include_once('templates/header.php');
 </style>
 
 <div class="container-fluid">
-    <form autocomplete="off" style="color:black;" action="#" method="POST" enctype="multipart/form-data">
+    <form autocomplete="off" style="color:black;" action="#" method="POST" enctype="multipart/form-data" id="form">
         <div class="form-row" style="text-align: center;">
             <h1>Añadir un Artículo</h1>
         </div>
@@ -390,7 +390,7 @@ include_once('templates/header.php');
                         <?php echo_invalid_feedback(!$valid_title, $errors['title']); ?>
                     </div>
                     <div class="col-md-5 mb-3 autocomplete">
-                        <label for="type">Tipo de Documento
+                        <label for="type"><i id="iconShowType" class=""></i> Tipo
                             <?php
                             $str = '';
                             $types = query(SQL_GET_DOC_TYPES);
@@ -407,7 +407,7 @@ include_once('templates/header.php');
                             ?>
 
                         </label>
-                        <input type="text" id="type" name="type" placeholder="<?php echo $str; ?>" title="Por ejemplo, <?php echo $str; ?>" class="form-control <?php not_valid_class($valid_type); ?>" value="<?php echo $item['type']; ?>" required>
+                        <input type="text" id="type" name="type" placeholder="<?php echo $str; ?>" title="Por ejemplo, <?php echo $str; ?>" class="form-control <?php not_valid_class($valid_type); ?>" value="<?php echo $item['type']; ?>" oninput="changeIcon(this, document.getElementById('iconShowType'))" required>
                         <?php echo_invalid_feedback(!$valid_type, $errors['type']); ?>
 
                     </div>
@@ -596,7 +596,7 @@ include_once('templates/header.php');
 
         <hr>
 
-        <button class="btn btn-success" type="submit" name="submit" style="width:100%;height:auto;" onclick="allowreload=true;addAllToReadonly('authorInput', 'authors');addAllToReadonly('subjectsInput', 'subjects');">Agregar Artículo</button>
+        <button class="btn btn-success" type="submit" name="submit" id="submitButton" style="width:100%;height:auto;" onclick="allowreload=true;addAllToReadonly('authorInput', 'authors');addAllToReadonly('subjectsInput', 'subjects');" disabled>Agregar Artículo</button>
     </form>
 </div>
 
@@ -615,10 +615,63 @@ include_once('templates/header.php');
     const types = [
         <?php foreach (query(SQL_GET_DOC_TYPES) as $type) echo '"' . htmlspecialchars($type['type']) . '",'; ?>
     ];
+
 </script>
 
 <script type="text/javascript" src="js/pdf.js"></script>
 <script src="js/add.js"></script>
+<script>
+    document.getElementsByTagName('form')[0].onclick = validate;
+    document.getElementsByTagName('body')[0].onclick = validate;
+    function validate() {
+        const title = document.getElementById('title').value;
+        const type = document.getElementById('type').value;
+        const description = document.getElementById('description').value;
+        const date = document.getElementById('published_date').value;
+        const authors = document.getElementById('authors').value;
+        const subjects = document.getElementById('subjects').value;
+        const subjectsIn = document.getElementById('subjectsInput').value;
+        const authorsIn = document.getElementById('authorInput').value;
+
+        let allow = counter > 0;
+        allow &= title.trim().length > 0;
+        allow &= description.trim().length > 0;
+        allow &= type.trim().length > 0;
+        allow &= date.trim().length > 0;
+
+        if (authorsIn.replaceAll(',', '').trim().length > 0) {
+            addAllToReadonly('authorInput', 'authors');
+        }
+
+        if (subjectsIn.replaceAll(',', '').trim().length > 0) {
+            addAllToReadonly('subjectsInput', 'subjects');
+        }
+
+        allow &= authors.replaceAll(',', '').trim().length > 0;
+        allow &= subjects.replaceAll(',', '').trim().length > 0;
+
+        document.getElementById('submitButton').disabled = !allow;
+    }
+
+
+
+    document.getElementById('form').addEventListener('submit', on);
+
+    function createElementFromHTML(htmlString) {
+        const div = document.createElement('div');
+        div.innerHTML = htmlString.trim();
+        return div.firstChild;
+    }
+
+    /**
+     *
+     * @param {HTMLElement} input
+     * @param {HTMLElement} element
+     */
+    function changeIcon(input, element) {
+        element.className = createElementFromHTML(getIcon(input.value)).className;
+    }
+</script>
 
 <?php include_once('templates/footer.php'); ?>
 

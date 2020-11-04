@@ -11,7 +11,6 @@
 <script charset="utf-8" src="js/jquery-3.2.1.slim.min.js"></script>
 <script charset="utf-8" src="js/popper.min.js"></script>
 <script charset="utf-8" src="js/bootstrap.min.js"></script>
-<script charset="utf-8" src="js/open.pdf.js"></script>
 <script charset="utf-8" src="js/generic.js"></script>
 
 <?php

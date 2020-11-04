@@ -79,3 +79,105 @@ function highlightAll(str, split=true, capitalize=false) {
     highlightDescriptions(str, split);
     highlightFiles(str, split);
 }
+
+/**
+ * Returns the icon related to the input
+ * @param {string} str name of the icon
+ * @returns {string} returns the html for the icon.
+ */
+function getIcon(str) {
+    switch (str.toLowerCase()) {
+        case "libro":
+        case "book":
+            return '<i class="fas fa-book"></i>';
+
+        case "novel":
+        case "novela":
+            return '<i class="fas fa-book-reader"></i>';
+
+        case "arte":
+        case "art":
+            return '<i class="fas fa-paint-brush"></i>';
+
+        case "foto":
+        case "photo":
+        case "picture":
+            return '<i class="far fa-image"></i>';
+
+        case "periódico":
+        case "periodico":
+        case "newspaper":
+            return '<i class="far fa-newspaper"></i>';
+
+        case "revista":
+        case "magazine":
+            return '<i class="fas fa-book-open"></i>';
+
+        case "document":
+        case "documento":
+            return '<i class="fas fa-file-invoice"></i>';
+
+        case "word":
+        case "word document":
+        case "doc":
+        case "docx":
+            return '<i class="far fa-file-word"></i>';
+
+        case "ppt":
+        case "pptx":
+        case "powerpoint":
+        case "powerpoint presentation":
+            return '<i class="far fa-file-powerpoint"></i>';
+
+        case "excel":
+        case "xlsx":
+        case "xls":
+        case "excel spreadsheet":
+            return '<i class="far fa-file-excel"></i>';
+
+        case "csv":
+        case "comma-separated values":
+        case "comma separated values":
+            return '<i class="fas fa-file-csv"></i>';
+
+        case "pdf":
+            return '<i class="fas fa-file-pdf"></i>';
+
+        case "zip":
+        case "archive":
+            return '<i class="fas fa-file-archive"></i>';
+
+        case "code":
+        case "programming":
+            return '<i class="fas fa-file-code"></i>';
+
+        case "video":
+        case "movie":
+        case "animation":
+            return '<i class="far fa-file-video"></i>';
+
+        case "audio":
+        case "song":
+        case "music":
+            return '<i class="far fa-file-audio"></i>';
+
+        case "media":
+            return '<i class="fas fa-photo-video"></i>';
+
+        case "atlas":
+        case "map":
+            return '<i class="fas fa-atlas"></i>';
+
+        case "bible":
+            return '<i class="fas fa-bible"></i>';
+
+        case "quran":
+            return '<i class="fas fa-quran"></i>';
+
+        case "torah":
+            return '<i class="fas fa-torah"></i>';
+
+        default:
+            return '<i class="far fa-file-alt"></i>';
+    }
+}
