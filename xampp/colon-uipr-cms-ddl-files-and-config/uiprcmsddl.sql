@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 -- -----------------------------------------------------
 -- Schema UIPRCMSDDL
 -- -----------------------------------------------------
--- DROP SCHEMA IF EXISTS `UIPRCMSDDL`;
+DROP SCHEMA IF EXISTS `UIPRCMSDDL`;
 
 -- -----------------------------------------------------
 -- Schema UIPRCMSDDL
@@ -41,14 +41,6 @@ CREATE TABLE `admin` (
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `admin`
---
-
-INSERT INTO `admin` (`id`, `email`, `username`, `password`) VALUES
-(1, 'dustindiazlopez98@gmail.com', 'root', 'nq1VhRLhQqBy8hc/5u3OgFblwYHyAyOfHnhYqLuZIpi3nq/yHBC3oQzs/ZRLrEDJr8Q/iKp9RVZOuXL4lbHO/.'),
-(2, 'lcolon@aguadilla.inter.edu', 'colon', 'nq1VhRLhQqBy8hc/5u3OgFblwYHyAyOfHnhYqLuZIpi3nq/yHBC3oQzs/ZRLrEDJr8Q/iKp9RVZOuXL4lbHO/.');
 
 -- --------------------------------------------------------
 
@@ -162,18 +154,6 @@ CREATE TABLE `type` (
   `type` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `type`
---
-
-INSERT INTO `type` (`id`, `type`) VALUES
-(3, 'Arte'),
-(1, 'Documento'),
-(6, 'Folleto'),
-(4, 'Foto'),
-(2, 'Libro'),
-(5, 'Periódico'),
-(7, 'Revista');
 
 --
 -- Indexes for dumped tables
@@ -341,3 +321,24 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id`, `email`, `username`, `password`) VALUES
+(1, 'dustindiazlopez98@gmail.com', 'root', 'nq1VhRLhQqBy8hc/5u3OgFblwYHyAyOfHnhYqLuZIpi3nq/yHBC3oQzs/ZRLrEDJr8Q/iKp9RVZOuXL4lbHO/.'),
+(2, 'lcolon@aguadilla.inter.edu', 'colon', 'nq1VhRLhQqBy8hc/5u3OgFblwYHyAyOfHnhYqLuZIpi3nq/yHBC3oQzs/ZRLrEDJr8Q/iKp9RVZOuXL4lbHO/.');
+
+--
+-- Dumping data for table `type`
+--
+
+INSERT INTO `type` (`id`, `type`) VALUES
+(3, 'Arte'),
+(1, 'Documento'),
+(6, 'Folleto'),
+(4, 'Foto'),
+(2, 'Libro'),
+(5, 'Periódico'),
+(7, 'Revista');
