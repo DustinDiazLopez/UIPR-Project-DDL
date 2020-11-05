@@ -15,6 +15,14 @@ if (isset($_GET['file']) && !empty($_GET['file']) && is_valid_int($_GET['file'])
     if (count($file) > 0) $file = $file[0];
 }
 
+if (isset($file['content']) || !empty($file['content'])) {
+    $file['filename'] = htmlspecialchars($file['filename']);
+    $file['type'] = htmlspecialchars($file['type']);
+    $file['content'] = base64_encode($file['content']);
+} else {
+    header('Location: index.php?error=no-pdf');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -23,29 +31,31 @@ if (isset($_GET['file']) && !empty($_GET['file']) && is_valid_int($_GET['file'])
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+    <link rel="icon" href="favicon.ico">
+    <title><?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?></title>
 
-<body>
     <style>
         body {
             margin: 0;
             padding: 0;
         }
     </style>
+</head>
+
+<body>
     <div class="container">
-        <object type="<?php echo $file['type'] ?>" data="#" title="<?php echo $file['filename']; ?>" id="pdf-object" width="750" height="750">
-            <param name="<?php echo $file['filename']; ?>" value="<?php echo $file['filename']; ?>">
-            <embed type="<?php echo $file['type'] ?>" src="#" title="<?php echo $file['filename']; ?>" id="pdf-embed">
+        <object type="<?php echo isset($file['type']) && !empty($file['type']) ? $file['type'] : 'application/pdf'; ?>" data="#" title="<?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>" id="pdf-object" width="750" height="750">
             <p>Este navegador no soporta ver archivos este tipo de archivo. Descargue el documento para verlo:
-                <a id="blob-download" href="#" download="<?php echo $file['filename']; ?>">Descargar <?php echo $file['filename']; ?></a>.
+                <a id="blob-download" href="#"
+                   download="<?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>">
+                    Descargar <?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>
+                </a>.
             </p>
-            </embed>
         </object>
     </div>
 
     <script>
-        const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
+        function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
             const byteCharacters = atob(b64Data);
             const byteArrays = [];
 
@@ -61,27 +71,23 @@ if (isset($_GET['file']) && !empty($_GET['file']) && is_valid_int($_GET['file'])
                 byteArrays.push(byteArray);
             }
 
-            const blob = new Blob(byteArrays, {
+            return new Blob(byteArrays, {
                 type: contentType
             });
-            return blob;
         }
-        const blob = b64toBlob("<?php echo base64_encode($file['content']); ?>", "<?php echo $file['type'] ?>");
-        blob.name = "<?php echo $file['filename']; ?>";
-        const blobUrl = URL.createObjectURL(blob);
+
+        const blobUrl = URL.createObjectURL(b64toBlob(
+            "<?php echo isset($file['content']) && !empty($file['content']) ? $file['content'] : ''; ?>",
+            "<?php echo isset($file['type']) && !empty($file['type']) ? $file['type'] : 'application/pdf'; ?>"
+        ));
+
         document.getElementById('blob-download').href = blobUrl;
 
         try {
             document.getElementById('pdf-object').data = blobUrl;
         } catch (err) {
-            console.log('Object not initilized or not supported.');
+            console.log('Object tag not initialized or not supported.');
         }
-        try {
-            document.getElementById('pdf-embed').src = blobUrl;
-        } catch (err) {
-            console.log('Object not initilized or not supported.');
-        }
-
 
         function resizePDF() {
             const padding = 5;
@@ -91,14 +97,7 @@ if (isset($_GET['file']) && !empty($_GET['file']) && is_valid_int($_GET['file'])
                 document.getElementById('pdf-object').width = w;
                 document.getElementById('pdf-object').height = h;
             } catch (err) {
-                console.log('Object not initilized or not supported.');
-            }
-
-            try {
-                document.getElementById('pdf-embed').width = w;
-                document.getElementById('pdf-embed').height = h;
-            } catch (err) {
-                console.log('Embed not initilized or not supported.');
+                console.log('Object tag not initialized or not supported.');
             }
         }
 

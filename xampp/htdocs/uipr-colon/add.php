@@ -623,6 +623,10 @@ include_once('templates/header.php');
 <script>
     document.getElementsByTagName('form')[0].onclick = validate;
     document.getElementsByTagName('body')[0].onclick = validate;
+
+    /**
+     * Validates the form, if it is not valid it disables the button util it is valid
+     */
     function validate() {
         const title = document.getElementById('title').value;
         const type = document.getElementById('type').value;
@@ -639,24 +643,18 @@ include_once('templates/header.php');
         allow &= type.trim().length > 0;
         allow &= date.trim().length > 0;
 
-        if (authorsIn.replaceAll(',', '').trim().length > 0) {
-            addAllToReadonly('authorInput', 'authors');
-        }
-
-        if (subjectsIn.replaceAll(',', '').trim().length > 0) {
-            addAllToReadonly('subjectsInput', 'subjects');
-        }
-
-        allow &= authors.replaceAll(',', '').trim().length > 0;
-        allow &= subjects.replaceAll(',', '').trim().length > 0;
+        allow &= subjectsIn.replaceAll(',', '').trim().length > 0 || subjects.replaceAll(',', '').trim().length > 0;
+        allow &= authorsIn.replaceAll(',', '').trim().length > 0 || authors.replaceAll(',', '').trim().length > 0;
 
         document.getElementById('submitButton').disabled = !allow;
     }
 
-
-
     document.getElementById('form').addEventListener('submit', on);
 
+    /**
+     * Converts the inputted string as an HTMLElement
+     * @param {string} htmlString the html string to be converted to a Node (HTMLElement)
+     */
     function createElementFromHTML(htmlString) {
         const div = document.createElement('div');
         div.innerHTML = htmlString.trim();
@@ -664,9 +662,9 @@ include_once('templates/header.php');
     }
 
     /**
-     *
-     * @param {HTMLElement} input
-     * @param {HTMLElement} element
+     * Changes the icon based on the inputted text
+     * @param {HTMLElement} input Input element
+     * @param {HTMLElement} element Output element (the i tag)
      */
     function changeIcon(input, element) {
         element.className = createElementFromHTML(getIcon(input.value)).className;

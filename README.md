@@ -2,12 +2,16 @@
 
 The **`xampp`** folder contains all the PHP, HTML, and CSS files.
 
-## Written With
+## Prerequisites
 
-- PHP 7.4
-- MySQL 5.6.49
+- `PHP 5.5` or above (tested with `PHP 7.4`)
+- `MySQL 5.6+`
 
-## Expected file structure (XAMPP/LAMP)
+Theoretically, it should work with `PHP5.5` or above, it is recommended to use `PHP5.6` or above. 
+
+***A VERSION LOWER THAN WHAT IS SPECIFIED MIGHT NOT WORK***.
+
+### Expected file structure (XAMPP or LAMP)
 ```
 xampp (or var)/
 ├── htdocs (or www)/
@@ -18,19 +22,13 @@ xampp (or var)/
     └── mysql_uiprcmsddl_config.json
 ```
 
-You can run everything once, and it'll generate the config folder (w/ the sample json file), if the system allows it.
+## Installation Process
 
-The mysql configuration (`mysql_uiprcmsddl_config.json`) must be two directories back the
-`uipr-colon` folder and inside the `colon-uipr-cms-ddl-files-and-config` folder. If this is not possible edit the first
-line in `connect.php` (`uipr-colon/connect.php`) file to match the desired file structured.
+Please follow these (4) steps ***carefully***.
 
-
-### The fist line in `connect.php`
-```PHP
-define('DDL_PATH', '../../colon-uipr-cms-ddl-files-and-config');
-```
-
-### mysql_uiprcmsddl_config.json example
+### Step 1: The Config File
+Create a folder in `xampp` or `var` called `colon-uipr-cms-ddl-files-and-config` (it ***HAS*** to be that name, unless you changed it in the source code), 
+and in that folder create a JSON file called `mysql_uiprcmsddl_config.json`. Then add this JSON object to the file:
 ```json
 { 
     "host": "localhost", 
@@ -41,9 +39,64 @@ define('DDL_PATH', '../../colon-uipr-cms-ddl-files-and-config');
     "salt": "$6$rounds=5000$exampleSalt$"
 }
 ```
+    
+Change `exampleSalt` to a silly string of characters (go crazy!), and change the rest of the information to match your MySQL configuration.
 
-## Download the SQL script
+#### WARNING!!!
+Make sure this file ***IS NOT*** in a publicly available location. Make sure it is the root directory of xampp 
+(`xampp` folder), or lamp (`var` folder)
 
-[Download SQL](https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/main/xampp/colon-uipr-cms-ddl-files-and-config/uiprcmsddl.sql), and 
-for inserting the `.sql` script refer to this
-[link](https://stackoverflow.com/questions/13955988/insert-sql-file-into-your-mysql-database)
+#### Salt
+The application will use `SHA-512` for hashing the passwords. If you wish to change this (not recommended) follow this 
+[link](https://www.php.net/manual/en/function.crypt.php)
+
+---
+
+### Step 2: Setting up the Database
+- [Download the SQL script](https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/main/xampp/colon-uipr-cms-ddl-files-and-config/uiprcmsddl.sql). 
+
+    - Either insert or paste the `.sql` script in phpMyAdmin (refer to this [link](https://stackoverflow.com/questions/13955988/insert-sql-file-into-your-mysql-database)),
+    - or execute the following command (in the MySQL shell):
+    ```MySQL
+    mysql> source path_to_sql
+    ```
+
+---
+
+### Step 3: Copying over the source code
+
+- In `htdocs` or `www` folder, copy over the `uipr-colon` folder, and try to access, e.g., `http://localhost/uipr-colon/hello.php`.
+It should say (***no errors should be displayed***):
+    > It works!
+
+    - This step might require more setup on `LAMP`. 
+
+    - If you wish to use the `html` folder or any other folder, please change
+the first line in `connect.php` (`uipr-colon/connect.php`) to match the new file structure.
+
+    ```PHP
+    define('DDL_PATH', '../../colon-uipr-cms-ddl-files-and-config');
+    ```
+
+---
+
+### Step 4: Creating an Admin User
+- Access `hello.php` again.
+
+    > It works!
+
+- Now pass in as the argument `pwd` (i.e., `hello.php?pwd=your_password`). This will return the hashed version of the 
+inputted text, using the hash algorithm (by default `SHA-526`) specified in the config file of `step 1`. It should 
+return something like:
+
+    > r4nwUWpjef1wJgwfW4WgSim2P0qskuBFmYQ/p56LZDONtVZiS6CHNBji25G9CTc/kOAjkvwnxeJw4Wr8CuTjS0
+
+- Now use the following SQL command, replacing the `<hashed_password>` with whatever you got back, and then finally, execute the SQL command.
+
+    ```SQL
+    INSERT INTO `admin` (`email`, `username`, `password`) VALUES ('example@example.com', 'username', '<hashed_password>');
+    ```
+
+- You should now have access to the system (go to `login.php`).
+
+---

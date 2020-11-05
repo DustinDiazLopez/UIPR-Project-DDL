@@ -420,7 +420,11 @@ $files = SQL_GET_ORPHANED_FILES();
                                 <th scope="col">ID</th>
                                 <th scope="col">Nombre del Tipo Huérfanos</th>
                                 <th scope="col">Editar</th>
-                                <th scope="col"><button type="submit" class="btn btn-danger" name="delete-file" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteAllOrphanedTypes">Borrar Todo</button></th>
+                                <?php
+                                $num_of_o_types = count($o_types);
+                                $disabled = $num_of_o_types === 0 ? 'disabled' : '';
+                                ?>
+                                <th scope="col"><button type="submit" class="btn btn-danger <?php echo $disabled; ?>" name="delete-file" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteAllOrphanedTypes" <?php echo $disabled; ?>>Borrar Todo</button></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -448,7 +452,7 @@ $files = SQL_GET_ORPHANED_FILES();
                             </div>
                             <!-- Modal ALL Orphaned TYPES  END -->
                             <?php
-                            if (count($o_types) > 0) :
+                            if ($num_of_o_types > 0) :
                                 foreach ($o_types as $type) :
                             ?>
                                     <tr>
@@ -537,7 +541,11 @@ $files = SQL_GET_ORPHANED_FILES();
                                 <th scope="col">Tamaño del Archivo</th>
                                 <th scope="col">En una Pestaña Nueva</th>
                                 <th scope="col">En Ventana Emergente</th>
-                                <th scope="col"><button type="submit" class="btn btn-danger" name="delete-file" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteAllOrphanedFiles">Borrar Todo</button></th>
+                                <?php
+                                $num_of_files = count($files);
+                                $disabled = $num_of_files === 0 ? 'disabled' : '';
+                                ?>
+                                <th scope="col"><button type="submit" class="btn btn-danger <?php echo $disabled; ?>" name="delete-file" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteAllOrphanedFiles" <?php echo $disabled; ?>>Borrar Todo</button></th>
                             </tr>
                         </thead>
 
@@ -566,7 +574,7 @@ $files = SQL_GET_ORPHANED_FILES();
                             </div>
                             <!-- Modal ALL FILES  END -->
                             <?php
-                            if (count($files) > 0) :
+                            if ($num_of_files > 0) :
                                 foreach ($files as $f) :
                             ?>
                                     <!-- FILE ROW START -->

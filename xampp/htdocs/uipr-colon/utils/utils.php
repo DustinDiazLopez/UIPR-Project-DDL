@@ -4,14 +4,14 @@ include_once('sql.const.php');
 include_once('sql.operations.php');
 include_once('sql.utils.php');
 
-$current_path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
 /**
  * Checks to see if the user has logged in, if not redirects to the login page, or if
  * @param float|int $secondsOfInactivity (optional) seconds to wait to log out user (default: 30 minutes)
  */
-function authenticate($secondsOfInactivity=60*30)
+function authenticate($secondsOfInactivity=1800)
 {
+    $current_path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
     if (session_status() == PHP_SESSION_NONE) session_start();
     if (isset($_SESSION['session_started'])){
         if ((mktime() - $_SESSION['session_started'] - $secondsOfInactivity) > 0){
@@ -130,7 +130,10 @@ function showSuccess($head, $msg="", $footer="")
 /**
  * Executes the SQL command inputted (uses global $conn).
  * @param string $sql SQL command or script.
- * @return array|null returns an associative array of the results, or NULL if something went wrong.
+ * @return array|bool|null
+ * returns NULL if an error occurs while fetching the objects (unlikely)
+ * returns true or false on success or failure
+ * returns the array of objects fetched.
  */
 function query($sql) 
 {
@@ -142,18 +145,24 @@ function query($sql)
             die("Failed to connect to database...");
         } else {
             $result = mysqli_query($conn, $sql);
-            $fetched = mysqli_fetch_all($result, MYSQLI_ASSOC);
-            mysqli_free_result($result);
-            mysqli_close($conn);
-            unset($conn);
-            return $fetched;
+            if ($result) {
+                if ($result === TRUE || $result === FALSE) {
+                    return $result;
+                } else {
+                    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+                }
+            } else {
+                return NULL;
+            }
         }
     } else {
         $result = mysqli_query($conn, $sql);
         if ($result) {
-            $fetched = mysqli_fetch_all($result, MYSQLI_ASSOC);
-            mysqli_free_result($result);
-            return $fetched;
+            if ($result === TRUE || $result === FALSE) {
+                return $result;
+            } else {
+                return mysqli_fetch_all($result, MYSQLI_ASSOC);
+            }
         } else {
             return NULL;
         }
@@ -287,7 +296,18 @@ function ddl_comp_pwd($pwd, $user_id)
     $query = SQL_GET_PWD_BY_ID($user_id);
     if (count($query) > 0 && isset($query[0]['password'])) {
         $hashed_password = $config['salt'] . $query[0]['password'];
-        return hash_equals($hashed_password, crypt($pwd, $hashed_password));
+        if(!function_exists('hash_equals')) { /*for php 5.5*/
+            function hash_equals($str1, $str2) {
+                if(strlen($str1) != strlen($str2)) {
+                    return false;
+                } else {
+                    $res = $str1 ^ $str2;
+                    $ret = 0;
+                    for($i = strlen($res) - 1; $i >= 0; $i--) $ret |= ord($res[$i]);
+                    return !$ret;
+                }
+            }
+        } else return hash_equals($hashed_password, crypt($pwd, $hashed_password));
     } else {
         return NULL;
     }

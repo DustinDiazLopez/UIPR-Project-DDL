@@ -6,8 +6,29 @@ session_start();
 $email = '';
 $errors = array();
 
+function redir($redir_loc='')
+{
+    if (isset($_SESSION['redir']) && !empty($_SESSION['redir'])) {
+        $redir_loc = trim($_SESSION['redir']);
+    }
+
+    if (strpos($redir_loc, $_SERVER['HTTP_HOST']) === false) {
+        if (empty($redir_loc)) {
+            header("Location: index.php");
+        } else {
+            header("Location: index.php?error=not-to-host");
+        }
+    } else {
+        header("Location: $redir_loc");
+    }
+}
+
+if (isset($_GET['noauth']) && !empty($_GET['noauth'])) {
+    $_SESSION['redir'] = $_GET['noauth'];
+}
+
 if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === TRUE) {
-    header('Location: index.php');
+    redir();
 }
 
 if (isset($_POST['submit'])) {
@@ -28,7 +49,7 @@ if (isset($_POST['submit'])) {
                 $_SESSION['email'] = $id[0]['email'];
                 $_SESSION['username'] = $id[0]['username'];
                 $_SESSION['authenticated'] = TRUE;
-                header('Location: index.php');
+                redir();
             } else {
                 $_SESSION['authenticated'] = FALSE;
                 $errors[] = 'Credenciales incorrectas.';
@@ -107,6 +128,4 @@ if (isset($_POST['submit'])) {
 
 
 <?php
-if (isset($conn)) {
-    mysqli_close($conn);
-}
+if (isset($conn)) mysqli_close($conn);

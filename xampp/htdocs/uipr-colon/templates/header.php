@@ -21,7 +21,7 @@ authenticate();
     <link rel="stylesheet" href="css/selection.color.css">
     <link rel="stylesheet" href="css/item.css">
     <link href="css/fa/css/all.css" rel="stylesheet">
-    <title>Library CMS - DDL</title>
+    <title><?php echo isset($title_tag) ? $title_tag : "Library CMS - DDL"?></title>
 
     <style>
         .cap {
@@ -136,7 +136,7 @@ authenticate();
                 }
                 ?>
 
-                <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:black;"><?php echo $_SESSION['username']; ?>, cerrar sesión. </a>
+                <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:black;"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>, cerrar sesión. </a>
             </span>
         </div>
     </nav>
