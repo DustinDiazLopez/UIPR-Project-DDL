@@ -115,7 +115,7 @@ if (isset($_POST['submit'])) {
                 <label for="pwd">Contraseña</label>
                 <input type="password" class="form-control" name="pwd" id="pwd" placeholder="password" value="hello-password" required>
             </div>
-            <button type="submit" name="submit" value="submit" class="btn btn-outline-success my-2 my-sm-0" style="width:100%;height:100%;">Iniciar Sesión</button>
+            <button type="submit" name="submit" value="submit" class="btn btn-outline-success my-2 my-sm-0" style="width:100%;height:100%;">Iniciar Sesión <i class="fas fa-sign-in-alt"></i></button>
         </form>
     </main>
 

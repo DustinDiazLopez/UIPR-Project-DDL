@@ -222,4 +222,4 @@ if (isset($_POST['edit-admin']) && isset($_POST['admin-to-edit']) && isset($_POS
     }
 }
 
-die('<hr>stopped!');
+die('<hr>Um, why are you here?');

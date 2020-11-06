@@ -71,7 +71,7 @@ function addNewLineCapability(textarea) {
  * Creates a FileList object for the dynamic uploading files system.
  * @param items File objects
  * @returns {FileList} FileList object
- * @private (not meant for general use)
+ * @private
  */
 function _FileList(items) {
     // flatten rest parameter
@@ -105,7 +105,11 @@ function on() {
 function off() {
     loadingImg.style.display = 'none';
 }
-let data;
+
+/**
+ * Cages the image to the uploaded image
+ * @param {HTMLElement} event the input element
+ */
 function insertCustomImage(event) {
     if (event.files && event.files[0]) {
         let reader = new FileReader();
@@ -153,11 +157,20 @@ function clearImage(clear=true) {
     }
 }
 
+/**
+ * Changes the image given the file element (file-1, file-2, ...)
+ * @param {string} fileId the id of the file html element
+ * @param {number} filePage the desired page to show
+ * @param {boolean} resetPageNumber whether to reset the page input element
+ */
 function changeImage(fileId, filePage, resetPageNumber=false) {
     if (resetPageNumber) pageNumberInput.value = 1;
-    updateImage(document.getElementById(fileId), 0, parseInt(filePage));
+    updateImage(document.getElementById(fileId), 0, parseInt(filePage + ""));
 }
 
+/**
+ * Generates the select element with all the files ending in pdf.
+ */
 function generateFileInputForImage() {
 
     //clears fileInputForThumbnail input
@@ -193,7 +206,8 @@ function generateFileInputForImage() {
  */
 function updateImage(id = filesInput, fileIdx = 0, pageNumber=1) {
     file = id.files[fileIdx];
-    if (file) {
+    if (file && file.name.endsWith('.pdf')) {
+        console.log(file.name);
         fileReader = new FileReader();
         fileReader.onload = function(ev) {
             PDFJS.getDocument(fileReader.result).then(function getPdfHelloWorld(pdf) {
@@ -378,6 +392,73 @@ function getFileSize(id) {
 }
 /* Show files end */
 
+
+/**
+ * Wrapper function for parseReadonly for subjects fields
+ */
+function parseReadonlySubject() {
+    parseReadonly('subjectsInput', 'subjects', 'readOnlyListViewSubject', -1);
+}
+
+/**
+ * Wrapper function for parseReadonly for authors fields
+ */
+function parseReadonlyAuthors() {
+    parseReadonly('authorInput', 'authors', 'readOnlyListViewAuthor', -1);
+}
+
+/**
+ * Displays a interactive view for the authors, and subjects
+ * @param {string} input id of the input element
+ * @param {string} readonly id of the readonly element
+ * @param {string} listView id of the list view
+ * @param {number} rmElementIdx list item index number to remove
+ */
+function parseReadonly(input, readonly, listView, rmElementIdx=-1) {
+    let LV = document.getElementById(listView);
+    let RO = document.getElementById(readonly);
+
+    let arr = RO.value.split(',');
+    if (rmElementIdx !== -1) {
+        const removed = arr[rmElementIdx];
+        arr.splice(rmElementIdx, 1);
+        if (input.trim() !== '') {
+            let put = document.getElementById(input);
+
+            if (put.value.trim() === '') {
+                put.value = removed;
+            } else {
+                put.value += ', ' + removed;
+            }
+        }
+    }
+
+    LV.innerHTML = '';
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].trim() !== '') {
+            LV.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center">
+                ${arr[i]}
+                <span class="badge badge-dark badge-pill hover-times" onclick="parseReadonly('${input}', '${readonly}', '${listView}', ${i})">
+                    <i class="fas fa-times"></i>
+                </span>
+            </li>`
+        }
+    }
+
+    RO.value = "";
+    let t;
+    for (let i = 0; i < arr.length; i++) {
+        t = arr[i].trim();
+        if (t !== '') {
+            if (RO.value === "") {
+                RO.value += t;
+            } else {
+                RO.value += `, ${t}`;
+            }
+        }
+    }
+}
+
 /**
  * Erases the last value inserted into the readonly input.
  * @param {string} input The input id.
@@ -526,7 +607,7 @@ $(document).ready(
 
 /**
  * Prompts the user to confirm reload or resubmission of page.
- * @param e the reload event handler
+ * @param {BeforeUnloadEvent} e the reload event handler
  * @returns {string} confirmation text
  */
 window.onbeforeunload = function(e) {
@@ -538,5 +619,80 @@ window.onbeforeunload = function(e) {
 
         // For Safari
         return 'Sure?';
+    } else {
+        on();
     }
 };
+
+document.getElementsByTagName('form')[0].onclick = validate;
+document.getElementsByTagName('body')[0].onclick = validate;
+
+const pTitle = document.getElementById('progress-title');
+const pType = document.getElementById('progress-type');
+const pDate = document.getElementById('progress-date');
+const pAuthors = document.getElementById('progress-author');
+const pSubjects = document.getElementById('progress-subject');
+const pDescription = document.getElementById('progress-description');
+const pFiles = document.getElementById('progress-files');
+const pMsg = document.getElementById('progress-msg');
+const pHeading = document.getElementById('progress-heading');
+
+/**
+ * Validates the form, if it is not valid it disables the button util it is valid
+ */
+function validate() {
+    const files = counter > 0;
+    const title = document.getElementById('title').value.trim().length > 0;
+    const type = document.getElementById('type').value.trim().length > 0;
+    const description = document.getElementById('description').value.trim().length > 0;
+    const date = document.getElementById('published_date').value.trim().length > 0;
+    const authors = document.getElementById('authors').value;
+    const subjects = document.getElementById('subjects').value;
+    const subjectsIn = document.getElementById('subjectsInput').value;
+    const authorsIn = document.getElementById('authorInput').value;
+    const subs = subjectsIn.replaceAll(',', '').trim().length > 0 || subjects.replaceAll(',', '').trim().length > 0;
+    const auths = authorsIn.replaceAll(',', '').trim().length > 0 || authors.replaceAll(',', '').trim().length > 0;
+
+    const no = "list-group-item list-group-item-danger";
+    const yes = "list-group-item list-group-item-success";
+    pTitle.className = title ? yes : no;
+    pType.className = type ? yes : no;
+    pDate.className = date ? yes : no;
+    pAuthors.className = auths ? yes : no;
+    pSubjects.className = subs ? yes : no;
+    pDescription.className = description ? yes : no;
+    pFiles.className = files ? yes : no;
+
+    const allow = files && title && description && type && date && subs && auths;
+    document.getElementById('submitButton').disabled = !allow;
+    allowReload = allow;
+
+    if (allow) {
+        pHeading.innerHTML = "<b>¡Completado!</b>";
+        pMsg.innerHTML = "La forma se puede subir!";
+    } else {
+        pHeading.innerHTML = "Completar";
+        pMsg.innerHTML = "Favor de completar la forma";
+    }
+}
+
+//document.getElementById('form').addEventListener('submit', on);
+
+/**
+ * Converts the inputted string as an HTMLElement
+ * @param {string} htmlString the html string to be converted to a Node (HTMLElement)
+ */
+function createElementFromHTML(htmlString) {
+    const div = document.createElement('div');
+    div.innerHTML = htmlString.trim();
+    return div.firstChild;
+}
+
+/**
+ * Changes the icon based on the inputted text
+ * @param {HTMLElement} input Input element
+ * @param {HTMLElement} element Output element (the i tag)
+ */
+function changeIcon(input, element) {
+    element.className = createElementFromHTML(getIcon(input.value)).className;
+}

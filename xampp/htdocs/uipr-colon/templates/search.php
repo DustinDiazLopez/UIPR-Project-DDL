@@ -1,4 +1,4 @@
-<h2>Buscar un Documento:</h2>
+<h2>Realizar una Búsqueda:</h2>
 <form>
     <label for="search-query">Buscar: <?php hint('No sea demasiado específico. Evite palabras como: la, de, a, el, etc. Por ejemplo, en lugar de \'El Grito de Lares\', haz \'Grito Lares\'.'); ?></label>
     <div class="input-group mb-3">
@@ -29,7 +29,7 @@
             }
         }
         ?>
-        <h3>Refinar busqueda:</h3>
+        <h3>Refinar:</h3>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="only" id="titleRestrict" value="title" <?php echo $title; ?>>
             <label class="form-check-label" for="titleRestrict">Título</label>
@@ -51,7 +51,7 @@
 
     <br />
 
-    <h4>Buscar por tipo de documento:</h4>
+    <h4>Incluir en la búsqueda sólo:</h4>
     <div>
         <?php
         $all = $file = $description = $title = $checked = NULL;
@@ -74,7 +74,7 @@
 
 <hr />
 
-<h3>Buscar por Tipo:</h3>
+<h3>Por Tipo:</h3>
 <form>
     <div class="input-group">
         <select class="custom-select" id="type" name="type">
@@ -94,7 +94,7 @@
 
 <hr />
 
-<h3>Buscar por Sujeto:</h3>
+<h3>Por Sujeto:</h3>
 <form>
     <div class="input-group">
         <select class="custom-select" id="subject" name="subject">
@@ -114,7 +114,7 @@
 
 <hr />
 
-<h3>Buscar por Autor(a):</h3>
+<h3>Por Autor(a):</h3>
 <form>
     <div class="input-group">
         <select class="custom-select" id="author" name="author">

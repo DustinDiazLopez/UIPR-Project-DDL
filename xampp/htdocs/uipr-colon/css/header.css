@@ -1,0 +1,72 @@
+.cap {
+    text-transform: capitalize;
+}
+
+a:link {
+    text-decoration: none;
+    color: rgba(0, 150, 0, 255) !important;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:active {
+    text-decoration: underline;
+}
+
+.brand {
+    background: #dbd123 !important;
+}
+
+.brand-text {
+    color: #04b800 !important;
+}
+
+form {
+    max-width: 460px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.center-content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+:target {
+    border-radius: 3px;
+    animation: highlight 1000ms ease-out;
+}
+
+@keyframes highlight {
+    0% {
+        background-color: green;
+    }
+
+    100% {
+        background-color: inherit;
+    }
+}
+
+.highlight{
+    color: green;
+    background-color: yellow;
+}
+
+
+.limit-des {
+    white-space: nowrap;
+    width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hide-overflow {
+    overflow: hidden;
+}

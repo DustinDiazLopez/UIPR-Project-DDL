@@ -20,109 +20,34 @@ authenticate();
     <link rel="stylesheet" href="css/responsive.table.css">
     <link rel="stylesheet" href="css/selection.color.css">
     <link rel="stylesheet" href="css/item.css">
+    <link rel="stylesheet" href="css/header.css">
     <link href="css/fa/css/all.css" rel="stylesheet">
     <title><?php echo isset($title_tag) ? $title_tag : "Library CMS - DDL"?></title>
-
-    <style>
-        .cap {
-            text-transform: capitalize;
-        }
-
-        a:link {
-            text-decoration: none;
-            color: rgba(0, 150, 0, 255) !important;
-        }
-
-        a:visited {
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        a:active {
-            text-decoration: underline;
-        }
-
-        .brand {
-            background: #dbd123 !important;
-        }
-
-        .brand-text {
-            color: #04b800 !important;
-        }
-
-        form {
-            max-width: 460px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-
-        .center-content {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-
-        :target {
-            border-radius: 3px;
-            animation: highlight 1000ms ease-out;
-        }
-
-        @keyframes highlight {
-            0% {
-                background-color: green;
-            }
-
-            100% {
-                background-color: inherit;
-            }
-        }
-
-        .highlight{
-            color: green;
-            background-color: yellow;
-        }
-
-
-        .limit-des {
-            white-space: nowrap;
-            width: 300px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .hide-overflow {
-            overflow: hidden;
-        }
-    </style>
 
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="index.php">UIPR CMS DDL</a>
+        <a class="navbar-brand" href="index.php"><i class="fab fa-hive"></i> UIPR CMS DDL</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="add.php">Añadir Artículo</a>
+                    <a class="nav-link" href="add.php"><i class="fas fa-plus-circle"></i> Añadir un Artículo</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="adminpanel.php">Panel de Administrador</a>
+                    <a class="nav-link" href="adminpanel.php"><i class="fas fa-tools"></i> Panel del Administrador</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Documentación</a>
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-folder-open"></i> Documentación</a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item disabled" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL/wiki/User-Doc">Usuario</a>
-                        <a class="dropdown-item disabled" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL/wiki/Dev-Doc">Desarrolladores</a>
+                        <a class="dropdown-item" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL/wiki/User-Doc"><i class="fas fa-file-invoice"></i> Usuario</a>
+                        <a class="dropdown-item" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL/wiki/Dev-Doc"><i class="fas fa-file-medical-alt"></i> Desarrolladores</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" target="_blank" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL">Código Fuente</a>
-                        <a class="dropdown-item" target="_blank" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL#readme">README</a>
-                        <a class="dropdown-item" target="_blank" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/main/LICENSE">LICENSE</a>
+                        <a class="dropdown-item" target="_blank" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL"><i class="fas fa-file-code"></i> Código Fuente</a>
+                        <a class="dropdown-item" target="_blank" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/main/LICENSE"><i class="fas fa-file-contract"></i> Licencia (MIT)</a>
                     </div>
                 </li>
             </ul>
@@ -136,7 +61,7 @@ authenticate();
                 }
                 ?>
 
-                <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:black;"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>, cerrar sesión. </a>
+                <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:green;" title="cerrar sessión"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?> <i class="fas fa-sign-out-alt"></i></a>
             </span>
         </div>
     </nav>

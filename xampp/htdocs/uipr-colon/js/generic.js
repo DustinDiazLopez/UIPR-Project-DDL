@@ -21,7 +21,7 @@ function highlight(str, targetClassName, capitalize=false) {
 }
 
 /**
- * Highlights the text inside a target element's class
+ * Highlights the text inside a target element's class.
  * @param {string} str text to highlight
  * @param {string} target target element class
  * @param {boolean} split weather to split the word by white space
@@ -81,8 +81,8 @@ function highlightAll(str, split=true, capitalize=false) {
 }
 
 /**
- * Returns the icon related to the input
- * @param {string} str name of the icon
+ * Returns the icon related to the input.
+ * @param {string} str name of the icon.
  * @returns {string} returns the html for the icon.
  */
 function getIcon(str) {

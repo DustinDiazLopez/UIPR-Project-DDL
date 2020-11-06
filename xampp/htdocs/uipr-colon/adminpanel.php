@@ -61,22 +61,22 @@ $files = SQL_GET_ORPHANED_FILES();
 <div class="container-fluid">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="admins-tab" data-toggle="tab" href="#admins" role="tab" aria-controls="admins" aria-selected="true">Administradores</a>
+            <a class="nav-link active" id="admins-tab" data-toggle="tab" href="#admins" role="tab" aria-controls="admins" aria-selected="true"><i class="fas fa-user-shield"></i> Administradores</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="authors-tab" data-toggle="tab" href="#authors" role="tab" aria-controls="authors" aria-selected="false">Autores</a>
+            <a class="nav-link" id="authors-tab" data-toggle="tab" href="#authors" role="tab" aria-controls="authors" aria-selected="false"><i class="fas fa-users-cog"></i> Autores</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="subjects-tab" data-toggle="tab" href="#subjects" role="tab" aria-controls="subjects" aria-selected="false">Sujetos</a>
+            <a class="nav-link" id="subjects-tab" data-toggle="tab" href="#subjects" role="tab" aria-controls="subjects" aria-selected="false"><i class="fas fa-sitemap"></i> Sujetos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="types-tab" data-toggle="tab" href="#types" role="tab" aria-controls="types" aria-selected="false">Tipos</a>
+            <a class="nav-link" id="types-tab" data-toggle="tab" href="#types" role="tab" aria-controls="types" aria-selected="false"><i class="fas fa-link"></i> Tipos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="oprphaned-type-tab" data-toggle="tab" href="#oprphaned-type" role="tab" aria-controls="oprphaned-type" aria-selected="false">Tipos Huérfanos</a>
+            <a class="nav-link" id="oprphaned-type-tab" data-toggle="tab" href="#oprphaned-type" role="tab" aria-controls="oprphaned-type" aria-selected="false"><i class="fas fa-unlink"></i> Tipos Huérfanos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false">Archivos Huérfanos</a>
+            <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false"><i class="fas fa-archive"></i> Archivos Huérfanos</a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -640,4 +640,3 @@ $files = SQL_GET_ORPHANED_FILES();
 
 <?php
 include_once('templates/footer.php');
-?>

@@ -2,6 +2,7 @@
  * Enables autocompletion for an input element
  * @param {Node} inp input element node
  * @param {string[]} arr arrays of values to be suggested
+ * @namespace AutoComplete
  */
 function autocomplete(inp, arr) {
     let currentFocus;

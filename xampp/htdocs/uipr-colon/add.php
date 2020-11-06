@@ -371,7 +371,35 @@ include_once('templates/header.php');
         z-index: 2;
         cursor: pointer;
     }
+
+    #stick-top {
+        position: fixed;
+        margin: 10px;
+        z-index: 99;
+        bottom: 20px;
+        right: 30px;
+
+    }
 </style>
+
+<!-- PROGRESS CARD START -->
+<div class="card" id="stick-top" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title" id="progress-heading">Completar</h5>
+        <p class="card-text" id="progress-msg">Favor de completar la forma</p>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item list-group-item-danger" id="progress-title">Título</li>
+        <li class="list-group-item list-group-item-danger" id="progress-type">Tipo</li>
+        <li class="list-group-item list-group-item-danger" id="progress-date">Fecha de Publicación</li>
+        <li class="list-group-item list-group-item-danger" id="progress-author">Autores</li>
+        <li class="list-group-item list-group-item-danger" id="progress-subject">Sujetos</li>
+        <li class="list-group-item list-group-item-danger" id="progress-description">Descripción del artículo</li>
+        <li class="list-group-item list-group-item-danger" id="progress-files">Archivos</li>
+    </ul>
+</div>
+
+<!-- PROGRESS CARD END -->
 
 <div class="container-fluid">
     <form autocomplete="off" style="color:black;" action="#" method="POST" enctype="multipart/form-data" id="form">
@@ -420,7 +448,7 @@ include_once('templates/header.php');
                     <div class="col-7 input-group">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                                <input name="yearOnly" id="yearOnly" onclick="changePubDateToYear('pub-date-label')" type="checkbox" aria-label="Checkbox for para demostrar en el articulo el año de publicacion solamente.">
+                                <input name="yearOnly" id="yearOnly" onclick="changePubDateToYear('pub-date-label')" type="checkbox" aria-label="Checkbox for para demostrar en el articulo el año de publicacion solamente." title="Sólo enseñar el año">
                             </div>
                         </div>
                         <input type="date" name="published_date" id="published_date" class="form-control <?php not_valid_class($valid_date); ?>" value="<?php echo $item['published_date']; ?>" required>
@@ -429,12 +457,33 @@ include_once('templates/header.php');
 
                 </div>
 
+                <style>
+                    .hover-times {
+                        background: white;
+                        color: gray;
+                    }
+
+                    .hover-times:hover {
+                        background: gray;
+                        color: white;
+                    }
+
+                    .hover-times:active {
+                        background: gray;
+                        color: red;
+                    }
+                </style>
                 <hr />
                 <!-- AUTHORS -->
                 <div class="form-row">
                     <label for="authors">Autores
-                        <?php hint('Favor no utilizar commas, especificar el nombre completo sin commas. Si se detectan commas, se eliminarán.'); ?>
+                        <?php //hint('Favor no utilizar commas, especificar el nombre completo sin commas. Si se detectan commas, se eliminarán.'); ?>
                     </label>
+                    <div class="input-group mb-3">
+                        <ul class="list-group container-fluid" id="readOnlyListViewAuthor">
+
+                        </ul>
+                    </div>
                     <div class="input-group mb-3">
                         <input class="form-control <?php not_valid_class($valid_authors); ?>" type="text" placeholder="" id="authors" name="authors" value="<?php
                         if ($item['authors'] !== '') {
@@ -442,15 +491,15 @@ include_once('templates/header.php');
                         }
                         ?>" readonly required>
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('authorInput', 'authors')" title="Borrar todos los autores."><i class="fas fa-users-slash"></i></button>
-                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('authorInput', 'authors')" title="Borrar el último autor/a entrado/a."><i class="fas fa-user-minus"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Editar todos los autores."><i class="fas fa-users-cog"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Editar el último autor(a) entrado(a)."><i class="fas fa-user-cog"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control <?php not_valid_class($valid_authors); ?>" placeholder="Miguel de Cervante" aria-label="Nombre del autor" id="authorInput">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('authorInput', 'authors')" title="Añadir autor"><i class="fas fa-users"></i></button>
-                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('authorInput', 'authors')" title="Añadir autor"><i class="fas fa-user-plus"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Añadir todos los autores separados por commas (CSV)"><i class="fas fa-users"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Añadir autor"><i class="fas fa-user-plus"></i></button>
                         </div>
                         <?php echo_invalid_feedback(!$valid_authors, $errors['authors']); ?>
                     </div>
@@ -460,8 +509,13 @@ include_once('templates/header.php');
                 <!-- SUBJECTS -->
                 <div class="form-row">
                     <label for="subjects">Sujetos
-                        <?php hint('Favor no utilizar commas, especificar el sujeto sin commas. Si se detectan commas, se eliminarán.'); ?>
+                        <?php //hint('Favor no utilizar commas, especificar el sujeto sin commas. Si se detectan commas, se eliminarán.'); ?>
                     </label>
+                    <div class="input-group mb-3">
+                        <ul class="list-group container-fluid" id="readOnlyListViewSubject">
+
+                        </ul>
+                    </div>
                     <div class="input-group mb-3">
                         <input class="form-control <?php not_valid_class($valid_subjects); ?>" type="text" placeholder="" id="subjects" name="subjects" value="<?php
                         if ($item['subjects'] !== '') {
@@ -469,15 +523,15 @@ include_once('templates/header.php');
                         }
                         ?>" readonly required>
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('subjectsInput', 'subjects')" title="Borrar todos los sujetos."><i class="far fa-trash-alt"></i></button>
-                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('subjectsInput', 'subjects')" title="Borrar el último sujeto entrado."><i class="fas fa-minus"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Editar todos los sujetos."><i class="fas fa-cogs"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Editar el último sujeto entrado."><i class="fas fa-cog"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control <?php not_valid_class($valid_subjects); ?>" placeholder="Caballerias" aria-label="Sujetos del articulo" id="subjectsInput">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('subjectsInput', 'subjects')" title="Añadir sujeto"><i class="fas fa-reply-all"></i></button>
-                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('subjectsInput', 'subjects')" title="Añadir sujeto"><i class="fas fa-plus"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Añadir todos loss sujetos separados por commas (CSV)"><i class="fas fa-project-diagram"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Añadir sujeto"><i class="fab fa-hive"></i></button>
                         </div>
                         <?php echo_invalid_feedback(!$valid_subjects, $errors['subjects']); ?>
                     </div>
@@ -490,15 +544,6 @@ include_once('templates/header.php');
                     <textarea class="form-control <?php not_valid_class($valid_description); ?>" id="description" name="description" aria-describedby="descriptionHelp" rows="3" required><?php echo $item['description']; ?></textarea>
                     <small id="descriptionHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
                     <?php echo_invalid_feedback(!$valid_description, $errors['description']); ?>
-                </div>
-
-                <!-- METADATA -->
-                <div class="form-group">
-                    <label for="metadata">Metadata
-                        <?php hint('Información que no será visible, pero que se utilizará en la búsqueda (por ejemplo, texto completo del artículo, otros títulos, etc.). En otras palabras, cualquier información relacionada con el artículo.'); ?>
-                    </label>
-                    <textarea class="form-control" id="metadata" name="metadata" rows="3" aria-describedby="metaHelp"><?php echo $item['metadata']; ?></textarea>
-                    <small id="metaHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
                 </div>
             </div>
             <!-- COL 1 END -->
@@ -519,8 +564,7 @@ include_once('templates/header.php');
                         ); ?>
                     </label>
                     <div id="file-view list-group">
-                        <!-- <input class="btn form-control <?php not_valid_class($valid_files); ?>" type="file" id="files" name="files[]" multiple="multiple" required> -->
-                        <input type="hidden" value="0" name="number-of-files" id="number-of-files">
+                        <input type="hidden" value="0" name="number-of-files" id="number-of-files" style="overflow: hidden;">
                         <div class="col-xs-1 text-center">
                             <input class="form-control btn <?php not_valid_class($valid_files); ?>" type="file" id="files" multiple="multiple" accept=".pdf" required>
                         </div>
@@ -550,7 +594,7 @@ include_once('templates/header.php');
                     </label>
                     <div class="form-row">
                         <small id="customImage" class="form-text text-muted">Déjelo en blanco si desea utilizar una página del archivo.</small>
-                        <input type="file" id="customImage" onchange="insertCustomImage(this)" accept="image/*">
+                        <input type="file" id="customImage" onchange="insertCustomImage(this)" accept="image/*" style="overflow: hidden;">
                     </div>
 
                     <div class="col-xs-1">
@@ -590,6 +634,18 @@ include_once('templates/header.php');
                     </div>
                 </div>
                 <!-- IMAGE END -->
+
+                <hr />
+                <div class="form-row">
+                    <!-- METADATA -->
+                    <div class="form-group">
+                        <label for="metadata">Metadata
+                            <?php hint('Información que no será visible, pero que se utilizará en la búsqueda (por ejemplo, texto completo del artículo, otros títulos, etc.). En otras palabras, cualquier información relacionada con el artículo.'); ?>
+                        </label>
+                        <textarea class="form-control" id="metadata" name="metadata" rows="3" aria-describedby="metaHelp"><?php echo $item['metadata']; ?></textarea>
+                        <small id="metaHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
+                    </div>
+                </div>
             </div>
             <!-- COL 2 END -->
         </div>
@@ -620,56 +676,6 @@ include_once('templates/header.php');
 
 <script type="text/javascript" src="js/pdf.js"></script>
 <script src="js/add.js"></script>
-<script>
-    document.getElementsByTagName('form')[0].onclick = validate;
-    document.getElementsByTagName('body')[0].onclick = validate;
-
-    /**
-     * Validates the form, if it is not valid it disables the button util it is valid
-     */
-    function validate() {
-        const title = document.getElementById('title').value;
-        const type = document.getElementById('type').value;
-        const description = document.getElementById('description').value;
-        const date = document.getElementById('published_date').value;
-        const authors = document.getElementById('authors').value;
-        const subjects = document.getElementById('subjects').value;
-        const subjectsIn = document.getElementById('subjectsInput').value;
-        const authorsIn = document.getElementById('authorInput').value;
-
-        let allow = counter > 0;
-        allow &= title.trim().length > 0;
-        allow &= description.trim().length > 0;
-        allow &= type.trim().length > 0;
-        allow &= date.trim().length > 0;
-
-        allow &= subjectsIn.replaceAll(',', '').trim().length > 0 || subjects.replaceAll(',', '').trim().length > 0;
-        allow &= authorsIn.replaceAll(',', '').trim().length > 0 || authors.replaceAll(',', '').trim().length > 0;
-
-        document.getElementById('submitButton').disabled = !allow;
-    }
-
-    document.getElementById('form').addEventListener('submit', on);
-
-    /**
-     * Converts the inputted string as an HTMLElement
-     * @param {string} htmlString the html string to be converted to a Node (HTMLElement)
-     */
-    function createElementFromHTML(htmlString) {
-        const div = document.createElement('div');
-        div.innerHTML = htmlString.trim();
-        return div.firstChild;
-    }
-
-    /**
-     * Changes the icon based on the inputted text
-     * @param {HTMLElement} input Input element
-     * @param {HTMLElement} element Output element (the i tag)
-     */
-    function changeIcon(input, element) {
-        element.className = createElementFromHTML(getIcon(input.value)).className;
-    }
-</script>
 
 <?php include_once('templates/footer.php'); ?>
 
