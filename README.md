@@ -24,7 +24,30 @@ xampp (or var)/
 
 ## Installation Process
 
-Please follow these (4) steps ***carefully***.
+Please follow these steps ***carefully***.
+
+### Step 0: PHP Config
+
+Consider modifying the `php.ini` file to be more permissive.
+
+Recommended:
+
+```ini
+; This sets the maximum time in seconds a script is allowed to parse input data, like POST and GET.
+max_input_time = 120
+
+; Do note that memory_limit should be larger than post_max_size
+memory_limit = 512M
+
+; post_max_size value must be larger than upload_max_filesize, in order to, upload large files.
+post_max_size = 256M
+
+; The maximum size of an uploaded file.
+upload_max_filesize = 256M
+
+; The maximum number of files allowed to be uploaded simultaneously.
+max_file_uploads = 25
+```
 
 ### Step 1: The Config File
 Create a folder in `xampp` or `var` called `colon-uipr-cms-ddl-files-and-config` (it ***HAS*** to be that name, unless you changed it in the source code), 
