@@ -35,16 +35,30 @@ if (isset($file['content']) || !empty($file['content'])) {
     <title><?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?></title>
 
     <style>
-        body {
-            margin: 0;
+        * {
             padding: 0;
+            margin: 0;
         }
+
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        #pdf-object {
+            width: 100%;
+            height: 100%;
+        }
+
     </style>
 </head>
 
 <body>
     <div class="container">
-        <object type="<?php echo isset($file['type']) && !empty($file['type']) ? $file['type'] : 'application/pdf'; ?>" data="#" title="<?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>" id="pdf-object" width="750" height="750">
+        <object type="<?php echo isset($file['type']) && !empty($file['type']) ? $file['type'] : 'application/pdf'; ?>" data="#" title="<?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>" id="pdf-object">
             <p>Este navegador no soporta ver archivos este tipo de archivo. Descargue el documento para verlo:
                 <a id="blob-download" href="#"
                    download="<?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>">
@@ -57,7 +71,6 @@ if (isset($file['content']) || !empty($file['content'])) {
     <script type="text/javascript" src="js/blob.util.js"></script>
 
     <script>
-
         const blobUrl = URL.createObjectURL(b64toBlob(
             "<?php echo isset($file['content']) && !empty($file['content']) ? $file['content'] : ''; ?>",
             "<?php echo isset($file['type']) && !empty($file['type']) ? $file['type'] : 'application/pdf'; ?>"
@@ -70,24 +83,6 @@ if (isset($file['content']) || !empty($file['content'])) {
         } catch (err) {
             console.log('Object tag not initialized or not supported.');
         }
-
-        /**
-         * Resizes the object to (almost) fit the screen
-         */
-        function resizePDF() {
-            const padding = 5;
-            const w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) - padding;
-            const h = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - padding;
-            try {
-                document.getElementById('pdf-object').width = w;
-                document.getElementById('pdf-object').height = h;
-            } catch (err) {
-                console.log('Object tag not initialized or not supported.');
-            }
-        }
-
-        window.onresize = resizePDF;
-        resizePDF();
     </script>
 </body>
 

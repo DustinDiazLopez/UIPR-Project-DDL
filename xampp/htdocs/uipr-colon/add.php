@@ -380,10 +380,33 @@ include_once('templates/header.php');
         right: 30px;
 
     }
+
+    #stick-top span {
+        position: absolute;
+        margin-top: 10px;
+        margin-right: 15px;
+        top: 0;
+        right: 0;
+    }
+
+    .close-progress {
+        background: white;
+        color: gray;
+    }
+
+    .close-progress:hover {
+        background: gray;
+        color: white;
+    }
+
 </style>
 
 <!-- PROGRESS CARD START -->
 <div class="card" id="stick-top" style="width: 18rem;">
+    <span class="badge badge-dark badge-pill close-progress" id="close-btn-progress"
+          style="display: none;" onclick="document.getElementById('stick-top').style.display = 'none';">
+        <i class="fas fa-times"></i>
+    </span>
     <div class="card-body">
         <h5 class="card-title" id="progress-heading">Completar</h5>
         <p class="card-text" id="progress-msg">Favor de completar la forma</p>

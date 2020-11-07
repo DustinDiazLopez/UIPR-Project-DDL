@@ -670,9 +670,13 @@ function validate() {
     if (allow) {
         pHeading.innerHTML = "<b>¡Completado!</b>";
         pMsg.innerHTML = "La forma se puede subir!";
+        document.getElementById('close-btn-progress').style.display = 'block';
     } else {
         pHeading.innerHTML = "Completar";
         pMsg.innerHTML = "Favor de completar la forma";
+        document.getElementById('stick-top').style.display = 'block';
+        document.getElementById('close-btn-progress').style.display = 'none';
+
     }
 }
 
@@ -696,3 +700,16 @@ function createElementFromHTML(htmlString) {
 function changeIcon(input, element) {
     element.className = createElementFromHTML(getIcon(input.value)).className;
 }
+
+function hideProgressHelper() {
+    const padding = 5;
+    const w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) - 80;
+    const h = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight);
+    if (w <= 1000) {
+        document.getElementById('stick-top').style.display = 'none';
+    } else {
+        document.getElementById('stick-top').style.display = 'block';
+    }
+}
+
+window.onresize = hideProgressHelper;
