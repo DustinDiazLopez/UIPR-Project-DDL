@@ -52,38 +52,47 @@ if (isset($file['content']) || !empty($file['content'])) {
             width: 100%;
             height: 100%;
         }
-
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <object type="<?php echo isset($file['type']) && !empty($file['type']) ? $file['type'] : 'application/pdf'; ?>" data="#" title="<?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>" id="pdf-object">
-            <p>Este navegador no soporta ver archivos este tipo de archivo. Descargue el documento para verlo:
-                <a id="blob-download" href="#"
-                   download="<?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>">
-                    Descargar <?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>
-                </a>.
-            </p>
-        </object>
-    </div>
+<div class="container">
+    <object type="<?php echo isset($file['type']) && !empty($file['type']) ? $file['type'] : 'application/pdf'; ?>" data="#" title="<?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>" id="pdf-object">
+        <p>Este navegador no soporta ver archivos este tipo de archivo. Descargue el documento para verlo:
+            <a id="blob-download" onclick="unSupportedBrowserDownload()" href="#" download="<?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>">
+                Descargar <?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>
+            </a>.
+        </p>
+    </object>
+</div>
 
-    <script type="text/javascript" src="js/blob.util.js"></script>
+<script type="text/javascript" src="js/blob.util.js"></script>
 
-    <script>
-        const blobUrl = URL.createObjectURL(b64toBlob(
-            "<?php echo isset($file['content']) && !empty($file['content']) ? $file['content'] : ''; ?>",
-            "<?php echo isset($file['type']) && !empty($file['type']) ? $file['type'] : 'application/pdf'; ?>"
-        ));
+<script>
+    const blob = b64toBlob(
+        "<?php echo isset($file['content']) && !empty($file['content']) ? $file['content'] : ''; ?>",
+        "<?php echo isset($file['type']) && !empty($file['type']) ? $file['type'] : 'application/pdf'; ?>",
+        512
+    );
+    blob.name = '<?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>';
+    const blobUrl = URL.createObjectURL(blob);
 
-        document.getElementById('blob-download').href = blobUrl;
+    document.getElementById('blob-download').href = blobUrl;
 
-        try {
-            document.getElementById('pdf-object').data = blobUrl;
-        } catch (err) {
-            console.log('Object tag not initialized or not supported.');
+    try {
+        document.getElementById('pdf-object').data = blobUrl;
+    } catch (err) {
+        console.log('Object tag not initialized or not supported.');
+    }
+
+    function unSupportedBrowserDownload() {
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(blob, blob.name);
+        } else {
+            window.open(blobUrl);
         }
-    </script>
+    }
+</script>
 </body>
 
 </html>

@@ -1,10 +1,10 @@
 <footer class="bg-light">
-    <center>
-        <p>UIPR 2020.</p>
+    <div style="text-align: center;">
+        <p><a href="LICENSE">Copyright &copy; 2020, Dustin A. Díaz López</a></p>
         <p>
-            <a href="#">Back to top</a>
+            <a href="#">Volver Arriba</a>
         </p>
-    </center>
+    </div>
 </footer>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

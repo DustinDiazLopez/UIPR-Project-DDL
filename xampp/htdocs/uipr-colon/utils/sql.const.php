@@ -1,10 +1,20 @@
 <?php
 // this file is included in utils.php
 
-// in add.php contains the inserts methods
+/**
+ * The duplicate error number of a duplicate error in mysqli
+ */
+define('SQL_DUPLICATE_ERROR', 1062);
+
+/**
+ * Buffer size (bytes) of the for the {@link fread} method, for the {@link send_long_data} method of the
+ * {@link SQL_SEND_LONG_BLOB} method.
+ */
+define('SEND_LONG_BLOB_BUFFER_SIZE', 256000);
 
 //insert file
 define('SQL_INSERT_FILE_CONTENT', 'INSERT INTO `file` (`content`) VALUES (?);');
+
 // get all
 define('SQL_ALL_ITEMS', 'SELECT i.id, i.title, t.`type`, i.image_id, i.description, i.create_at, i.published_date, i.year_only FROM item i INNER JOIN `type` t ON i.type_id = t.id ');
 define('SQL_GET_AUTHORS', "SELECT id, author_name FROM author");
@@ -61,5 +71,21 @@ define('SQL_INSERT_ADMIN', 'INSERT INTO `admin` (`email`, `username`, `password`
 
 //update admin
 define('SQL_UPDATE_ADMIN_BY_ID', 'UPDATE `admin` SET ');
+
+// inserts
+define('SQL_INSERT_TYPE', "INSERT INTO `type` (`type`) VALUES ('%s')");
+define('SQL_INSERT_IMAGE', "INSERT INTO `image` (`type`, `size`, `image`) VALUES ('%s', %d, '%s')");
+define('SQL_INSERT_AUTHOR', "INSERT INTO `author` (`author_name`) VALUES ('%s')");
+define('SQL_INSERT_SUBJECT', "INSERT INTO `subject` (`subject`) VALUES ('%s')");
+define('SQL_INSERT_ITEM', "INSERT INTO `item` (`title`, `type_id`, `image_id`, `published_date`, `year_only`, `description`, `meta`) VALUES ('%s', %d, %s, '%s', %d, '%s', '%s')");
+define('SQL_INSERT_ITEM_HAS_SUBJECT', "INSERT INTO `item_has_subject` (`item_id`, `subject_id`) VALUES (%d, %d)");
+define('SQL_INSERT_FILE_HAS_ITEM', "INSERT INTO `file_has_item` (`file_id`, `item_id`) VALUES (%d, %d)");
+define('SQL_INSERT_AUTHOR_HAS_ITEM', "INSERT INTO `author_has_item` (`item_id`, `author_id`) VALUES (%d, %d)");
+
+// sql get id of id or name
+define('SQL_GET_ID_OF_TYPE_BY_TYPE', "SELECT id FROM `type` WHERE `type` = '%s'");
+define('SQL_GET_ID_OF_AUTHOR_BY_AUTHOR_NAME', "SELECT id FROM `author` WHERE `author_name` = '%s'");
+define('SQL_GET_ID_OF_SUBJECT_BY_SUBJECT', "SELECT id FROM `subject` WHERE `subject` = '%s'");
+
 
 

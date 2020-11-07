@@ -702,7 +702,6 @@ function changeIcon(input, element) {
 }
 
 function hideProgressHelper() {
-    const padding = 5;
     const w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) - 80;
     const h = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight);
     if (w <= 1000) {

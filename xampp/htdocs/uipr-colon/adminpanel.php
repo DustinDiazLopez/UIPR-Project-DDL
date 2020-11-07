@@ -1,4 +1,5 @@
 <?php
+$title_tag = 'Panel';
 include_once('templates/header.php');
 
 function ddlprint($arr, $name = 'debug')
@@ -394,7 +395,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                                     <div class="modal-footer">
                                                         <input type="hidden" id="confirmTypeEdit<?php echo $type['id']; ?>" name="type-to-edit" value="<?php echo $type['id']; ?>">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                        <button type="submit" class="btn btn-primary" name="edit-type">Editar Borrar <?php echo $type['type']; ?></button>
+                                                        <button type="submit" class="btn btn-primary" name="edit-type">Editar <?php echo $type['type']; ?></button>
                                                     </div>
                                                 </form>
                                             </div>

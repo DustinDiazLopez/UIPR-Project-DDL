@@ -5,7 +5,7 @@
  * @param {number} sliceSize buffer size to parse through the data
  * @returns {Blob} returns the blob of the base54 encoded data
  */
-function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
+function b64toBlob(b64Data, contentType, sliceSize) {
     const byteCharacters = atob(b64Data);
     const byteArrays = [];
 
@@ -17,8 +17,7 @@ function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
             byteNumbers[i] = slice.charCodeAt(i);
         }
 
-        const byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
+        byteArrays.push(new Uint8Array(byteNumbers));
     }
 
     return new Blob(byteArrays, {

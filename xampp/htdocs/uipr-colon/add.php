@@ -1,332 +1,263 @@
 <?php
-
+$title_tag = 'Añadir un Artículo';
 include_once('connect.php');
 include_once('utils/utils.php');
-
 authenticate();
-
 set_time_limit(0);
 
-$errors = $item = ['title' => '', 'type' => '', 'published_date' => '', 'authors' => '', 'subjects' => '', 'description' => '', 'metadata' => '', 'image' => '', 'files' => ''];
+$errors = $item = ['title' => '', 'type' => '', 'published_date' => '', 'authors' => '', 'subjects' => '', 'description' => '', 'metadata' => '', 'files' => ''];
+$sql_errors = ['item' => '', 'authors' => '', 'subjects' => '', 'type' => '', 'image' => '', 'files' => '', 'item_has_subject' => '', 'file_has_item' => '', 'author_has_item' => ''];
 $valid_title = $valid_type = $valid_date = $valid_authors = $valid_subjects = $valid_description = $valid_image = $valid_files = '';
 $warning = false;
+$provide_char_msg = 'debe proveer al menos un cáracter (no espacio en blanco).';
+
+function split_clean_array_ddl($str)
+{
+    $arr = explode(',', $str);
+    for ($i = 0; $i < count($arr); $i++) $arr[$i] = htmlspecialchars(trim($arr[$i]));
+    $arr = array_unique($arr);
+    return count($arr) > 0 ? $arr : NULL;
+}
+
+function validate_post_csv ($key, $alt_key, &$is_valid, &$error_buffer)
+{
+    if (isset($_POST[$key])) {
+        $obj = split_clean_array_ddl($_POST[$key]);
+        if ($obj === NULL) {
+            $is_valid = FALSE;
+            $error_buffer[$key] .= "Provee al menos un $alt_key";
+        } else {
+            return $obj;
+        }
+    } else {
+        $is_valid = FALSE;
+        $error_buffer[$key] .= "Provee al menos un $alt_key";
+    }
+    return NULL;
+}
+
 
 if (isset($_POST['submit'])) {
-    // checks to see if the used checked year only button
+    /* checks to see if the used checked year only button */
     $yearOnly = isset($_POST['yearOnly']);
+
+    /* VALIDATE START */
+    validate_ddl($_POST, 'title', 'título', $valid_title, $errors);
+    validate_ddl($_POST, 'type', 'tipo', $valid_type, $errors);
+    validate_ddl($_POST, 'published_date', 'fecha de publicación', $valid_date, $errors);
+    validate_ddl($_POST, 'authors', 'autores', $valid_date, $errors);
+    validate_ddl($_POST, 'subjects', 'sujetos', $valid_date, $errors);
+    validate_ddl($_POST, 'description', 'descripción', $valid_date, $errors);
+
+    // no errors are logged for image validation, if something fails it will be ignored.
+    $image = validate_ddl_image($_POST, $valid_image);
+    $files = validate_files_form_ddl($_FILES, $errors['files']);
+
+    // validate authros and subjects
+    $authors = validate_post_csv('authors', 'autor(a)', $valid_authors, $errors);
+    $subjects = validate_post_csv('subjects', 'sujeto', $valid_subjects, $errors);
+
+    // validate date
+    if ($valid_date) {
+        if (!preg_match("/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/", $_POST['published_date'])) {
+            $errors['published_date'] = 'Favor the proveer una fecha en el formato yyyy-mm-dd';
+            $valid_date = false;
+        }
+    }
 
     //inits the values for the item with the inputs of the user
     $item = [
-        'title' => trim(htmlspecialchars($_POST['title'])),
-        'type' => trim(htmlspecialchars($_POST['type'])),
-        'published_date' => trim(htmlspecialchars($_POST['published_date'])),
-        'authors' => explode(',', trim(preg_replace('/\s\s+/', ' ', trim(htmlspecialchars($_POST['authors']))))),
-        'subjects' => explode(',', trim(preg_replace('/\s\s+/', ' ', trim(htmlspecialchars($_POST['subjects']))))),
+        'title' => htmlspecialchars($_POST['title']),
+        'type' => htmlspecialchars($_POST['type']),
+        'published_date' => htmlspecialchars($_POST['published_date']),
+        'authors' => $authors,
+        'subjects' => $subjects,
         'description' => trim(htmlspecialchars($_POST['description'])),
         'metadata' => trim(htmlspecialchars($_POST['metadata'])),
-        'image' => '',
-        'files' => array(),
+        'image' => $image,
+        'files' => $files,
     ];
 
-    //validates that the title is not empty
-    if (empty($item['title'])) {
-        $errors['title'] = 'Favor de proveer un titulo.';
-        $valid_title = false;
-    } else $valid_title = true;
-
-    if (empty($item['type'])) {
-        $errors['type'] = 'Favor de proveer un tipo.';
-        $valid_type = false;
-    } else $valid_type = true;
-
-    if (empty($item['published_date'])) {
-        $errors['published_date'] = 'Favor de proveer un tipo.';
-        $valid_date = false;
-    } elseif (!preg_match('/^[0-9]*-[0-9]*-[0-9]*$/', $item['published_date'])) {
-        $errors['published_date'] = 'Fecha invalida tiene que ser, por ejemplo, yyyy/mm/dd';
-        $valid_date = false;
-    } else $valid_date = true;
-
-    if (count($item['authors']) < 1) {
-        $errors['authors'] = 'Favor de proveer al menos un autor.';
-        $valid_authors = false;
-    } else $valid_authors = true;
-
-    if (count($item['subjects']) < 1) {
-        $errors['subjects'] = 'Favor de proveer al menos un sujeto.';
-        $valid_subjects = false;
-    } else $valid_subjects = true;
-
-    if (empty($item['description'])) {
-        $errors['description'] = 'Favor de proveer una descripción.';
-        $valid_description = false;
-    } else $valid_description = true;
-
-    //image
-    if (isset($_POST['image']) && !empty($_POST['image'])) {
-        $image_info = getimagesize($_POST['image']);
-        $image_type = (isset($image_info["mime"]) ? $image_info["mime"] : "image/jpeg");
-        $item['image'] = base64_decode(str_replace("data:$image_type;base64,", '', $_POST['image']));
-        $image_size = strlen($item['image']);
-    } else {
-        $item['image'] = NULL;
-    }
-    //image end
-
-    if (isset($_POST['number-of-files'])) {
-        $file_count = intval($_POST['number-of-files']);
-        if ($file_count > 0) {
-            $file_names = [];
-
-            for ($i = 1; $i <= $file_count; $i++) {
-                $file_names[] = "file-{$i}";
-            }
-
-            $tmpPath = $name = $size = $type = '';
-            for ($i = 0; $i < count($file_names); $i++) {
-                //Get the temp file path
-                $tmpFilePath = $_FILES[$file_names[$i]]['tmp_name'];
-                $name = $_FILES[$file_names[$i]]['name'];
-                $size = $_FILES[$file_names[$i]]['size'];
-                $type = $_FILES[$file_names[$i]]['type'];
-                //Make sure we have a file path
-                if (!empty($tmpFilePath)) {
-                    $item['files'][] = [
-                        'file_name' => $name,
-                        'tmp_path' => $tmpFilePath,
-                        'size' => $size,
-                        'type' => $type,
-                        'file' => $tmpFilePath
-                    ];
-
-                } else {
-                    echo 'Empty file path ' . ($i + 1);
-                    echo '<hr>';
-                }
-            }
-        } else {
-            die('Number of files is less than zero');
-        }
-    } else {
-        die('Number of files is not set, provide an input with the name of number-of-files.');
-    }
 
     if (array_filter($errors)) {
+        print_r($errors);
         echo showWarn('Error:', 'Errores se detectaron en la forma.');
     } else {
-        $sql_errors = ['item' => '', 'authors' => '', 'type' => '', 'image' => '', 'files' => ''];
-
         if (isset($conn)) {
+
             $upload_item = [
                 'title' => mysqli_real_escape_string($conn, $item['title']),
                 'type' => mysqli_real_escape_string($conn, $item['type']),
                 'published_date' => mysqli_real_escape_string($conn, $item['published_date']),
-                'authors' => explode(',', trim(preg_replace('/\s\s+/', ' ', mysqli_real_escape_string($conn, $_POST['authors'])))),
-                'subjects' => explode(',', trim(preg_replace('/\s\s+/', ' ', mysqli_real_escape_string($conn, $_POST['subjects'])))),
+                'authors' => array_unique(explode(',', trim(preg_replace('/\s\s+/', ' ', mysqli_real_escape_string($conn, $_POST['authors']))))),
+                'subjects' => array_unique(explode(',', trim(preg_replace('/\s\s+/', ' ', mysqli_real_escape_string($conn, $_POST['subjects']))))),
                 'description' => mysqli_real_escape_string($conn, $item['description']),
                 'metadata' => mysqli_real_escape_string($conn, $item['metadata'])
             ];
-        } else die("Connection to database has not been established");
 
-        $error = "";
+            /*********/
 
-        echo '<hr>INSERT TYPE START<br>';
-        //insert type
-        $sql_type = "INSERT INTO `type` (`type`) VALUES('{$upload_item['type']}')";
-        $type_id = NULL;
-        if (mysqli_query($conn, $sql_type)) {
-            $type_id = mysqli_insert_id($conn);
-            echo htmlspecialchars('success type ' . $upload_item['type'] . ' id: ' . $type_id) . '<br />';
-        } else {
-            $error = mysqli_error($conn);
-            if (strpos($error, 'Duplicate entry') === false) {
-                $sql_errors['type'] = 'Unexpected Insertion SQL ERROR (CONTACT A DEVELOPER): ' . $error . '<br />';
-            } else {
-                $qt = query("Select id from `type` where `type` = '{$upload_item['type']}'");
-                if (count($qt) > 0) {
-                    $type_id = $qt[0]['id'];
-                    echo htmlspecialchars('type already exists ' . $upload_item['type'] . ' id: ' . $type_id) . '<br />';
-                }
+            /* INSERT TYPE START */
+
+            // tries to insert the type or get back the existing type (hence the fallback)
+            $type_id = INSERT(
+                SQL_INSERT_TYPE($upload_item['type']),
+                SQL_GET_ID_OF_TYPE_BY_TYPE($upload_item['type']),
+                $sql_errors['type']
+            );
+
+
+            if ($type_id === FALSE) {
+                echo "<hr>Type: $type_id<br>Err: {$sql_errors['type']}<br>";
             }
-        }
-        echo 'INSERT TYPE END';
+            echo "<hr>Type: $type_id<br>Err: {$sql_errors['type']}<br>";
+            /* INSERT TYPE END */
 
-        echo '<hr />';
+            /*********/
 
-        echo '<hr>INSERT AUTHORS START<br>';
-        //insert author (multi)
-        $sql_author = "INSERT INTO `author` (`author_name`) VALUES";
-        $author_ids = array();
-        foreach ($upload_item['authors'] as $author) {
-            if (mysqli_query($conn, $sql_author . "('$author')")) {
-                $id = mysqli_insert_id($conn);
-                $author_ids[] = $id;
-                echo htmlspecialchars('success author ' . $author . ' id: ' . $id) . ' <br />';
-            } else {
-                $error = mysqli_error($conn);
-                if (strpos($error, 'Duplicate entry') === false) {
-                    $sql_errors['authors'] = 'Unexpected Insertion SQL ERROR (CONTACT A DEVELOPER): ' . $error . '<br />';
+            /* INSERT IMAGE START */
+            $image_id = "NULL";
+            if ($valid_image === TRUE) {
+                $image_id = INSERT(
+                    SQL_INSERT_IMAGE(
+                            $image['image_type'], $image['image_size'],
+                            mysqli_real_escape_string($conn, $image['content'])
+                    ),
+                    '',
+                    $sql_errors['image']
+                );
+            }
+
+            $image_id = is_int($image_id) ? $image_id : "NULL";
+
+            /* INSERT IMAGE END */
+
+            /*********/
+
+            /* INSERT ITEM START */
+            $item_id = INSERT(
+                SQL_INSERT_ITEM(
+                        $upload_item['title'], $type_id, $image_id, $upload_item['published_date'], $yearOnly,
+                        $upload_item['description'], $upload_item['metadata']
+                ),
+                '',
+                $sql_errors['item']
+            );
+
+            echo "<hr>Item: $item_id<br>Err: {$sql_errors['item']}<br>";
+            /* INSERT ITEM END */
+
+            /*********/
+
+            /* INSERT FILES START */
+            $file_ids = array();
+            $num_of_files = count($files);
+            foreach ($files as $file) {
+                // sends the file piece by piece
+                $insert_id = SQL_SEND_LONG_BLOB($file, $sql_errors['files']);
+                if ($insert_id !== NULL) {
+                    // adds the inserted id to the list of ids
+                    $file_ids[] = $insert_id;
+                    // updates the inserted file information to match the inputted file object.
+                    query(SQL_FILE_INSERT($insert_id, $file));
                 } else {
-                    $qt = query("Select id from `author` where `author_name` = '$author'");
-                    if (count($qt) > 0) {
-                        $id = $qt[0]['id'];
-                        $author_ids[] = $id;
-                        echo htmlspecialchars('author already exists ' . $author . ' id: ' . $id) . '<br />';
-                    }
+                    error_log('FAILED TO UPLOAD FILE: ' . $file['file_name']);
+                    error_log('Possible cause: ' . $sql_errors['files']);
                 }
             }
-        }
-        echo 'INSERT AUTHORS END';
 
-        if (count($author_ids) <= 0) $author_ids = NULL;
-        echo '<hr />';
 
-        echo '<hr>INSERT IMAGE START<br>';
-        //insert image
-        $data = $name = $id = $q = $img_id = null;
-        if (isset($item['image']) && !empty($item['image']) && $item['image'] !== NULL) {
-            $data = mysqli_real_escape_string($conn, $item['image']);
-            $sql_image = "INSERT INTO `image` (`type`, `size`, `image`) VALUES ('$image_type', $image_size, '$data')";
-            $q = mysqli_query($conn, $sql_image);
-            if (isset($q)) {
-                $img_id = mysqli_insert_id($conn);
-                echo htmlspecialchars('success image : ' . $name . ' id: ' . $img_id) . '<br />';
-            } else {
-                $error = mysqli_error($conn);
-                echo htmlspecialchars($error);
-                $sql_errors['image'] = 'Unexpected error ' . $error;
+            /* INSERT FILES END */
+
+            /*********/
+
+            /* INSERT FILES_HAS_ITEM START */
+            foreach ($file_ids as $id) {
+                $ihs = INSERT(
+                    SQL_INSERT_FILE_HAS_ITEM($id, $item_id),
+                    '',
+                    $sql_errors['file_has_item']
+                );
             }
-        }
-        echo '<hr /> image id: ' . htmlspecialchars($img_id) . '<hr/>';
-        echo 'INSERT IMAGE END<hr>';
+            /* INSERT FILES_HAS_ITEM END */
 
-        echo '<hr>INSERT SUBJECTS START<br>';
-        //insert subject (multi)
-        $sql_subject = "INSERT INTO `subject` (`subject`) VALUES";
-        $subject_ids = array();
-        foreach ($upload_item['subjects'] as $subject) {
-            if (mysqli_query($conn, $sql_subject . "('$subject')")) {
-                $id = mysqli_insert_id($conn);
-                $subject_ids[] = $id;
-                echo htmlspecialchars('success subject ' . $subject . ' id: ' . $id) . '<br />';
-            } else {
-                $error = mysqli_error($conn);
-                if (strpos($error, 'Duplicate entry') === false) {
-                    $sql_errors['subjects'] = 'Unexpected Insertion SQL ERROR (CONTACT A DEVELOPER): ' . $error . '<br />';
-                } else {
-                    $qt = query("Select id from `subject` where `subject` = '$subject'");
-                    if (count($qt) > 0) {
-                        $id = $qt[0]['id'];
-                        $author_ids[] = $id;
-                        echo htmlspecialchars('subject already exists ' . $author . ' id: ' . $id) . '<br />';
-                    }
+            /*********/
+
+            /* INSERT AUTHORS START */
+            $author_ids = array();
+            foreach ($upload_item['authors'] as $author) {
+                // tries to insert author or get back the existing author
+                $id = INSERT(
+                    SQL_INSERT_AUTHOR($author),
+                    SQL_GET_ID_OF_AUTHOR_BY_AUTHOR_NAME($author),
+                    $sql_errors['authors']
+                );
+
+                // if it is an int add to the list
+                if (is_int(intval($id))) {
+                    $author_ids[] = $id;
                 }
             }
-        }
-        echo 'INSERT SUBJECT END';
-        echo  '<hr/>';
 
-        echo 'INSERT ITEM START<br>';
-        //insert item
-        $sql_item = "INSERT INTO `item` (`title`, `type_id`, `image_id`, `published_date`, `year_only`, `description`, `meta`) VALUES ";
-        $title = $upload_item['title'];
-        $des = $upload_item['description'];
-        $meta = $upload_item['metadata'];
-        $date = $upload_item['published_date'];
-        $img = $img_id === NULL ? 'null' : $img_id;
-        $q = mysqli_query($conn, $sql_item . "('$title', $type_id, $img, '$date', '$yearOnly', '$des', '$meta')");
-        $item_id = NULL;
-        if (isset($q)) {
-            $id = mysqli_insert_id($conn);
-            $item_id = $id;
-            echo htmlspecialchars('success item ' . $title . ' id: ' . $id) . '<br />';
-            echo mysqli_error($conn);
-        } else {
-            $error = mysqli_error($conn);
-            $sql_errors['item'] = $error;
-            echo '<b>' . htmlspecialchars($error) . '</b>';
-        }
+            print_r($author_ids);
+            echo 'Err: ' . $sql_errors['authors'];
+            /* INSERT AUTHORS END */
 
-        echo 'INSERT ITEM END';
+            /*********/
 
-        echo '<hr>INSERT FILE START<br>';
+            /* INSERT SUBJECTS START */
+            $subject_ids = array();
+            foreach ($upload_item['subjects'] as $subject) {
+                $id = INSERT(
+                    SQL_INSERT_SUBJECT($subject),
+                    SQL_GET_ID_OF_SUBJECT_BY_SUBJECT($subject),
+                    $sql_errors['subjects']
+                );
 
-        // insert paths
-        $file_ids = array();
-        if (count($item['files']) > 0) {
-            $insert_id = -1;
-            foreach ($item['files'] as $file) {
-                $insert_id = SQL_SEND_LONG_BLOB($file);
-                $file_ids[] = $insert_id;
-                query(SQL_FILE_INSERT($insert_id, $file));
+                if (is_int($id)) {
+                    $subject_ids[] = $id;
+                }
             }
-        } else {
-            $sql_errors['files'] = "No files were submitted";
-        }
 
-        echo '<hr>';
-        echo 'file ids: ';
-        print_r($file_ids);
-        echo '<hr>';
+            print_r($author_ids);
+            echo 'Err: ' . $sql_errors['authors'];
+            /* INSERT SUBJECTS END */
 
-        echo 'INSERT FILE END<hr/>';
+            /*********/
 
-        echo '<hr>INSERT ITEM_HAS_SUBJECT START<br>';
-        //insert item_has_subject
-        $sql_item_has_subject = "INSERT INTO `item_has_subject` (`item_id`, `subject_id`) VALUES";
-        foreach ($subject_ids as $subject_id) {
-            $q = mysqli_query($conn, $sql_item_has_subject . "($item_id, $subject_id)");
+            /* INSERT AUTHORS_HAS_ITEM START */
+            foreach ($author_ids as $id) {
+                $ihs = INSERT(
+                    SQL_INSERT_AUTHOR_HAS_ITEM($item_id, $id),
+                    '',
+                    $sql_errors['author_has_item']
+                );
+            }
+            /* INSERT AUTHORS_HAS_ITEM END */
 
-            if (isset($q)) {
-                echo "<br>Relation created subject [$subject_id] -> item [$item_id]<br>";
+            /*********/
+
+            /* INSERT ITEM_HAS_SUBJECTS START */
+
+            foreach ($subject_ids as $id) {
+                $ihs = INSERT(
+                    SQL_INSERT_ITEM_HAS_SUBJECT($item_id, $id),
+                    '',
+                    $sql_errors['item_has_subject']
+                );
+            }
+
+            /* INSERT ITEM_HAS_SUBJECTS END */
+
+            echo '<hr>SQL ERROR CHECK START<br>';
+            if (array_filter($sql_errors)) {
+                echo showWarn('SQL ERROR:', 'There were unexpected insertion errors.');
             } else {
-                $error = mysqli_error($conn);
-                echo '<b>' . $error . '</b>';
+                //mysqli_close($conn);
+                header("Location: index.php#$item_id");
             }
+            echo 'SQL ERROR CHECK END<hr>';
         }
-        echo 'INSERT ITEM_HAS_SUBJECT END<hr>';
-        $error = "";
-        echo '<hr>INSERT FILE_HAS_ITEM START<br>';
-        //insert file_has_item
-        $sql_file_has_item = "INSERT INTO `file_has_item` (`file_id`, `item_id`) VALUES";
-        foreach ($file_ids as $file_id) {
-            $q = mysqli_query($conn, $sql_file_has_item . "($file_id, $item_id)");
-
-            if (isset($q)) {
-                echo "<br>" . htmlspecialchars("Relation created file [$file_id] -> item [$item_id]") . "<br>";
-            } else {
-                $error = mysqli_error($conn);
-
-                echo '<b>' . htmlspecialchars($error) . '</b>';
-            }
-        }
-        echo htmlspecialchars('File has item sql error: ' . $error);
-        echo '<hr>INSERT FILE_HAS_ITEM END<hr>';
-
-        echo '<hr>INSERT AUTHOR_HAS_ITEM START<br>';
-        //insert author_has_item
-        $sql_author_has_item = "INSERT INTO `author_has_item` (`item_id`, `author_id`) VALUES";
-        foreach ($author_ids as $author_id) {
-            $q = mysqli_query($conn, $sql_author_has_item . "($item_id, $author_id)");
-
-            if (isset($q)) {
-                echo "<br>" . htmlspecialchars("Relation created author [$author_id] -> item [$item_id]") . "<br>";
-            } else {
-                $error = mysqli_error($conn);
-                echo '<b>' . htmlspecialchars($error) . '</b>';
-            }
-        }
-        echo 'INSERT AUTHOR_HAS_ITEM END<hr>';
-
-        echo '<hr>SQL ERROR CHECK START<br>';
-        if (array_filter($errors)) {
-            echo showWarn('SQL ERROR:', 'There were unexpected insertion errors. Last error: ' . $error);
-            print_r($sql_errors);
-        } else {
-            //mysqli_close($conn);
-            header("Location: index.php#$item_id");
-        }
-        echo 'SQL ERROR CHECK END<hr>';
     }
 }
 
@@ -397,6 +328,21 @@ include_once('templates/header.php');
     .close-progress:hover {
         background: gray;
         color: white;
+    }
+
+    .hover-times {
+        background: white;
+        color: gray;
+    }
+
+    .hover-times:hover {
+        background: gray;
+        color: white;
+    }
+
+    .hover-times:active {
+        background: gray;
+        color: red;
     }
 
 </style>
@@ -480,22 +426,6 @@ include_once('templates/header.php');
 
                 </div>
 
-                <style>
-                    .hover-times {
-                        background: white;
-                        color: gray;
-                    }
-
-                    .hover-times:hover {
-                        background: gray;
-                        color: white;
-                    }
-
-                    .hover-times:active {
-                        background: gray;
-                        color: red;
-                    }
-                </style>
                 <hr />
                 <!-- AUTHORS -->
                 <div class="form-row">
@@ -586,12 +516,14 @@ include_once('templates/header.php');
                 (php.ini -> upload_max_filesize y post_max_size, Requerirá un reinicio de XAMPP).'
                         ); ?>
                     </label>
+
                     <div id="file-view list-group">
                         <input type="hidden" value="0" name="number-of-files" id="number-of-files" style="overflow: hidden;">
                         <div class="col-xs-1 text-center">
                             <input class="form-control btn <?php not_valid_class($valid_files); ?>" type="file" id="files" multiple="multiple" accept=".pdf" required>
                         </div>
                         <?php echo_invalid_feedback(!$valid_files, $errors['files']); ?>
+
                     </div>
 
 
@@ -616,8 +548,12 @@ include_once('templates/header.php');
                         <?php hint('La imagen será la primera página del primer documento PDF.'); ?>
                     </label>
                     <div class="form-row">
-                        <small id="customImage" class="form-text text-muted">Déjelo en blanco si desea utilizar una página del archivo.</small>
+                        <small id="customImage" class="form-text text-muted">
+                            Déjelo en blanco si desea utilizar una página del archivo. Si no aparece la imagen
+                            adecuada, recorra las páginas para restablecerla.
+                        </small>
                         <input type="file" id="customImage" onchange="insertCustomImage(this)" accept="image/*" style="overflow: hidden;">
+
                     </div>
 
                     <div class="col-xs-1">
@@ -625,7 +561,6 @@ include_once('templates/header.php');
                         <input type="hidden" id='image' name="image" value="">
 
                         <img id="show" class="img-thumbnail rounded" src="images/pdf-placeholder.jpg" alt="">
-                        <?php echo_invalid_feedback(!$valid_image, $errors['image']); ?>
                     </div>
                 </div>
                 <div class="form-row" style="padding-top: 10px;">
@@ -647,13 +582,17 @@ include_once('templates/header.php');
                         <input type="number" class="form-control" min="1" value="1" id="pageNumber" onchange="changeImage(
                                             document.getElementById('selectedFileInput').value,
                                             document.getElementById('pageNumber').value
-                                        );">
+                                        );" >
+
+
+
                         <div class="input-group-append">
                             <button class="btn btn-outline-danger" type="button"
-                                    onclick="clearImage();" alt="borrar">
+                                    onclick="clearImage();">
                                 <i class="far fa-trash-alt"></i>
                             </button>
                         </div>
+
                     </div>
                 </div>
                 <!-- IMAGE END -->

@@ -4,11 +4,14 @@ include_once('sql.const.php');
 include_once('sql.operations.php');
 include_once('sql.utils.php');
 
+define('APP_NAME', 'Catálogo UIPR CMS');
+
 /**
- * Checks to see if the user has logged in, if not redirects to the login page, or if
- * @param float|int $secondsOfInactivity (optional) seconds to wait to log out user (default: 30 minutes)
+ * Checks to see if the user has logged in, if not redirects to the login page, and if the user had tried to access a
+ * url they will be redirected to that url once they've logged in.
+ * @param float|int $secondsOfInactivity (optional) seconds to wait to log out user (default: 1 hour, i.e., 3600 seconds)
  */
-function authenticate($secondsOfInactivity=1800)
+function authenticate($secondsOfInactivity=3600)
 {
     $current_path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
@@ -30,6 +33,200 @@ function authenticate($secondsOfInactivity=1800)
         } else {
             header("Location: login.php");
         }
+    }
+}
+
+/**
+ * Validates a post key (all values are expected to be strings, if they are set a {@link trim()} will be applied).
+ * @param &$POST array the array containing the key
+ * @param $key string the key to check if is set in the array
+ * @param $alt_key string the title to show in the error message
+ * @param &$is_valid boolean is valid boolean variable
+ * @param &$error_buffer array the array that will contain all the errors (it will set the key with the a msg as the value)
+ * @param $head_msg string (optional) the message to display (will use alt_key)
+ * @param $empty_msg string (optional) the message to display when only space is provided
+ */
+function validate_ddl(&$POST, $key, $alt_key, &$is_valid, &$error_buffer, $head_msg="Favor de proveer",
+                      $empty_msg="debe proveer al menos un cáracter, no espacios en blanco")
+{
+    // checks if the key is not set
+    if (!isset($POST[$key])) {
+        // adds a message to the buffer (array)
+        $error_buffer[$key] = "$head_msg: $alt_key.";
+        // logs error to the console
+        error_log($error_buffer[$key]);
+        // sets the reference boolean
+        $is_valid = false;
+    } else {
+        // trims any spacial padding
+        $POST[$key] = trim($POST[$key]);
+
+        // checks to see if it's an empty string
+        if (empty($POST[$key])) {
+            // adds a message to the buffer (array)
+            $error_buffer[$key] = "$head_msg: $alt_key ($empty_msg).";
+            // logs error to the console
+            error_log($error_buffer[$key]);
+            // sets the reference boolean
+            $is_valid = false;
+        } else {
+            // sets the reference boolean
+            $is_valid = true;
+        }
+    }
+}
+
+
+/**
+ * Tests to see if the image is set, if it is processes it accordingly (expects image to be a base64 object,
+ * <code>data:image/[...];base64,[...]</code>).
+ * @param $POST array the array containing the image
+ * @param $key string [optional] the key value of the image in the array (default is 'image')
+ * @return array|null returns null if an error occurs or the key is not set or empty. returns an array containing the
+ * <code>content</code> (i.e., the image binary data),  <code>image_size</code>, <code>image_type</code>
+ * (mime type, e.g., <code>image/jpeg</code>), and the original base64 string <code>base64</code>.
+ */
+function validate_ddl_image(&$POST, &$is_valid, $key='image')
+{
+    // checks to see if the key is set in the array and that it is not empty
+    // no trim operation (since it has to be an image for it to return something)
+    if (isset($POST[$key]) && !empty($POST[$key])) {
+
+        if (function_exists('getimagesize')) {
+            // default image mime type
+            $image_info = ['mime' => 'image/jpeg'];
+
+            // uses an available function in php for the image mime
+            if (function_exists('getimagesize')) {
+                $image_info = getimagesize($POST[$key]);
+            } elseif (function_exists('mime_content_type')) {
+                $image_info = ['mime' => mime_content_type($POST[$key])];
+            }
+
+            // checks if the function returned false (on failure) and if the mime is set on the returned object.
+            if ($image_info && isset($image_info["mime"])) {
+                $is_valid = true;
+                // sets the mime
+                $image_type = $image_info["mime"];
+                // decodes the image to binary
+                $image = base64_decode(str_replace("data:$image_type;base64,", '', $POST[$key]));
+                // gets the image size
+                $image_size = strlen($image);
+
+                return [
+                    'content' => $image,
+                    'image_size' => $image_size,
+                    'image_type' => $image_type
+                ];
+            }
+        }
+    }
+    return NULL;
+}
+
+/**
+ * Validates to see if the filenames are in the array and checks if the tmp_name is set and not <b>NULL</b>.
+ * @param $FILES array the array containing the files (<b>$_FILES</b>)
+ * @param $file_names array an array with the file names.
+ * @param &$error_buffer string where the errors will be appended (they will be separated by a ~)
+ * @return array|null returns <b>NULL</b> on an error (error should be appended to <b>&$error_buffer</b>)
+ * returns an <b>array</b> containing the <code>file_name</code>, <code>tmp_path</code>, <code>size</code>,
+ * and <code>type</code>.
+ */
+function validate_ddl_files($FILES, $file_names, &$error_buffer)
+{
+    $files = array();
+    $form_file_names_count = count($file_names);
+    for ($i = 0; $i < $form_file_names_count; $i++) {
+        // gets the submit file name
+        $file_name = $file_names[$i];
+
+        // checks to see if the file name is set on the array
+        if (isset($FILES[$file_name])) {
+            // gets the file associated with the name
+            $file = $FILES[$file_name];
+
+            // checks to see if the file has a temp location (or if it is empty)
+            if (isset($file['tmp_name']) && !empty($file['tmp_name'])) {
+                $files[] = [
+                    'file_name' => $file['name'],
+                    'tmp_path' => $file['tmp_name'],
+                    'size' => $file['size'],
+                    'type' => $file['type']
+                ];
+            } else {
+                // file tmp path is empty or was not set!
+                $msg = "~The file submitted with id '$file_name' is set, but has an invalid file location";
+                $error_buffer .= $msg;
+                error_log($msg);
+            }
+        } else {
+            // file with name is not set
+            $msg = "~A file submitted with id '$file_name' is not set!";
+            $error_buffer .= $msg;
+            error_log($msg);
+        }
+    }
+
+    $files_count = count($files);
+
+    // few checks
+    if ($form_file_names_count == $files_count) {
+        if ($files_count > 0) {
+            return $files;
+        } else {
+            $msg = "~No files.";
+            $error_buffer .= $msg;
+            error_log($msg);
+        }
+    } else {
+        $msg = "~Mismatch file count (submitted: $files_count files, pre-processed successfully: $files_count)";
+        $error_buffer .= $msg;
+        error_log($msg);
+    }
+
+    return NULL;
+}
+
+/**
+ * Generates the file id names for the array (e.g., file-1, file-2, file-3, ...), and calls on
+ * {@link validate_ddl_files()} with the new generated names. Any errors will be appended on the error buffer.
+ * @param $FILES array the array containing the files ($_FILES)
+ * @param &$error_buffer string where the errors will be appended (they will be separated by a ~)
+ * @param $key_format string (optional) the format of the key value (default is 'file-%d')
+ * @return array|null see {@link validate_ddl_files()}
+ */
+function validate_files_form_ddl($FILES, &$error_buffer, $key_format='file-%d')
+{
+    $files = array();
+    $i = 0;
+    do {
+        // formats the name
+        $name = sprintf($key_format, ++$i);
+        // checks to see if it is set in the array
+        if (isset($FILES[$name])) {
+            // adds the name in the array of files (name)
+            $files[] = $name;
+        } else {
+            // breaks when the file with the name is not set in the array
+            break;
+        }
+    } while($i <= 100); // hard stop on sub 100 files (should never happen)
+
+    $len = count($files);
+    if ($len > 0) {
+
+        if (isset($_POST['number-of-files']) && (intval($_POST['number-of-files']) !== $len)) {
+            error_log('Number of files specified do not match actual number. This value is not longer used the number of files are calculated automatically.');
+        }
+
+        return validate_ddl_files($FILES, $files, $error_buffer);
+    } else {
+        $msg = '~No files were submitted';
+
+        $error_buffer .= $msg;
+        error_log($msg);
+        return NULL;
     }
 }
 
@@ -128,7 +325,7 @@ function showSuccess($head, $msg="", $footer="")
 }
 
 /**
- * Executes the SQL command inputted (uses global $conn).
+ * Executes the SQL command inputted (uses global $conn). Please see {@link mysqli_query()}
  * @param string $sql SQL command or script.
  * @return array|bool|null
  * returns NULL if an error occurs while fetching the objects (unlikely)

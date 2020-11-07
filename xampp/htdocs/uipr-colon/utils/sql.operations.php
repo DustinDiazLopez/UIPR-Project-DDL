@@ -3,25 +3,215 @@
 
 /**
  * @param array $file array containing the file_name, type, tmp_path, and size (binary)
+ * @param string $error_buffer variable to put the error if it occurs
+ * @param string $key the key of the array containing the path of the file.
  * @return mixed returns the insert id
  */
-function SQL_SEND_LONG_BLOB($file)
+function SQL_SEND_LONG_BLOB($file, &$error_buffer, $key='tmp_path')
 {
     $mysqli = connect_obj();
     $stmt = $mysqli->prepare(SQL_INSERT_FILE_CONTENT);
     $null = NULL;
     $stmt->bind_param("b", $null);
-    echo 'Opening file ' . $file['tmp_path'] . '<br>';
-    $fp = fopen($file['tmp_path'], "r");
+    $fp = fopen($file[$key], "r");
     while (!feof($fp)) {
-        $stmt->send_long_data(0, fread($fp, 8192));
+        $stmt->send_long_data(0, fread($fp, SEND_LONG_BLOB_BUFFER_SIZE));
     }
     fclose($fp);
-    $stmt->execute();
-    return $mysqli->insert_id;
+    $success = $stmt->execute();
+    if (!$success) $error_buffer = $stmt->error;
+    return $success ? $mysqli->insert_id : NULL;
 }
 
 /**
+ * @param $sql string the sql script
+ * @param $sql_fallback_get string the fallback sql when sql fails
+ * @param $error_buffer string where to put the error
+ * @return integer|boolean
+ * Returns the insert id of the inserted item, or if it already exists ({@link SQL_DUPLICATE_ERROR}) it returns the id of the existing item.
+ * Returns false for another type of error (do {@link mysqli_error()}), the error will be passed to the
+ * <b>$error_buffer</b>, if not fallback sql is set then returns true.
+ */
+function INSERT($sql, $sql_fallback_get, &$error_buffer)
+{
+    global $conn;
+    $insert_id = NULL;
+    // execute the insert query, since it's an INSERT, mysqli_query returns either true or false.
+    if (mysqli_query($conn, $sql)) {
+        // get the inserted id
+        return mysqli_insert_id($conn);
+    } else {
+        // check to see if it is a duplicate error
+        if (mysqli_errno($conn) === SQL_DUPLICATE_ERROR) {
+            // check to see the fallback sql is empty
+            if (!empty($sql_fallback_get)) {
+                // get the first value of the query
+                return query($sql_fallback_get)[0]['id'];
+            }
+        }
+
+        // overrides the error buffer with the error message
+        $error_buffer = mysqli_error($conn);
+        error_log($error_buffer);
+        return FALSE;
+    }
+}
+
+/**
+ * SQL script for an insert to the type table.
+ * Please see {@link query()}
+ * @param $type string the name of the type
+ * @return array|bool|null
+ * returns NULL if an error occurs while fetching the objects (unlikely)
+ * returns true or false on success or failure
+ * returns the array of objects fetched.
+ */
+function SQL_INSERT_TYPE($type)
+{
+    return (sprintf(SQL_INSERT_TYPE, $type));
+}
+
+/**
+ * SQL script for an insert to the image table.
+ * Please see {@link query()}
+ * @param $type string type (mime type) of the image (e.g., image/jpeg)
+ * @param $size integer size of the image in bytes
+ * @param $image string the binary (content) of the image.
+ * @return array|bool|null
+ * returns NULL if an error occurs while fetching the objects (unlikely)
+ * returns true or false on success or failure
+ * returns the array of objects fetched.
+ */
+function SQL_INSERT_IMAGE($type, $size, $image)
+{
+    return (sprintf(SQL_INSERT_IMAGE, $type, $size, $image));
+}
+
+/**
+ * SQL script for an insert to the auhtor table.
+ * Please see {@link query()}
+ * @param $author_name string the name of the author
+ * @return array|bool|null
+ * returns NULL if an error occurs while fetching the objects (unlikely)
+ * returns true or false on success or failure
+ * returns the array of objects fetched.
+ */
+function SQL_INSERT_AUTHOR($author_name)
+{
+    return (sprintf(SQL_INSERT_AUTHOR, $author_name));
+}
+
+/**
+ * SQL script for an insert to the subject table.
+ * Please see {@link query()}
+ * @param $subject string the subject name
+ * @return array|bool|null
+ * returns NULL if an error occurs while fetching the objects (unlikely)
+ * returns true or false on success or failure
+ * returns the array of objects fetched.
+ */
+function SQL_INSERT_SUBJECT($subject)
+{
+    return (sprintf(SQL_INSERT_SUBJECT, $subject));
+}
+
+/**
+ * SQL script for an insert to the item table.
+ * Please see {@link query()}
+ * @param $title string the title of the item
+ * @param $type_id integer the type id of the item
+ * @param $image_id integer the image id of the item
+ * @param $pub_date string the published date of the item (yyyy-mm-dd)
+ * @param $year_only boolean weather to only show the year or the whole $pub_date
+ * @param $description string the description of the item
+ * @param $metadata string the metadata of the item
+ * @return array|bool|null
+ * returns NULL if an error occurs while fetching the objects (unlikely)
+ * returns true or false on success or failure
+ * returns the array of objects fetched.
+ */
+function SQL_INSERT_ITEM($title, $type_id, $image_id, $pub_date, $year_only, $description, $metadata)
+{
+    return (sprintf(SQL_INSERT_ITEM, $title, $type_id, $image_id, $pub_date, $year_only, $description, $metadata));
+}
+
+/**
+ * SQL script for an insert to the item_has_subject table.
+ * Please see {@link query()}
+ * @param $item_id integer the item id
+ * @param $subject_id integer the subject id
+ * @return array|bool|null
+ * returns NULL if an error occurs while fetching the objects (unlikely)
+ * returns true or false on success or failure
+ * returns the array of objects fetched.
+ */
+function SQL_INSERT_ITEM_HAS_SUBJECT($item_id, $subject_id)
+{
+    return (sprintf(SQL_INSERT_ITEM_HAS_SUBJECT, $item_id, $subject_id));
+}
+
+/**
+ * SQL script for an insert to the file_has_item table.
+ * Please see {@link query()}
+ * @param $file_id integer the file id
+ * @param $item_id integer  the item id
+ * @return array|bool|null
+ * returns NULL if an error occurs while fetching the objects (unlikely)
+ * returns true or false on success or failure
+ * returns the array of objects fetched.
+ */
+function SQL_INSERT_FILE_HAS_ITEM($file_id, $item_id)
+{
+    return (sprintf(SQL_INSERT_FILE_HAS_ITEM, $file_id, $item_id));
+}
+
+/**
+ * SQL script for an insert to the type author_has_item.
+ * Please see {@link query()}
+ * @param $item_id integer the item id
+ * @param $author_id integer the author id
+ * @return array|bool|null
+ * returns NULL if an error occurs while fetching the objects (unlikely)
+ * returns true or false on success or failure
+ * returns the array of objects fetched.
+ */
+function SQL_INSERT_AUTHOR_HAS_ITEM($item_id, $author_id)
+{
+    return (sprintf(SQL_INSERT_AUTHOR_HAS_ITEM, $item_id, $author_id));
+}
+
+/**
+ * SQL script to find the id of the specified type
+ * @param $type string the name of the type
+ * @return string returns the sql script
+ */
+function SQL_GET_ID_OF_TYPE_BY_TYPE($type)
+{
+    return sprintf(SQL_GET_ID_OF_TYPE_BY_TYPE, $type);
+}
+
+/**
+ * SQL script to find the id of the specified author
+ * @param $author_name string the name of the author
+ * @return string returns the sql script
+ */
+function SQL_GET_ID_OF_AUTHOR_BY_AUTHOR_NAME($author_name)
+{
+    return sprintf(SQL_GET_ID_OF_AUTHOR_BY_AUTHOR_NAME, $author_name);
+}
+
+/**
+ * SQL script to find the id of the specified subject
+ * @param $subject string the name of the subject
+ * @return string returns the sql script
+ */
+function SQL_GET_ID_OF_SUBJECT_BY_SUBJECT($subject)
+{
+    return sprintf(SQL_GET_ID_OF_SUBJECT_BY_SUBJECT, $subject);
+}
+
+/**
+ * SQL script that sets the file information in the database
  * @param array $file array containing the file_name, type, tmp_path, and size
  * @param integer $id (optional) id of the file, default is NULL (i.e., will autoincrement)
  * @return string returns the sql script to insert a file

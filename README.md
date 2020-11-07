@@ -7,7 +7,7 @@ The **`xampp`** folder contains all the PHP, HTML, and CSS files.
 - `PHP 5.5` or above (tested with `PHP 7.4`)
 - `MySQL 5.6+`
 
-Theoretically, it should work with `PHP5.5` or above, it is recommended to use `PHP5.6` or above. 
+Theoretically, it should work with `PHP5.5` or above, it is recommended to use `PHP5.6` or above.
 
 ***A VERSION LOWER THAN WHAT IS SPECIFIED MIGHT NOT WORK***.
 
@@ -26,11 +26,11 @@ xampp (or var)/
 
 Please follow these steps ***carefully***.
 
-### Step 0: PHP Config
+### Step 0: Configuring PHP & MySQL
 
-Consider modifying the `php.ini` file to be more permissive.
+Consider modifying the `php.ini` and the `my.ini` (`mysqldump.cnf` in LAMP) file to be more flexible.
 
-Recommended:
+#### Recommened settings for `php.ini`
 
 ```ini
 ; This sets the maximum time in seconds a script is allowed to parse input data, like POST and GET.
@@ -46,37 +46,44 @@ post_max_size = 256M
 upload_max_filesize = 256M
 
 ; The maximum number of files allowed to be uploaded simultaneously.
+; In the application it is hardcoded to be 100
 max_file_uploads = 25
 ```
 
+#### Recommened settings for `my.ini`
+```
+# the same value as upload_max_filesize in the php.ini file
+max_allowed_packet = 256M
+```
+
 ### Step 1: The Config File
-Create a folder in `xampp` or `var` called `colon-uipr-cms-ddl-files-and-config` (it ***HAS*** to be that name, unless you changed it in the source code), 
+Create a folder in `xampp` or `var` called `colon-uipr-cms-ddl-files-and-config` (it ***HAS*** to be that name, unless you changed it in the source code),
 and in that folder create a JSON file called `mysql_uiprcmsddl_config.json`. Then add this JSON object to the file:
 ```json
-{ 
-    "host": "localhost", 
-    "port": "3306", 
-    "username": "root", 
-    "password": "password", 
-    "database": "UIPRCMSDDL", 
+{
+    "host": "localhost",
+    "port": "3306",
+    "username": "root",
+    "password": "password",
+    "database": "UIPRCMSDDL",
     "salt": "$6$rounds=5000$exampleSalt$"
 }
 ```
-    
+
 Change `exampleSalt` to a silly string of characters (go crazy!), and change the rest of the information to match your MySQL configuration.
 
 #### WARNING!!!
-Make sure this file ***IS NOT*** in a publicly available location. Make sure it is the root directory of xampp 
+Make sure this file ***IS NOT*** in a publicly available location. Make sure it is the root directory of xampp
 (`xampp` folder), or lamp (`var` folder)
 
 #### Salt
-The application will use `SHA-512` for hashing the passwords. If you wish to change this (not recommended) follow this 
+The application will use `SHA-512` for hashing the passwords. If you wish to change this (not recommended) follow this
 [link](https://www.php.net/manual/en/function.crypt.php)
 
 ---
 
 ### Step 2: Setting up the Database
-- [Download the SQL script](https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/main/xampp/colon-uipr-cms-ddl-files-and-config/uiprcmsddl.sql). 
+- [Download the SQL script](https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/main/xampp/colon-uipr-cms-ddl-files-and-config/uiprcmsddl.sql).
 
     - Either insert or paste the `.sql` script in phpMyAdmin (refer to this [link](https://stackoverflow.com/questions/13955988/insert-sql-file-into-your-mysql-database)),
     - or execute the following command (in the MySQL shell):
@@ -92,7 +99,7 @@ The application will use `SHA-512` for hashing the passwords. If you wish to cha
 It should say (***no errors should be displayed***):
     > It works!
 
-    - This step might require more setup on `LAMP`. 
+    - This step might require more setup on `LAMP`.
 
     - If you wish to use the `html` folder or any other folder, please change
 the first line in `connect.php` (`uipr-colon/connect.php`) to match the new file structure.
@@ -108,8 +115,8 @@ the first line in `connect.php` (`uipr-colon/connect.php`) to match the new file
 
     > It works!
 
-- Now pass in as the argument `pwd` (i.e., `hello.php?pwd=your_password`). This will return the hashed version of the 
-inputted text, using the hash algorithm (by default `SHA-526`) specified in the config file of `step 1`. It should 
+- Now pass in as the argument `pwd` (i.e., `hello.php?pwd=your_password`). This will return the hashed version of the
+inputted text, using the hash algorithm (by default `SHA-526`) specified in the config file of `step 1`. It should
 return something like:
 
     > r4nwUWpjef1wJgwfW4WgSim2P0qskuBFmYQ/p56LZDONtVZiS6CHNBji25G9CTc/kOAjkvwnxeJw4Wr8CuTjS0

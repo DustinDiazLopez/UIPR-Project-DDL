@@ -1,4 +1,7 @@
-<?php include_once('templates/header.php'); ?>
+<?php
+$title_tag = 'Inicio';
+include_once('templates/header.php');
+?>
 
 <div class="container-fluid">
     <div class="row">
