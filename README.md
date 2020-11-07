@@ -50,8 +50,8 @@ upload_max_filesize = 256M
 max_file_uploads = 25
 ```
 
-#### Recommened settings for `my.ini`
-```
+#### Recommened settings for `my.ini` (or `mysqldump.cnf`)
+```ini
 # the same value as upload_max_filesize in the php.ini file
 max_allowed_packet = 256M
 ```
