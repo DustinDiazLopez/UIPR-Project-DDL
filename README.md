@@ -74,7 +74,7 @@ sudo systemctl restart apache2
 
 ##### Set `max_allowed_packet` globally for Linux:
 This will set it to 1GB, but MySQL will only use what it needs.
-```terminal
+```SQL
 mysql> SET GLOBAL max_allowed_packet=1073741824;
 ```
 ***Do note*** this is only temporary, and ***will*** be resseted after a restart (of any kind).
@@ -118,9 +118,9 @@ The application will use `SHA-512` for hashing the passwords. If you wish to cha
 ---
 
 ### Step 3: Copying over the source code
-
-- In `htdocs` or `www` folder, copy over the `uipr-colon` folder, and try to access, e.g.,
- ` http://localhost/uipr-colon/hello.php `.It should display the PHP information.
+- Download the [latest release](https://github.com/DustinDiazLopez/UIPR-Project-DDL/releases).
+- In `htdocs` or `www` folder, create a new folder (e.g., `uipr-colon`), and copy over the files of the downloaded 
+release, and try to access, e.g., ` http://localhost/uipr-colon/hello.php `.It should display the PHP information.
 
     - This step might require more setup on `LAMP`.
 

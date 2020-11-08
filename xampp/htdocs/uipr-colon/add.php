@@ -538,7 +538,7 @@ if (isset($errors_present) && $errors_present) {
 <div id="overlay">
     <div class="floatCenter" id="loading-splash">
         <object data="images/processing.svg" type="image/svg+xml">
-            <img alt="procesando" src="images/processing.gif"/>
+            <img loading="lazy" alt="espere mientras procesamos la información" src="images/processing.gif"/>
         </object>
     </div>
 </div>
