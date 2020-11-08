@@ -107,7 +107,7 @@ The application will use `SHA-512` for hashing the passwords. If you wish to cha
 ---
 
 ### Step 2: Setting up the Database
-- [Download the SQL script](https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/main/xampp/colon-uipr-cms-ddl-files-and-config/uiprcmsddl.sql).
+- Download the SQL script from the [latest release](https://github.com/DustinDiazLopez/UIPR-Project-DDL/releases).
 
     - Either insert or paste the `.sql` script in phpMyAdmin (refer to this [link](https://stackoverflow.com/questions/13955988/insert-sql-file-into-your-mysql-database)),
     - or execute the following command (in the MySQL shell):
