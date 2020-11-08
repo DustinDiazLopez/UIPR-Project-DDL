@@ -37,6 +37,18 @@ function authenticate($secondsOfInactivity=3600)
 }
 
 /**
+ * Validates a date given a format.
+ * @param string $date the date
+ * @param string $format the expected format
+ * @return bool returns <b>TRUE</b> if the date is valid, or <b>FALSE</b> if it is not.
+ */
+function validateDate($date, $format = 'Y-m-d')
+{
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) === $date;
+}
+
+/**
  * Validates a post key (all values are expected to be strings, if they are set a {@link trim()} will be applied).
  * @param &$POST array the array containing the key
  * @param $key string the key to check if is set in the array

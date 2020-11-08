@@ -33,7 +33,7 @@ if (isset($_POST['submit'])) {
 
     // validate date
     if ($valid_date) {
-        if (!preg_match("/[0-9]*-[0-9][0-9]-[0-9][0-9]/", $_POST['published_date'])) {
+        if (!validateDate($_POST['published_date'])) {
             $errors['published_date'] = 'Favor the proveer una fecha en el formato yyyy-mm-dd';
             $valid_date = false;
         }
@@ -242,17 +242,21 @@ if (isset($errors_present) && $errors_present) {
         unset($sql_errors['files']);
     }
 
+    $inserted = TRUE;
     // check if any other error exists
     if (array_filter($sql_errors)) {
         $keys = array_keys($sql_errors);
         foreach ($keys as $key) {
+            if ($key === 'item') $inserted = FALSE;
             $err = trim($sql_errors[$key]);
             if (!empty($err)) {
                 echo showWarn("Insert $key Error:", $err);
             }
         }
 
-        echo showWarn('Important: ', 'Do keep in mind the item might have been created (if there wasn\'t an \'Insert Item Error\')');
+        if (!$inserted) {
+            echo showWarn('Important: ', 'The item was created)');
+        }
     }
 
 }
