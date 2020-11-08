@@ -200,7 +200,7 @@ function generateFileInputForImage() {
  * <li>Needs a img HTMLElement (showImage) to show the base64 image</li>
  * <li>Needs a input HTMLElement (inputImageShow) to save the base64 data value (in the input's value) for POST</li>
  * </ul>
- * @param {HTMLElement} [id=filesInput] ID of the file html element
+ * @param {HTMLElement} [id=filesInput] file html element
  * @param {number} [fileIdx=0] the index of the file in the element
  * @param {number} [pageNumber=1] the page number for the image
  */
@@ -231,7 +231,7 @@ function updateImage(id = filesInput, fileIdx = 0, pageNumber=1) {
                 clearImage();
                 updateImage(id, ++fileIdx, pageNumber); //recurse to next file if it fails (i.e., not a valid PDF structure)
             });
-
+            validate();
         };
         fileReader.readAsArrayBuffer(file);
     }
@@ -669,7 +669,7 @@ function validate() {
 
     if (allow) {
         pHeading.innerHTML = "<b>¡Completado!</b>";
-        pMsg.innerHTML = "La forma se puede subir!";
+        pMsg.innerHTML = "La forma se puede subir.";
         document.getElementById('close-btn-progress').style.display = 'block';
     } else {
         pHeading.innerHTML = "Completar";
@@ -701,6 +701,9 @@ function changeIcon(input, element) {
     element.className = createElementFromHTML(getIcon(input.value)).className;
 }
 
+/**
+ * Hides the progress div when the screen is too small
+ */
 function hideProgressHelper() {
     const w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) - 80;
     const h = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight);

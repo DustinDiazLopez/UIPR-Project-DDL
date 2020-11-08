@@ -33,7 +33,7 @@ if (isset($_POST['submit'])) {
 
     // validate date
     if ($valid_date) {
-        if (!preg_match("/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/", $_POST['published_date'])) {
+        if (!preg_match("/[0-9]*-[0-9][0-9]-[0-9][0-9]/", $_POST['published_date'])) {
             $errors['published_date'] = 'Favor the proveer una fecha en el formato yyyy-mm-dd';
             $valid_date = false;
         }
@@ -221,9 +221,8 @@ if (isset($_POST['submit'])) {
             // redirect on no errors
             if (!$errors_present) {
                 header("Location: index.php#$item_id?noerr");
-            }
+            } // esleif ->>>> after the include header the errors will appear.
 
-            // ->>> after the include header the errors will appear.
             // ...
             /* SQL ERROR CHECK END */
         }
@@ -343,84 +342,6 @@ if (isset($errors_present) && $errors_present) {
                 </div>
 
                 <hr />
-                <!-- AUTHORS -->
-                <div class="form-row">
-                    <label for="authors">Autores
-                        <?php //hint('Favor no utilizar commas, especificar el nombre completo sin commas. Si se detectan commas, se eliminarán.'); ?>
-                    </label>
-                    <div class="input-group mb-3">
-                        <ul class="list-group container-fluid" id="readOnlyListViewAuthor">
-
-                        </ul>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input class="form-control <?php not_valid_class($valid_authors); ?>" type="text" placeholder="" id="authors" name="authors" value="<?php
-                        if ($item['authors'] !== '') {
-                            echo listToCSV($item['authors']);
-                        }
-                        ?>" readonly required>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Editar todos los autores."><i class="fas fa-users-cog"></i></button>
-                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Editar el último autor(a) entrado(a)."><i class="fas fa-user-cog"></i></button>
-                        </div>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control <?php not_valid_class($valid_authors); ?>" placeholder="Miguel de Cervante" aria-label="Nombre del autor" id="authorInput">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Añadir todos los autores separados por commas (CSV)"><i class="fas fa-users"></i></button>
-                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Añadir autor"><i class="fas fa-user-plus"></i></button>
-                        </div>
-                        <?php echo_invalid_feedback(!$valid_authors, $errors['authors']); ?>
-                    </div>
-                </div>
-                <hr />
-
-                <!-- SUBJECTS -->
-                <div class="form-row">
-                    <label for="subjects">Sujetos
-                        <?php //hint('Favor no utilizar commas, especificar el sujeto sin commas. Si se detectan commas, se eliminarán.'); ?>
-                    </label>
-                    <div class="input-group mb-3">
-                        <ul class="list-group container-fluid" id="readOnlyListViewSubject">
-
-                        </ul>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input class="form-control <?php not_valid_class($valid_subjects); ?>" type="text" placeholder="" id="subjects" name="subjects" value="<?php
-                        if ($item['subjects'] !== '') {
-                            echo listToCSV($item['subjects']);
-                        }
-                        ?>" readonly required>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Editar todos los sujetos."><i class="fas fa-cogs"></i></button>
-                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Editar el último sujeto entrado."><i class="fas fa-cog"></i></button>
-                        </div>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control <?php not_valid_class($valid_subjects); ?>" placeholder="Caballerias" aria-label="Sujetos del articulo" id="subjectsInput">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Añadir todos loss sujetos separados por commas (CSV)"><i class="fas fa-project-diagram"></i></button>
-                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Añadir sujeto"><i class="fab fa-hive"></i></button>
-                        </div>
-                        <?php echo_invalid_feedback(!$valid_subjects, $errors['subjects']); ?>
-                    </div>
-                </div>
-                <hr />
-
-                <!-- DESCRIPTION -->
-                <div class="form-group">
-                    <label for="description">Descripción del artículo</label>
-                    <textarea class="form-control <?php not_valid_class($valid_description); ?>" id="description" name="description" aria-describedby="descriptionHelp" rows="3" required><?php echo $item['description']; ?></textarea>
-                    <small id="descriptionHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
-                    <?php echo_invalid_feedback(!$valid_description, $errors['description']); ?>
-                </div>
-            </div>
-            <!-- COL 1 END -->
-
-            <hr />
-
-            <!-- COL 2 START -->
-            <div >
 
                 <!-- FILES -->
                 <div class="form-row">
@@ -458,6 +379,98 @@ if (isset($errors_present) && $errors_present) {
                 </div>
                 <!-- FILES END -->
                 <hr />
+
+                <!-- DESCRIPTION -->
+                <div class="form-group">
+                    <label for="description">Descripción del artículo</label>
+                    <textarea class="form-control <?php not_valid_class($valid_description); ?>" id="description" name="description" aria-describedby="descriptionHelp" rows="3" required><?php echo $item['description']; ?></textarea>
+                    <small id="descriptionHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
+                    <?php echo_invalid_feedback(!$valid_description, $errors['description']); ?>
+                </div>
+                <hr />
+                <!-- AUTHORS -->
+                <div class="form-row">
+                    <label for="authors">Autores
+                        <?php //hint('Favor no utilizar commas, especificar el nombre completo sin commas. Si se detectan commas, se eliminarán.'); ?>
+                    </label>
+                    <div class="input-group mb-3">
+                        <ul class="list-group container-fluid" id="readOnlyListViewAuthor">
+
+                        </ul>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input class="form-control <?php not_valid_class($valid_authors); ?>" type="text" placeholder="" id="authors" name="authors" value="<?php
+                        if ($item['authors'] !== '') {
+                            echo listToCSV($item['authors']);
+                        }
+                        ?>" readonly required>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Editar todos los autores."><i class="fas fa-users-cog"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Editar el último autor(a) entrado(a)."><i class="fas fa-user-cog"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control <?php not_valid_class($valid_authors); ?>" placeholder="Miguel de Cervante" aria-label="Nombre del autor" id="authorInput">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Añadir todos los autores separados por commas (CSV)"><i class="fas fa-users"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Añadir autor"><i class="fas fa-user-plus"></i></button>
+                        </div>
+                        <?php echo_invalid_feedback(!$valid_authors, $errors['authors']); ?>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- SUBJECTS -->
+                <div class="form-row">
+                    <label for="subjects">Sujetos
+                        <?php //hint('Favor no utilizar commas, especificar el sujeto sin commas. Si se detectan commas, se eliminarán.'); ?>
+                    </label>
+                    <div class="input-group mb-3">
+                        <ul class="list-group container-fluid" id="readOnlyListViewSubject">
+
+                        </ul>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input class="form-control <?php not_valid_class($valid_subjects); ?>" type="text" placeholder="" id="subjects" name="subjects" value="<?php
+                        if ($item['subjects'] !== '') {
+                            echo listToCSV($item['subjects']);
+                        }
+                        ?>" readonly required>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Editar todos los sujetos."><i class="fas fa-cogs"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Editar el último sujeto entrado."><i class="fas fa-cog"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control <?php not_valid_class($valid_subjects); ?>" placeholder="Caballerias" aria-label="Sujetos del articulo" id="subjectsInput">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Añadir todos loss sujetos separados por commas (CSV)"><i class="fas fa-project-diagram"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Añadir sujeto"><i class="fab fa-hive"></i></button>
+                        </div>
+                        <?php echo_invalid_feedback(!$valid_subjects, $errors['subjects']); ?>
+                    </div>
+                </div>
+
+                <hr />
+                <div class="form-row">
+                    <!-- METADATA -->
+                    <div class="form-group">
+                        <label for="metadata">Metadata
+                            <?php hint('Información que no será visible, pero que se utilizará en la búsqueda (por ejemplo, texto completo del artículo, otros títulos, etc.). En otras palabras, cualquier información relacionada con el artículo.'); ?>
+                        </label>
+                        <textarea class="form-control" id="metadata" name="metadata" rows="3" aria-describedby="metaHelp"><?php echo $item['metadata']; ?></textarea>
+                        <small id="metaHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
+                    </div>
+                </div>
+                <hr />
+            </div>
+            <!-- COL 1 END -->
+
+            <hr />
+
+            <!-- COL 2 START -->
+            <div >
                 <!-- IMAGE -->
                 <div class="form-row">
                     <label for="image">Imágen
@@ -512,18 +525,6 @@ if (isset($errors_present) && $errors_present) {
                     </div>
                 </div>
                 <!-- IMAGE END -->
-
-                <hr />
-                <div class="form-row">
-                    <!-- METADATA -->
-                    <div class="form-group">
-                        <label for="metadata">Metadata
-                            <?php hint('Información que no será visible, pero que se utilizará en la búsqueda (por ejemplo, texto completo del artículo, otros títulos, etc.). En otras palabras, cualquier información relacionada con el artículo.'); ?>
-                        </label>
-                        <textarea class="form-control" id="metadata" name="metadata" rows="3" aria-describedby="metaHelp"><?php echo $item['metadata']; ?></textarea>
-                        <small id="metaHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
-                    </div>
-                </div>
             </div>
             <!-- COL 2 END -->
         </div>

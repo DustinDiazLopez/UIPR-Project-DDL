@@ -72,6 +72,12 @@ Apache
 sudo systemctl restart apache2
 ```
 
+##### Set `max_allowed_packet` globally for Linux:
+This will set it to 1GB, but MySQL will only use what it needs.
+```terminal
+mysql> SET GLOBAL max_allowed_packet=1073741824;
+```
+***Do note*** this is only temporary, and ***will*** be resseted after a restart (of any kind).
 ### Step 1: The Config File
 Create a folder in `xampp` or `var` called `colon-uipr-cms-ddl-files-and-config` (it ***HAS*** to be that name, unless 
 you changed it in the source code),
