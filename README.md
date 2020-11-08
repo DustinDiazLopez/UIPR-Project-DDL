@@ -33,6 +33,9 @@ Consider modifying the `php.ini` and the `my.ini` (`mysqldump.cnf` in LAMP) file
 #### Recommened settings for `php.ini`
 
 ```ini
+; This sets the maximum time in seconds a script is allowed to run before it is terminated by the parser.
+max_execution_time = 120
+
 ; This sets the maximum time in seconds a script is allowed to parse input data, like POST and GET.
 max_input_time = 120
 
@@ -50,6 +53,19 @@ upload_max_filesize = 256M
 max_file_uploads = 25
 ```
 
+#### Restart the services
+
+For `XAMPP` just click `start` and `stop` in the GUI, but for `LAMP` (or Linux):
+
+MySQL:
+```terminal
+sudo systemctl restart mysql
+```
+Apache
+```terminal
+sudo systemctl restart apache2
+```
+
 #### Recommened settings for `my.ini` (or `mysqldump.cnf`)
 ```ini
 # the same value as upload_max_filesize in the php.ini file
@@ -57,7 +73,8 @@ max_allowed_packet = 256M
 ```
 
 ### Step 1: The Config File
-Create a folder in `xampp` or `var` called `colon-uipr-cms-ddl-files-and-config` (it ***HAS*** to be that name, unless you changed it in the source code),
+Create a folder in `xampp` or `var` called `colon-uipr-cms-ddl-files-and-config` (it ***HAS*** to be that name, unless 
+you changed it in the source code),
 and in that folder create a JSON file called `mysql_uiprcmsddl_config.json`. Then add this JSON object to the file:
 ```json
 {
@@ -70,7 +87,8 @@ and in that folder create a JSON file called `mysql_uiprcmsddl_config.json`. The
 }
 ```
 
-Change `exampleSalt` to a silly string of characters (go crazy!), and change the rest of the information to match your MySQL configuration.
+Change `exampleSalt` to a silly string of characters (go crazy!), and change the rest of the information to match your 
+MySQL configuration.
 
 #### WARNING!!!
 Make sure this file ***IS NOT*** in a publicly available location. Make sure it is the root directory of xampp
@@ -95,7 +113,8 @@ The application will use `SHA-512` for hashing the passwords. If you wish to cha
 
 ### Step 3: Copying over the source code
 
-- In `htdocs` or `www` folder, copy over the `uipr-colon` folder, and try to access, e.g., `http://localhost/uipr-colon/hello.php`.
+- In `htdocs` or `www` folder, copy over the `uipr-colon` folder, and try to access, e.g., 
+`http://localhost/uipr-colon/hello.php`.
 It should say (***no errors should be displayed***):
     > It works!
 

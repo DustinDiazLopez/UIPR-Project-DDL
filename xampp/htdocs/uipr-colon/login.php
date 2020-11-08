@@ -69,7 +69,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title><?php echo "Iniciar Sesión - " . APP_NAME; ?></title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/selection.color.css">
     <link href="css/fa/css/all.css" rel="stylesheet">

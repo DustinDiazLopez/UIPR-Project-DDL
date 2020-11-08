@@ -231,6 +231,69 @@ function validate_files_form_ddl($FILES, &$error_buffer, $key_format='file-%d')
 }
 
 /**
+ * It parses ({@link explode}s) the csv as an array, {@link trim}s the values, and removes ({@link array_unique}) the duplicate values.
+ * @param $str string the csv
+ * @return string[]|null
+ * returns <b>NULL</b> if the count is less than 0
+ * returns an array of the values
+ */
+function split_clean_array_ddl($str)
+{
+    $arr = explode(',', $str);
+    for ($i = 0; $i < count($arr); $i++) $arr[$i] = htmlspecialchars(trim($arr[$i]));
+    $arr = array_unique($arr);
+    return count($arr) > 0 ? $arr : NULL;
+}
+
+/**
+ * Validates a <b>$_POST</b> value (a csv value)
+ * @param $key string the key value in the <b>$_POST</b> and the <b>&$error_buffer</b>
+ * @param $alt_key string the name that will show up in the <b>&$error_buffer</b>
+ * @param &$is_valid boolean a refernce to a boolean to update weather the key->value was valid
+ * @param &$error_buffer array where to store the error (if it happens)
+ * @return string[]|null
+ * returns the array of strings on success
+ * returns <b>NULL</b> of an error occurred or didn't pass the checks
+ */
+function validate_post_csv ($key, $alt_key, &$is_valid, &$error_buffer)
+{
+    if (isset($_POST[$key])) {
+        $obj = split_clean_array_ddl($_POST[$key]);
+        if ($obj === NULL) {
+            $is_valid = FALSE;
+            $error_buffer[$key] .= "Provee al menos un $alt_key";
+        } else {
+            return $obj;
+        }
+    } else {
+        $is_valid = FALSE;
+        $error_buffer[$key] .= "Provee al menos un $alt_key";
+    }
+    return NULL;
+}
+
+/**
+ * Either prints out 'is-valid' for when <b>TRUE</b> is passed, prints out 'is-invalid' for when <b>FALSE</b> is
+ * passed, or does nothing if anything else is passed.
+ * @param boolean|string $boolean the choice
+ */
+function not_valid_class($boolean = 'do nothing')
+{
+    if ($boolean === true) echo 'is-valid';
+    elseif ($boolean === false) echo 'is-invalid';
+}
+
+/**
+ * Prints an invalid feedback.
+ * @param boolean $boolean weather to print it or not
+ * @param string $msg the message to display
+ */
+function echo_invalid_feedback($boolean = false, $msg = 'Invalido')
+{
+    if ($boolean) echo "<div class=\"invalid-feedback\">$msg</div>";
+}
+
+/**
  * Tests weather the variable is an integer.
  * @param string|integer $id variable to test
  * @return bool returns true if the input is an integer

@@ -1,5 +1,5 @@
 <?php
-//header('Location: http://34.70.88.44/index.php');
+header('Location: http://35.236.192.81/index.php');
 ?>
 
 <p>Site under construction</p>

@@ -11,32 +11,6 @@ $valid_title = $valid_type = $valid_date = $valid_authors = $valid_subjects = $v
 $warning = false;
 $provide_char_msg = 'debe proveer al menos un cáracter (no espacio en blanco).';
 
-function split_clean_array_ddl($str)
-{
-    $arr = explode(',', $str);
-    for ($i = 0; $i < count($arr); $i++) $arr[$i] = htmlspecialchars(trim($arr[$i]));
-    $arr = array_unique($arr);
-    return count($arr) > 0 ? $arr : NULL;
-}
-
-function validate_post_csv ($key, $alt_key, &$is_valid, &$error_buffer)
-{
-    if (isset($_POST[$key])) {
-        $obj = split_clean_array_ddl($_POST[$key]);
-        if ($obj === NULL) {
-            $is_valid = FALSE;
-            $error_buffer[$key] .= "Provee al menos un $alt_key";
-        } else {
-            return $obj;
-        }
-    } else {
-        $is_valid = FALSE;
-        $error_buffer[$key] .= "Provee al menos un $alt_key";
-    }
-    return NULL;
-}
-
-
 if (isset($_POST['submit'])) {
     /* checks to see if the used checked year only button */
     $yearOnly = isset($_POST['yearOnly']);
@@ -106,11 +80,6 @@ if (isset($_POST['submit'])) {
                 $sql_errors['type']
             );
 
-
-            if ($type_id === FALSE) {
-                echo "<hr>Type: $type_id<br>Err: {$sql_errors['type']}<br>";
-            }
-            echo "<hr>Type: $type_id<br>Err: {$sql_errors['type']}<br>";
             /* INSERT TYPE END */
 
             /*********/
@@ -135,6 +104,7 @@ if (isset($_POST['submit'])) {
             /*********/
 
             /* INSERT ITEM START */
+
             $item_id = INSERT(
                 SQL_INSERT_ITEM(
                         $upload_item['title'], $type_id, $image_id, $upload_item['published_date'], $yearOnly,
@@ -144,12 +114,12 @@ if (isset($_POST['submit'])) {
                 $sql_errors['item']
             );
 
-            echo "<hr>Item: $item_id<br>Err: {$sql_errors['item']}<br>";
             /* INSERT ITEM END */
 
             /*********/
 
             /* INSERT FILES START */
+
             $file_ids = array();
             $num_of_files = count($files);
             foreach ($files as $file) {
@@ -165,7 +135,6 @@ if (isset($_POST['submit'])) {
                     error_log('Possible cause: ' . $sql_errors['files']);
                 }
             }
-
 
             /* INSERT FILES END */
 
@@ -198,9 +167,6 @@ if (isset($_POST['submit'])) {
                     $author_ids[] = $id;
                 }
             }
-
-            print_r($author_ids);
-            echo 'Err: ' . $sql_errors['authors'];
             /* INSERT AUTHORS END */
 
             /*********/
@@ -219,8 +185,6 @@ if (isset($_POST['submit'])) {
                 }
             }
 
-            print_r($author_ids);
-            echo 'Err: ' . $sql_errors['authors'];
             /* INSERT SUBJECTS END */
 
             /*********/
@@ -249,103 +213,55 @@ if (isset($_POST['submit'])) {
 
             /* INSERT ITEM_HAS_SUBJECTS END */
 
-            echo '<hr>SQL ERROR CHECK START<br>';
-            if (array_filter($sql_errors)) {
-                echo showWarn('SQL ERROR:', 'There were unexpected insertion errors.');
-            } else {
-                //mysqli_close($conn);
-                header("Location: index.php#$item_id");
+            /*********/
+
+            /* SQL ERROR CHECK START */
+            $errors_present = array_filter($sql_errors);
+
+            // redirect on no errors
+            if (!$errors_present) {
+                header("Location: index.php#$item_id?noerr");
             }
-            echo 'SQL ERROR CHECK END<hr>';
+
+            // ->>> after the include header the errors will appear.
+            // ...
+            /* SQL ERROR CHECK END */
         }
     }
 }
 
-function not_valid_class($boolean = 'do nothing')
-{
-    if ($boolean === true) echo 'is-valid';
-    elseif ($boolean === false) echo 'is-invalid';
-}
-
-function echo_invalid_feedback($boolean = false, $msg = 'Invalido')
-{
-    if ($boolean) echo "<div class=\"invalid-feedback\">$msg</div>";
-}
-
 include_once('templates/header.php');
+
+if (isset($errors_present) && $errors_present) {
+
+    echo showDanger('SQL ERROR:', "There were unexpected insertion errors");
+
+    // check if it was a upload file error
+    if (!empty($sql_errors['files'])) {
+        echo showDanger('SQL UPLOAD ERROR:', 'Error uploading files! Due to: ' . $sql_errors['files']);
+        // remove it from the list
+        unset($sql_errors['files']);
+    }
+
+    // check if any other error exists
+    if (array_filter($sql_errors)) {
+        $keys = array_keys($sql_errors);
+        foreach ($keys as $key) {
+            $err = trim($sql_errors[$key]);
+            if (!empty($err)) {
+                echo showWarn("Insert $key Error:", $err);
+            }
+        }
+
+        echo showWarn('Important: ', 'Do keep in mind the item might have been created (if there wasn\'t an \'Insert Item Error\')');
+    }
+
+}
 
 ?>
 
 <link rel="stylesheet" href="css/autocomplete.css">
-
-<style>
-    .floatCenter {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        margin-top: -50px;
-        margin-left: -50px;
-        width: 100%;
-        height: 100%;
-    }
-
-    #overlay {
-        position: fixed;
-        display: none;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(255,255,255,0.5);
-        z-index: 2;
-        cursor: pointer;
-    }
-
-    #stick-top {
-        position: fixed;
-        margin: 10px;
-        z-index: 99;
-        bottom: 20px;
-        right: 30px;
-
-    }
-
-    #stick-top span {
-        position: absolute;
-        margin-top: 10px;
-        margin-right: 15px;
-        top: 0;
-        right: 0;
-    }
-
-    .close-progress {
-        background: white;
-        color: gray;
-    }
-
-    .close-progress:hover {
-        background: gray;
-        color: white;
-    }
-
-    .hover-times {
-        background: white;
-        color: gray;
-    }
-
-    .hover-times:hover {
-        background: gray;
-        color: white;
-    }
-
-    .hover-times:active {
-        background: gray;
-        color: red;
-    }
-
-</style>
+<link rel="stylesheet" href="css/add.css">
 
 <!-- PROGRESS CARD START -->
 <div class="card" id="stick-top" style="width: 18rem;">
@@ -626,16 +542,13 @@ include_once('templates/header.php');
     </div>
 </div>
 
-<script charset="utf-8" src="js/jquery-3.2.1.slim.min.js"></script>
-<script src="js/autocomplete.js"></script>
 <script>
-    /*An array containing all the article types*/
     const types = [
         <?php foreach (query(SQL_GET_DOC_TYPES) as $type) echo '"' . htmlspecialchars($type['type']) . '",'; ?>
     ];
-
 </script>
-
+<script charset="utf-8" src="js/jquery-3.2.1.slim.min.js"></script>
+<script src="js/autocomplete.js"></script>
 <script type="text/javascript" src="js/pdf.js"></script>
 <script src="js/add.js"></script>
 
