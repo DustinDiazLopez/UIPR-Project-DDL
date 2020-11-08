@@ -53,6 +53,12 @@ upload_max_filesize = 256M
 max_file_uploads = 25
 ```
 
+#### Recommened settings for `my.ini` (or `mysqldump.cnf`)
+```ini
+# the same value as upload_max_filesize in the php.ini file
+max_allowed_packet = 256M
+```
+
 #### Restart the services
 
 For `XAMPP` just click `start` and `stop` in the GUI, but for `LAMP` (or Linux):
@@ -64,12 +70,6 @@ sudo systemctl restart mysql
 Apache
 ```terminal
 sudo systemctl restart apache2
-```
-
-#### Recommened settings for `my.ini` (or `mysqldump.cnf`)
-```ini
-# the same value as upload_max_filesize in the php.ini file
-max_allowed_packet = 256M
 ```
 
 ### Step 1: The Config File
