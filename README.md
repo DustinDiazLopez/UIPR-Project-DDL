@@ -113,10 +113,8 @@ The application will use `SHA-512` for hashing the passwords. If you wish to cha
 
 ### Step 3: Copying over the source code
 
-- In `htdocs` or `www` folder, copy over the `uipr-colon` folder, and try to access, e.g., 
-`http://localhost/uipr-colon/hello.php`.
-It should say (***no errors should be displayed***):
-    > It works!
+- In `htdocs` or `www` folder, copy over the `uipr-colon` folder, and try to access, e.g.,
+ ` http://localhost/uipr-colon/hello.php `.It should display the PHP information.
 
     - This step might require more setup on `LAMP`.
 
@@ -132,15 +130,15 @@ the first line in `connect.php` (`uipr-colon/connect.php`) to match the new file
 ### Step 4: Creating an Admin User
 - Access `hello.php` again.
 
-    > It works!
-
-- Now pass in as the argument `pwd` (i.e., `hello.php?pwd=your_password`). This will return the hashed version of the
+- Now pass in as the argument `pwd` (e.g., `hello.php?pwd=your_password`). This will return the hashed version of the
 inputted text, using the hash algorithm (by default `SHA-526`) specified in the config file of `step 1`. It should
 return something like:
+    ```text
+    r4nwUWpjef1wJgwfW4WgSim2P0qskuBFmYQ/p56LZDONtVZiS6CHNBji25G9CTc/kOAjkvwnxeJw4Wr8CuTjS0
+    ```
 
-    > r4nwUWpjef1wJgwfW4WgSim2P0qskuBFmYQ/p56LZDONtVZiS6CHNBji25G9CTc/kOAjkvwnxeJw4Wr8CuTjS0
-
-- Now use the following SQL command, replacing the `<hashed_password>` with whatever you got back, and then finally, execute the SQL command.
+- Now use the following SQL command, replacing the `<hashed_password>` with whatever you got back, and then finally, 
+execute the SQL command.
 
     ```SQL
     INSERT INTO `admin` (`email`, `username`, `password`) VALUES ('example@example.com', 'username', '<hashed_password>');
