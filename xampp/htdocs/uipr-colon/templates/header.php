@@ -42,16 +42,20 @@ include_once('templates/loading.php');
                     <a class="nav-link" href="add.php"><i class="fas fa-plus-circle"></i> Añadir un Artículo</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="adminpanel.php"><i class="fas fa-cog"></i> Panel del Administrador</a>
+                    <a class="nav-link" href="adminpanel.php"><i class="fas fa-tools"></i> Panel del Administrador</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-server"></i> Documentación</a>
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-server"></i> Enlaces</a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL/wiki/User-Doc"><i class="fas fa-user-graduate"></i> Usuario</a>
-                        <a class="dropdown-item" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL/wiki/Dev-Doc"><i class="fas fa-ghost"></i> Desarrolladores</a>
+                        <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/userdoc.php"><i class="fas fa-user"></i> Documentación para el Usuario</a>
+                        <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/newissue.php"><i class="fas fa-bug"></i> Reportar un Error</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" target="_blank" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL"><i class="fab fa-github"></i> Código Fuente</a>
-                        <a class="dropdown-item" target="_blank" href="https://github.com/DustinDiazLopez/UIPR-Project-DDL/blob/main/LICENSE"><i class="far fa-copyright"></i> Licencia (<span style="font-family:courier new,courier,monospace; font-size:16px;">MIT</span>)</a>
+                        <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/wiki.php"><i class="fas fa-book"></i> WIKI</a>
+                        <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/releases.php"><i class="fas fa-cloud-download-alt"></i> Descargar la Última Versión</a>
+                        <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/code.php"><i class="fab fa-github"></i> Código Fuente</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/readme.php"><i class="fas fa-book-open"></i> README</a>
+                        <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/license.php"><i class="far fa-copyright"></i> Licencia (<span style="font-family:courier new,courier,monospace; font-size:16px;">MIT</span>)</a>
                     </div>
                 </li>
             </ul>

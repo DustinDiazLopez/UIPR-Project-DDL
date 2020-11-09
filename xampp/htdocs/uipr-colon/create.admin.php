@@ -39,7 +39,7 @@ if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['pwd']) 
     if (empty($repwd)) {
         $errors['repwd'] = 'Repite la contraseña.';
     } elseif (strlen($repwd) < $min_pwd_len) {
-        $errors['pwd'] = 'Las contraseñas no coinciden.';
+        $errors['pwd'] = 'Provee una contraseña con más de 6 caracteres.';
     }
 
     if (array_filter($errors)) {
