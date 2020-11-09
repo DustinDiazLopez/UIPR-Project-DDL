@@ -223,11 +223,14 @@ function SQL_FILE_INSERT($id, $file)
 
 /**
  * Queries the database for all the files that do not have an item associated with them.
+ * @param bool $exclude_content whether to include the binary of the files
  * @return array|null returns the associative array of the files (id, and path), or NULL if something went wrong.
  */
-function SQL_GET_ORPHANED_FILES()
+function SQL_GET_ORPHANED_FILES($exclude_content=true)
 {
-    return query(SQL_GET_ORPHANED_FILES);
+    return $exclude_content
+        ? query(SQL_GET_ORPHANED_FILES_NO_CONTENT)
+        : query(SQL_GET_ORPHANED_FILES);
 }
 
 /**
@@ -827,4 +830,14 @@ function sql_delete_item($item_id)
 {
 
     return SQL_DELETE_ITEM_BY_ID. $item_id;
+}
+
+/**
+ * Returns the item in the database matching the id.
+ * @param $item_id integer the id of the item
+ * @return array|bool|null
+ */
+function SQL_GET_ITEM_BY_ID($item_id)
+{
+    return query(sprintf(SQL_GET_ITEM, $item_id));
 }

@@ -4,7 +4,15 @@ include_once('sql.const.php');
 include_once('sql.operations.php');
 include_once('sql.utils.php');
 
+/**
+ * What will appear in the header and the title of every page.
+ */
 define('APP_NAME', 'Catálogo UIPR CMS');
+
+/**
+ * This will be used in the lang attribute of the html pages, and the date of the items.
+ */
+define('LANG', 'es');
 
 /**
  * Checks to see if the user has logged in, if not redirects to the login page, and if the user had tried to access a
@@ -29,10 +37,33 @@ function authenticate($secondsOfInactivity=3600)
     if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE) {
         session_destroy();
         if (isset($current_path)) {
+            $current_path = rawurlencode($current_path);
             header("Location: login.php?noauth=$current_path");
         } else {
             header("Location: login.php");
         }
+    }
+}
+
+/**
+ * Redirects to a location, only to host
+ * @param string $redir_loc the encoded url
+ */
+function redir($redir_loc='')
+{
+    if (isset($_SESSION['redir']) && !empty($_SESSION['redir'])) {
+        $redir_loc = trim($_SESSION['redir']);
+    }
+
+    if (strpos($redir_loc, $_SERVER['HTTP_HOST']) === FALSE) {
+        if (empty($redir_loc)) {
+            header("Location: index.php");
+        } else {
+            header("Location: index.php?error=invalidurl");
+        }
+    } else {
+        $redir_loc = rawurldecode($redir_loc);
+        header("Location: $redir_loc");
     }
 }
 
@@ -463,11 +494,11 @@ function authorsToCSV($authors, $atr='author_name')
  * Formats an inputted date into a easily (intuitively) readable format.
  * @param string $date date to format (e.g., 10-30-2020, could also be in another format).
  * @param false $yearOnly (optional) shows the year only
- * @param string $locale (optional) language to use (e.g., en, es, etc.)
+ * @param string $locale (optional) language to use (e.g., en, es, etc.). See {@link LANG}
  * @param string $format (optional) format of the date to return
  * @return string returns the formatted date as a string.
  */
-function formatDate($date, $yearOnly = false, $locale = 'es', $format = "%e de %B de %Y")
+function formatDate($date, $yearOnly = false, $locale = LANG, $format = "%e de %B de %Y")
 {
     $currentLocale = setlocale(LC_ALL, 0);
     setlocale(LC_ALL, $locale);

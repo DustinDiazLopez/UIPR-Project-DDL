@@ -26,39 +26,24 @@ if (isset($file['content']) || !empty($file['content'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo LANG; ?>">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/file.css">
+
     <title><?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?></title>
-
-    <style>
-        * {
-            padding: 0;
-            margin: 0;
-        }
-
-        .container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-
-        #pdf-object {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
 </head>
 
 <body>
+
+<?php include_once('templates/loading.php');?>
+
 <div class="container">
     <object type="<?php echo isset($file['type']) && !empty($file['type']) ? $file['type'] : 'application/pdf'; ?>" data="#" title="<?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>" id="pdf-object">
-        <p>Este navegador no soporta ver archivos este tipo de archivo. Descargue el documento para verlo:
+        <p>El navegador no soporta ver este tipo de documento o un error paso. Favor de descargar el documento a través de este enlace:
             <a id="blob-download" onclick="unSupportedBrowserDownload()" href="#" download="<?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>">
                 Descargar <?php echo isset($file['filename']) && !empty($file['filename']) ? $file['filename'] : 'No Name'; ?>
             </a>.
@@ -93,6 +78,7 @@ if (isset($file['content']) || !empty($file['content'])) {
         }
     }
 </script>
+
 </body>
 
 </html>

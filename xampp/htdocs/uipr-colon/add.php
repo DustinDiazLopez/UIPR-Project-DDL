@@ -52,11 +52,10 @@ if (isset($_POST['submit'])) {
         'files' => $files,
     ];
 
+    $form_errors = array_filter($errors);
+    // if ^ the user will be notified after the inclusion of the header
 
-    if (array_filter($errors)) {
-        print_r($errors);
-        echo showWarn('Error:', 'Errores se detectaron en la forma.');
-    } else {
+    if (!$form_errors) {
         if (isset($conn)) {
 
             $upload_item = [
@@ -220,7 +219,8 @@ if (isset($_POST['submit'])) {
 
             // redirect on no errors
             if (!$errors_present) {
-                header("Location: index.php#$item_id?noerr");
+                $t = json_decode($item['title']);
+                header("Location: index.php#$item_id?created=$t}]");
             } // esleif ->>>> after the include header the errors will appear.
 
             // ...
@@ -230,6 +230,10 @@ if (isset($_POST['submit'])) {
 }
 
 include_once('templates/header.php');
+
+if (isset($form_errors) && $form_errors) {
+    echo showWarn('Error:', 'Errores se detectaron en la forma.');
+}
 
 if (isset($errors_present) && $errors_present) {
 
@@ -255,6 +259,7 @@ if (isset($errors_present) && $errors_present) {
         }
 
         if (!$inserted) {
+
             echo showWarn('Important: ', 'The item was created)');
         }
     }
@@ -280,9 +285,9 @@ if (isset($errors_present) && $errors_present) {
         <li class="list-group-item list-group-item-danger" id="progress-title">Título</li>
         <li class="list-group-item list-group-item-danger" id="progress-type">Tipo</li>
         <li class="list-group-item list-group-item-danger" id="progress-date">Fecha de Publicación</li>
+        <li class="list-group-item list-group-item-danger" id="progress-description">Descripción del artículo</li>
         <li class="list-group-item list-group-item-danger" id="progress-author">Autores</li>
         <li class="list-group-item list-group-item-danger" id="progress-subject">Sujetos</li>
-        <li class="list-group-item list-group-item-danger" id="progress-description">Descripción del artículo</li>
         <li class="list-group-item list-group-item-danger" id="progress-files">Archivos</li>
     </ul>
 </div>
@@ -347,49 +352,20 @@ if (isset($errors_present) && $errors_present) {
 
                 <hr />
 
-                <!-- FILES -->
-                <div class="form-row">
-                    <label for="files">Seleccionar los Archivos
-                        <?php hint(
-                            'Puede seleccionar más de un archivo. 
-                El máximo tamaño combinado es de 40 megabytes. Este limite esta expuesto por el servidor
-                Si desea un tamaño mas grande habla con el webmaster para que edite la configuración de PHP 
-                (php.ini -> upload_max_filesize y post_max_size, Requerirá un reinicio de XAMPP).'
-                        ); ?>
-                    </label>
-
-                    <div id="file-view list-group">
-                        <input type="hidden" value="0" name="number-of-files" id="number-of-files" style="overflow: hidden;">
-                        <div class="col-xs-1 text-center">
-                            <input class="form-control btn <?php not_valid_class($valid_files); ?>" type="file" id="files" multiple="multiple" accept=".pdf" required>
-                        </div>
-                        <?php echo_invalid_feedback(!$valid_files, $errors['files']); ?>
-
-                    </div>
-
-
-                    <div class="form-row">
-                        <div class="col-xs-1 container-fluid">
-                            <hr />
-                            <p id="file-info"></p>
-                            <ul id="fileList" class="list-group">
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="col-xs-1 container-fluid" id="size-warning"></div>
-                    </div>
-                </div>
-                <!-- FILES END -->
-                <hr />
-
                 <!-- DESCRIPTION -->
                 <div class="form-group">
                     <label for="description">Descripción del artículo</label>
                     <textarea class="form-control <?php not_valid_class($valid_description); ?>" id="description" name="description" aria-describedby="descriptionHelp" rows="3" required><?php echo $item['description']; ?></textarea>
                     <small id="descriptionHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
                     <?php echo_invalid_feedback(!$valid_description, $errors['description']); ?>
+                </div>
+                <hr />
+                <div class="form-group">
+                    <label for="metadata">Metadata
+                        <?php hint('Información que no será visible, pero que se utilizará en la búsqueda (por ejemplo, texto completo del artículo, otros títulos, etc.). En otras palabras, cualquier información relacionada con el artículo.'); ?>
+                    </label>
+                    <textarea class="form-control" id="metadata" name="metadata" rows="3" aria-describedby="metaHelp"><?php echo $item['metadata']; ?></textarea>
+                    <small id="metaHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
                 </div>
                 <hr />
                 <!-- AUTHORS -->
@@ -456,20 +432,46 @@ if (isset($errors_present) && $errors_present) {
                     </div>
                 </div>
 
-                <hr />
-                <div class="form-row">
-                    <!-- METADATA -->
-                    <div class="form-group">
-                        <label for="metadata">Metadata
-                            <?php hint('Información que no será visible, pero que se utilizará en la búsqueda (por ejemplo, texto completo del artículo, otros títulos, etc.). En otras palabras, cualquier información relacionada con el artículo.'); ?>
-                        </label>
-                        <textarea class="form-control" id="metadata" name="metadata" rows="3" aria-describedby="metaHelp"><?php echo $item['metadata']; ?></textarea>
-                        <small id="metaHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
-                    </div>
-                </div>
-                <hr />
             </div>
             <!-- COL 1 END -->
+
+            <hr />
+
+            <!-- FILES -->
+            <div class="form-row">
+                <label for="files">Seleccionar los Archivos
+                    <?php hint(
+                        'Puede seleccionar más de un archivo. 
+                El máximo tamaño combinado es de 40 megabytes. Este limite esta expuesto por el servidor
+                Si desea un tamaño mas grande habla con el webmaster para que edite la configuración de PHP 
+                (php.ini -> upload_max_filesize y post_max_size, Requerirá un reinicio de XAMPP).'
+                    ); ?>
+                </label>
+
+                <div id="file-view list-group">
+                    <input type="hidden" value="0" name="number-of-files" id="number-of-files" style="overflow: hidden;">
+                    <div class="col-xs-1 text-center">
+                        <input class="form-control btn <?php not_valid_class($valid_files); ?>" type="file" id="files" multiple="multiple" accept=".pdf" required>
+                    </div>
+                    <?php echo_invalid_feedback(!$valid_files, $errors['files']); ?>
+
+                </div>
+
+
+                <div class="form-row">
+                    <div class="col-xs-1 container-fluid">
+                        <hr />
+                        <p id="file-info"></p>
+                        <ul id="fileList" class="list-group">
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-xs-1 container-fluid" id="size-warning"></div>
+                </div>
+            </div>
+            <!-- FILES END -->
 
             <hr />
 

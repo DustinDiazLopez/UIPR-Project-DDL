@@ -5,7 +5,7 @@ authenticate();
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="<?php echo LANG; ?>">
 
 <head>
     <!-- meta tags -->
@@ -27,6 +27,10 @@ authenticate();
 </head>
 
 <body>
+<?php
+$background_color = 'rgba(255, 255, 255, 0.75)';
+include_once('templates/loading.php');
+?>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="index.php"><i class="fab fa-hive"></i> <?php echo APP_NAME; ?></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">

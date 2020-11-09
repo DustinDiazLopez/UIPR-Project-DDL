@@ -61,12 +61,15 @@ include_once('templates/header.php');
                 }
             } elseif (isset($_GET['deleted'])) {
                 echo showSuccess("Éxito - Se borró un artículo:", "Todavía tienes acceso a los PDFs relacionado con el artículo borrado.");
+            } elseif (isset($_GET['created'])) {
+                $t = json_decode($_GET['created']);
+                echo showSuccess("Éxito:", "Se creo el articulo \"$t\"");
             }
             // IF NOTHING IS FOUND
             if (empty($items) || $items === NULL || count($items) == 0 || !array_filter($items)) {
                 echo '<div class="center-content">
-                <svg height="100%" width="100%" xmlns:xlink="http://www.w3.org/1999/xlink"><a xlink:href="add.php" alt="Nada encontrado, añadir un articulo."> 
-                <text x="100" y="100" style="fill:black;font-size:100px;" transform="rotate(0,0,0)">...</text> 
+                <svg height="100%" width="100%" xmlns:xlink="http://www.w3.org/1999/xlink"><a xlink:href="add.php"> 
+                <text x="100" y="100" style="fill:black;font-size:50px;" transform="rotate(0,0,0)">Nada encontrado, añadir un articulo.</text> 
                 </a></svg></div>';
             } else {
                 foreach ($items as $item) include('templates/detailed.item.php');

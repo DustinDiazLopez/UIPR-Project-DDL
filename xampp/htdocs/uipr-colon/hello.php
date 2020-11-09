@@ -5,7 +5,7 @@ include_once('utils/utils.php');
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="<?php echo LANG; ?>">
 
 <head>
     <meta charset="UTF-8">

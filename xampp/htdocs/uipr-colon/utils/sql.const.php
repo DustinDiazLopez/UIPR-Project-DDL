@@ -28,6 +28,7 @@ define('SQL_GET_FILES', 'SELECT fi.item_id, f.id, f.`path`, f.`content`, f.`file
 define('SQL_GET_IMAGE', 'SELECT image FROM image where id = ');
 define('SQL_GET_FILE', 'SELECT `id`, `content`, `filename`, `type`, `size`, `path` FROM `file` WHERE `id` = ');
 define('SQL_GET_TYPE', 'SELECT `id`, `type` FROM `type` WHERE `id` = ');
+define('SQL_GET_ITEM', 'SELECT i.id, i.title, t.`type`, i.image_id, i.description, i.create_at, i.published_date, i.year_only FROM item i INNER JOIN `type` t ON i.type_id = t.id where i.id = %d');
 define('SQL_GET_SUBJECTS_BY_ID', 'SELECT s.`subject` FROM `subject` s inner join item_has_subject `is` inner join item i on i.id = `is`.item_id AND `is`.subject_id = s.id WHERE i.id = ');
 define('SQL_GET_AUTHORS_BY_ID', "SELECT a.author_name FROM author a inner join author_has_item ai inner join item i on i.id = ai.item_id AND ai.author_id = a.id WHERE i.id = ");
 define('SQL_GET_ITEMS_BY_AUTHOR_ID', 'SELECT i.id, i.title, t.`type`, i.image_id, i.description, i.meta, i.create_at, i.published_date, i.year_only FROM author_has_item ai INNER JOIN author a INNER JOIN item i INNER JOIN `type` t ON i.type_id = t.id WHERE a.id = author_id AND i.id = item_id AND a.id = ');
@@ -61,6 +62,7 @@ define('SQL_DELETE_ADMIN_BY_ID', 'DELETE FROM `admin` WHERE `admin`.`id` = ');
 
 // get all by no relation
 define('SQL_GET_ORPHANED_FILES', 'SELECT f.id, f.`path`, f.`content`, f.`filename`, f.`type`, f.`size` FROM `file` f WHERE NOT EXISTS (SELECT * FROM file_has_item fi WHERE f.id = fi.file_id)');
+define('SQL_GET_ORPHANED_FILES_NO_CONTENT', 'SELECT f.id, f.`path`, f.`filename`, f.`type`, f.`size` FROM `file` f WHERE NOT EXISTS (SELECT * FROM file_has_item fi WHERE f.id = fi.file_id)');
 define('SQL_GET_ORPHANED_AUTHORS', 'SELECT a.id, a.author_name FROM author a WHERE NOT EXISTS (SELECT * FROM author_has_item ai WHERE a.id = ai.author_id)');
 define('SQL_GET_ORPHANED_SUBJECTS', 'SELECT a.id, a.`subject` FROM `subject` a WHERE NOT EXISTS (SELECT * FROM item_has_subject ai WHERE a.id = ai.subject_id)');
 define('SQL_GET_ORPHANED_IMAGES', 'SELECT a.id FROM `image` a WHERE NOT EXISTS (SELECT * FROM item i WHERE a.id = i.image_id)');
