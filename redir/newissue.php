@@ -1,3 +1,3 @@
 <?php
 include_once('../consts.php');
-redir_pre_req();
+redir_new_issue();

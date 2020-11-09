@@ -1,6 +1,6 @@
 <?php
-header('Location: http://35.236.192.81/index.php');
 
 include_once('consts.php');
-echoPaths('Site under construction');
+echo '<h1>Go to: <a target="_blank" href="'.DEV_SITE.'">Development Demo Site</a></h1>';
+echoPaths('Site is under construction');
 
