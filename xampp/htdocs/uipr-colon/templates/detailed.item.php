@@ -87,13 +87,13 @@
                         <th scope="row"><?php echo $f['id']; ?></th>
                         <td scope="row" class="file"><?php echo $f['filename']; ?></td>
                         <td scope="row">
-                            <form action="file.php" method="POST" style="padding:0px;margin:0px;" target="_blank">
+                            <form action="file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
                                 <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="fas fa-external-link-alt"></i></button>
                             </form>
                         </td>
                         <td scope="row">
-                            <form action="file.php" method="POST" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")' target="open-pdf-view-">
+                            <form action="file.php" method="GET" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")' target="open-pdf-view-">
                                 <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="far fa-window-restore"></i></button>
                             </form>

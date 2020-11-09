@@ -21,12 +21,12 @@ define('LANG', 'es');
  */
 function authenticate($secondsOfInactivity=3600)
 {
-    $current_path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $current_path = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
 
     if (session_status() == PHP_SESSION_NONE) session_start();
     if (isset($_SESSION['session_started'])){
         if ((mktime() - $_SESSION['session_started'] - $secondsOfInactivity) > 0){
-            header("Location: logout.php?se");
+            header("Location: logout.php?se&noauth=$current_path");
         } else {
             $_SESSION['session_started'] = mktime();
         }
@@ -37,7 +37,6 @@ function authenticate($secondsOfInactivity=3600)
     if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] === FALSE) {
         session_destroy();
         if (isset($current_path)) {
-            $current_path = rawurlencode($current_path);
             header("Location: login.php?noauth=$current_path");
         } else {
             header("Location: login.php");
@@ -51,6 +50,8 @@ function authenticate($secondsOfInactivity=3600)
  */
 function redir($redir_loc='')
 {
+    $redir_loc = rawurldecode($redir_loc);
+
     if (isset($_SESSION['redir']) && !empty($_SESSION['redir'])) {
         $redir_loc = trim($_SESSION['redir']);
     }
@@ -62,7 +63,6 @@ function redir($redir_loc='')
             header("Location: index.php?error=invalidurl");
         }
     } else {
-        $redir_loc = rawurldecode($redir_loc);
         header("Location: $redir_loc");
     }
 }
@@ -599,7 +599,9 @@ function ddl_comp_pwd($pwd, $user_id)
     $query = SQL_GET_PWD_BY_ID($user_id);
     if (count($query) > 0 && isset($query[0]['password'])) {
         $hashed_password = $config['salt'] . $query[0]['password'];
-        if(!function_exists('hash_equals')) { /*for php 5.5*/
+
+        // hash_equals does not exists for php5.5
+        if(!function_exists('hash_equals')) {
             function hash_equals($str1, $str2) {
                 if(strlen($str1) != strlen($str2)) {
                     return false;
@@ -610,10 +612,27 @@ function ddl_comp_pwd($pwd, $user_id)
                     return !$ret;
                 }
             }
-        } else return hash_equals($hashed_password, crypt($pwd, $hashed_password));
+        }
+
+        return hash_equals($hashed_password, crypt($pwd, $hashed_password));
     } else {
         return NULL;
     }
+}
+
+/**
+ * @param float $var the value to round
+ * @param int $places the number of places to round to.
+ * @return float|int
+ * Returns a float of the rounded number
+ * Returns an integer when the round value ($places) is 1
+ */
+function round_ddl($var, $places=2)
+{
+    if ($places < 0) $places = 0;
+    $round_val = 1;
+    for ($i = 1; $i <= $places; $i++) $round_val *= 10;
+    return round($var * $round_val) / $round_val;
 }
 
 /**

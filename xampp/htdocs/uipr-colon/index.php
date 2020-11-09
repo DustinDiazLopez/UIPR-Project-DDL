@@ -58,6 +58,11 @@ include_once('templates/header.php');
                             "Warning:",
                             "A request for a file was made, but failed. You may be missing form data expected key <code>view-file</code> or <code>download-file</code> to be present with another key <code>file</code>, specifying the path (path in the database)."
                     );
+                } elseif ($_GET['error'] == "no-pdf") {
+                    echo showWarn(
+                        "Advertencia:",
+                        "El archivo solicitado no parece existir ..."
+                    );
                 }
             } elseif (isset($_GET['deleted'])) {
                 echo showSuccess("Éxito - Se borró un artículo:", "Todavía tienes acceso a los PDFs relacionado con el artículo borrado.");

@@ -81,16 +81,21 @@ if (isset($conn)) {
         $arr = SQL_GET_ORPHANED_FILES();
         $count = 0;
         $total = count($arr);
+        $total_size = 0;
         // and deletes them
         if ($total > 0) {
             foreach ($arr as $obj) {
                 if (isset($obj['id'])) {
                     query(sql_delete_file_by_id($obj['id']));
                     $count += mysqli_affected_rows($conn);
+                    if (mysqli_affected_rows($conn) > 0) {
+                        $total_size += $obj['size'];
+                    }
                 }
             }
 
-            redir_success_error($redirTitle, "$count de $total archivos huérfanos fueron borrados.");
+            $total_size = round_ddl($total_size / 1e+6);
+            redir_success_error($redirTitle, "$count de $total archivos huérfanos fueron borrados ($total_size MB).");
         } else {
             redir_warn_error('No hay archivos huérfanos', '');
         }

@@ -46,7 +46,7 @@ function INSERT($sql, $sql_fallback_get, &$error_buffer)
             // check to see the fallback sql is empty
             if (!empty($sql_fallback_get)) {
                 // get the first value of the query
-                return query($sql_fallback_get)[0]['id'];
+                return intval(query($sql_fallback_get)[0]['id']);
             }
         }
 
