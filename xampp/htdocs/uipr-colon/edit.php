@@ -16,8 +16,8 @@ if (isset($_POST['editItem']) && !empty($_POST['editItem'])) {
                 $image = SQL_GET_IMAGE($item['image_id']);
             }
 
-            $files = SQL_GET_FILES($item['id'], true);
-            $orphaned_files = SQL_GET_ORPHANED_FILES(true);
+            $files = SQL_GET_FILES($item['id']);
+            $orphaned_files = SQL_GET_ORPHANED_FILES();
 
             print_r($item);
             print_r($files);
