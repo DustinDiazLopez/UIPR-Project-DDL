@@ -83,13 +83,13 @@ Create a folder in `xampp` or `var` called `colon-uipr-cms-ddl-files-and-config`
 you changed it in the source code),
 and in that folder create a JSON file called `mysql_uiprcmsddl_config.json`. Then add this JSON object to the file:
 ```json
-{
-    "host": "localhost",
-    "port": "3306",
-    "username": "root",
-    "password": "password",
-    "database": "UIPRCMSDDL",
-    "salt": "$6$rounds=5000$exampleSalt$"
+{ 
+    "host": "localhost", 
+    "port": "3306", 
+    "username": "dustin", 
+    "password": "password", 
+    "database": "UIPRCMSDDL", 
+    "salt": "exampleSalt"
 }
 ```
 
@@ -99,10 +99,6 @@ MySQL configuration.
 #### WARNING!!!
 Make sure this file ***IS NOT*** in a publicly available location. Make sure it is the root directory of xampp
 (`xampp` folder), or lamp (`var` folder)
-
-#### Salt
-The application will use `SHA-512` for hashing the passwords. If you wish to change this (not recommended) follow this
-[link](https://www.php.net/manual/en/function.crypt.php)
 
 ---
 

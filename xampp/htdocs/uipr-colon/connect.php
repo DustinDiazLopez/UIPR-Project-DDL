@@ -10,16 +10,18 @@ if (!is_dir(DDL_PATH))
         echo 'Please create a directory ' . DDL_PATH . ' from current path.';
 
 if (!file_exists(PATH_TO_CONFIG)) {
-    $put = file_put_contents(PATH_TO_CONFIG, '{ "host": "localhost", "port": "3306", "username": "dustin", "password": "password", "database": "UIPRCMSDDL", "salt": "$6$rounds=5000$exampleSalt$" }');
+    $put = file_put_contents(PATH_TO_CONFIG, '{ "host": "localhost", "port": "3306", "username": "dustin", "password": "password", "database": "UIPRCMSDDL", "salt": "epIHEZHeJQyBIry" }');
     if ($put === FALSE)
         echo 'Please create a json config file ' . PATH_TO_CONFIG . ' inside ' . DDL_PATH;
 
 }
 
 $config = json_decode(file_get_contents(PATH_TO_CONFIG), true);
+$config['salt'] = '$6$rounds=5000$' . $config['salt'] . '$';
 
 /**
- * @return false|mysqli
+ * Establishes a connection to the database with the login information specified in {@link DDL_PATH} / {@link PATH_TO_CONFIG}
+ * @return false|mysqli object which represents the connection to a MySQL Server or false if an error occurred.
  */
 function connect() 
 {
@@ -27,6 +29,10 @@ function connect()
     return mysqli_connect($config['host'], $config['username'], $config['password'], $config['database'], $config['port']);
 }
 
+/**
+ * Establishes a connection to the database with the login information specified in {@link DDL_PATH} / {@link PATH_TO_CONFIG}
+ * @return mysqli the {@link mysqli::__construct} object.
+ */
 function connect_obj()
 {
     global $config;
