@@ -97,7 +97,11 @@ and in that folder create a JSON file called `mysql_uiprcmsddl_config.json`. The
 Change `exampleSalt` to a silly string of characters, e.g., `JILASHdfjskfhalskjdjLKJFHsfhlkjsdjhld` (go crazy!), 
 and change the rest of the information (`host`, `port`, `username`, `password`) to match your MySQL configuration.
 
-##### Socket?
+#### WARNING!!!
+Make sure this file ***IS NOT*** in a publicly available location. Make sure it is the root directory of xampp
+(`xampp` folder), or lamp (`var` folder)
+
+#### Socket?
 ***IF you need to specify a socket***, you'll have to edit `connect.php`, and include the socket in both functions of `connect.php`
 (`connect_obj()`, `connect()`)
 
@@ -112,6 +116,8 @@ Please reference the [PHP documentation](https://www.php.net/manual/en/mysqli.co
 
 For example:
 ```PHP
+$config['socket'] = 'path/to/socket.sock';
+
 /**
  * Establishes a connection to the database with the login information specified in {@link DDL_PATH} / {@link PATH_TO_CONFIG}
  * @return false|mysqli object which represents the connection to a MySQL Server or false if an error occurred.
@@ -119,7 +125,7 @@ For example:
 function connect() 
 {
     global $config;
-    return mysqli_connect($config['host'], $config['username'], $config['password'], $config['database'], $config['port'], '/run/mysqld/mysqld.sock');
+    return mysqli_connect($config['host'], $config['username'], $config['password'], $config['database'], $config['port'], $config['socket']);
 }
 
 /**
@@ -129,7 +135,7 @@ function connect()
 function connect_obj()
 {
     global $config;
-    $mysqli = new mysqli($config['host'], $config['username'], $config['password'], $config['database'], $config['port'], '/run/mysqld/mysqld.sock');
+    $mysqli = new mysqli($config['host'], $config['username'], $config['password'], $config['database'], $config['port'], $config['socket']);
     /* check connection */
     if (mysqli_connect_errno()) {
         printf("Connect failed: %s\n", mysqli_connect_error());
@@ -138,10 +144,6 @@ function connect_obj()
     return $mysqli;
 }
 ```
-
-#### WARNING!!!
-Make sure this file ***IS NOT*** in a publicly available location. Make sure it is the root directory of xampp
-(`xampp` folder), or lamp (`var` folder)
 
 ---
 
