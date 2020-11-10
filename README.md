@@ -82,6 +82,7 @@ mysql> SET GLOBAL max_allowed_packet=1073741824;
 Create a folder in `xampp` or `var` called `colon-uipr-cms-ddl-files-and-config` (it ***HAS*** to be that name, unless 
 you changed it in the source code),
 and in that folder create a JSON file called `mysql_uiprcmsddl_config.json`. Then add this JSON object to the file:
+
 ```json
 { 
     "host": "localhost", 
@@ -93,8 +94,50 @@ and in that folder create a JSON file called `mysql_uiprcmsddl_config.json`. The
 }
 ```
 
-Change `exampleSalt` to a silly string of characters (go crazy!), and change the rest of the information to match your 
-MySQL configuration.
+Change `exampleSalt` to a silly string of characters, e.g., `JILASHdfjskfhalskjdjLKJFHsfhlkjsdjhld` (go crazy!), 
+and change the rest of the information (`host`, `port`, `username`, `password`) to match your MySQL configuration.
+
+##### Socket?
+***IF you need to specify a socket***, you'll have to edit `connect.php`, and include the socket in both functions of `connect.php`
+(`connect_obj()`, `connect()`)
+
+Please reference the [PHP documentation](https://www.php.net/manual/en/mysqli.construct.php).
+> **socket** 
+>
+> Specifies the socket or named pipe that should be used.
+>
+> > ***Note:*** 
+> >
+> > Specifying the socket parameter will not explicitly determine the type of connection to be used when connecting to the MySQL server. How the connection is made to the MySQL database is determined by the host parameter.
+
+For example:
+```PHP
+/**
+ * Establishes a connection to the database with the login information specified in {@link DDL_PATH} / {@link PATH_TO_CONFIG}
+ * @return false|mysqli object which represents the connection to a MySQL Server or false if an error occurred.
+ */
+function connect() 
+{
+    global $config;
+    return mysqli_connect($config['host'], $config['username'], $config['password'], $config['database'], $config['port'], '/run/mysqld/mysqld.sock');
+}
+
+/**
+ * Establishes a connection to the database with the login information specified in {@link DDL_PATH} / {@link PATH_TO_CONFIG}
+ * @return mysqli the {@link mysqli::__construct} object.
+ */
+function connect_obj()
+{
+    global $config;
+    $mysqli = new mysqli($config['host'], $config['username'], $config['password'], $config['database'], $config['port'], '/run/mysqld/mysqld.sock');
+    /* check connection */
+    if (mysqli_connect_errno()) {
+        printf("Connect failed: %s\n", mysqli_connect_error());
+        exit();
+    }
+    return $mysqli;
+}
+```
 
 #### WARNING!!!
 Make sure this file ***IS NOT*** in a publicly available location. Make sure it is the root directory of xampp
@@ -107,7 +150,7 @@ Make sure this file ***IS NOT*** in a publicly available location. Make sure it 
 
     - Either insert or paste the `.sql` script in phpMyAdmin (refer to this [link](https://stackoverflow.com/questions/13955988/insert-sql-file-into-your-mysql-database)),
     - or execute the following command (in the MySQL shell):
-    ```MySQL
+    ```SQL
     mysql> source path_to_sql
     ```
 
