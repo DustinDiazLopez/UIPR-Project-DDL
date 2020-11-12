@@ -649,6 +649,7 @@ const pHeading = document.getElementById('progress-heading');
  * Validates the form, if it is not valid it disables the button util it is valid
  */
 function validate() {
+    document.getElementById('iconShowType').innerHTML = getIcon(document.getElementById('type').value);
     const files = counter > 0;
     const title = document.getElementById('title').value.trim().length > 0;
     const description = document.getElementById('description').value.trim().length > 0;
@@ -696,16 +697,6 @@ function createElementFromHTML(htmlString) {
     const div = document.createElement('div');
     div.innerHTML = htmlString.trim();
     return div.firstChild;
-}
-
-/**
- * Changes the icon based on the inputted text
- * @param {HTMLElement} input Input element
- * @param {HTMLElement} element Output element (the i tag)
- */
-function changeIcon(input, element) {
-    console.log(input.value)
-    element.className = createElementFromHTML(getIcon(input.value)).className;
 }
 
 /**

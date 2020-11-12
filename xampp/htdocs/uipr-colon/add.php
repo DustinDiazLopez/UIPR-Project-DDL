@@ -310,13 +310,13 @@ if (isset($errors_present) && $errors_present) {
                         <?php echo_invalid_feedback(!$valid_title, $errors['title']); ?>
                     </div>
                     <div class="col-md-5 mb-3 autocomplete">
-                        <label for="type"><i id="iconShowType" class=""></i> Tipo
+                        <label for="type"><span id="iconShowType"></span> Tipo
                             <?php
                             hint('Si desea un tipo no existente lo puede añadir a traves del Panel del Administrador > Data > Tipos');
                             ?>
 
                         </label>
-                        <select class="custom-select" id="type" name="type" onclick="changeIcon(this, document.getElementById('iconShowType'))">
+                        <select class="custom-select" id="type" name="type">
                             <?php
                             $types = query(SQL_GET_DOC_TYPES);
                             foreach ($types as $type) {
@@ -553,6 +553,7 @@ if (isset($errors_present) && $errors_present) {
 <script charset="utf-8" src="js/jquery-3.2.1.slim.min.js"></script>
 <script src="js/autocomplete.js"></script>
 <script type="text/javascript" src="js/pdf.js"></script>
+<script src="js/generic.js"></script>
 <script src="js/add.js"></script>
 
 <?php include_once('templates/footer.php'); ?>
