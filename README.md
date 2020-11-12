@@ -163,7 +163,8 @@ function connect_obj()
 - In `htdocs` or `www` folder, create a new folder (e.g., `uipr-colon`), and copy over the files of the downloaded 
 release, and try to access, e.g., ` http://localhost/uipr-colon/hello.php `.It should display the PHP information.
 
-    - This step might require more setup on `LAMP`.
+    - This step might require more setup on `LAMP` (see [this](https://unix.stackexchange.com/a/174114) for setting 
+    write permissions).
 
     - If you wish to use the `html` folder or any other folder, please change
 the first line in `connect.php` (`uipr-colon/connect.php`) to match the new file structure.
