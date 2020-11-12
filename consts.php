@@ -3,7 +3,7 @@
 /**
  * URL of the dev site
  */
-define('DEV_SITE', 'http://34.75.237.32/index.html');
+define('DEV_SITE', 'http://34.66.186.123/index.html');
 
 /**
  * URL to the project
