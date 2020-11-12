@@ -14,16 +14,6 @@ define('APP_NAME', 'Catálogo UIPR CMS');
  */
 define('LANG', 'es');
 
-$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
-if (strEndsWith($url, '.php')) {
-    $url = str_replace(basename($_SERVER['SCRIPT_FILENAME']), '', $url);
-}
-
-if (strEndsWith($url, '/'))  {
-    $url = substr($url, 0, strlen($url) - 1);
-}
-
 
 /**
  * Checks to see if the user has logged in, if not redirects to the login page, and if the user had tried to access a

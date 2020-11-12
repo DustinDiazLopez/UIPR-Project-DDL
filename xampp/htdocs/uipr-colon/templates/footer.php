@@ -66,8 +66,8 @@ if (isset($_GET['q']) && isset($only) && !empty($only)) {
         btn.copied = true;
     }
 
-    const copyIcon = '<i class="far fa-copy"></i>';
-    const shareIcon = '<i class="fas fa-share-alt"></i>';
+    const copyIcon = '<i class="far fa-copy"><span class="sr-only">Copiar enlace a documento</span></i>';
+    const shareIcon = '<i class="fas fa-share-alt"><span class="sr-only">Compartir enlace a documento</span></i>';
 
     function changeIcon(btn) {
         if (!btn.copied) {

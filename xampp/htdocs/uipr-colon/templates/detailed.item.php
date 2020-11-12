@@ -88,7 +88,24 @@
                         <th scope="row"><?php echo $f['id']; ?></th>
                         <td scope="row" class="file"><?php echo $f['filename']; ?></td>
                         <td scope="row">
-                            <input type="text" style="display: none" value="<?php echo "$url/file.php?file={$f['id']}"; ?>" id="share-<?php echo $f['id']; ?>">
+                            <input type="text" style="display: none" value="<?php
+                            $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+
+                            $basename = basename($_SERVER['REQUEST_URI'], '?' . $_SERVER['QUERY_STRING']);
+                            $pos = strpos($url, $basename);
+                            if ($pos) {
+                                $url = substr($url, 0, $pos);
+                            }
+
+
+                            if (strEndsWith($url, '/'))  {
+                                $url = substr($url, 0, strlen($url) - 1);
+                            }
+
+                            echo "$url/file.php?file={$f['id']}";
+
+                            ?>" id="share-<?php echo $f['id']; ?>">
                             <button type="submit" class="btn btn-light copy-btn"
                                     style="width:100%;height:100%;" onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', this)" onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
                                 <i class="fas fa-share-alt"></i> <span class="sr-only">Compartir el documento <?php echo $f['filename']; ?>.</span>

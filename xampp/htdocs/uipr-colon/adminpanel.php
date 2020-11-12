@@ -601,10 +601,28 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <td scope="row" class="font-weight-light"><?php echo $f['type']; ?></td>
                                         <td scope="row" class="font-weight-light"><?php echo $f['size'] / 1e+6; ?> MB</td>
                                         <td scope="row">
-                                            <input type="text" style="display: none" value="<?php echo "$url/file.php?file={$f['id']}"; ?>" id="share-admin-<?php echo $f['id']; ?>">
+                                            <input type="text" style="display: none" value="<?php
+
+                                            $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+
+                                            $basename = basename($_SERVER['REQUEST_URI'], '?' . $_SERVER['QUERY_STRING']);
+                                            $pos = strpos($url, $basename);
+                                            if ($pos) {
+                                                $url = substr($url, 0, $pos);
+                                            }
+
+
+                                            if (strEndsWith($url, '/'))  {
+                                                $url = substr($url, 0, strlen($url) - 1);
+                                            }
+
+                                            echo "$url/file.php?file={$f['id']}";
+
+                                            ?>" id="share-admin-<?php echo $f['id']; ?>">
                                             <button type="submit" class="btn btn-light"
                                                     style="width:100%;height:100%;" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>', this)" onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
-                                                <i class="fas fa-share-alt"></i>
+                                                <i class="fas fa-share-alt"></i> <span class="sr-only">Compartir el documento <?php echo $f['filename']; ?>.</span>
                                             </button>
                                         </td>
                                         <td scope="row">
