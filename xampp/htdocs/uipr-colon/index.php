@@ -1,6 +1,9 @@
 <?php
 $title_tag = 'Inicio';
+$allow_guests = TRUE;
 include_once('templates/header.php');
+
+$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
 ?>
 
 <div class="container-fluid">
@@ -62,6 +65,11 @@ include_once('templates/header.php');
                     echo showWarn(
                         "Advertencia:",
                         "El archivo solicitado no parece existir ..."
+                    );
+                } elseif ($_GET['error'] == "403") {
+                    echo showDanger(
+                        "Advertencia:",
+                        "No tiene los privilegios para acceder esa área"
                     );
                 }
             } elseif (isset($_GET['deleted'])) {

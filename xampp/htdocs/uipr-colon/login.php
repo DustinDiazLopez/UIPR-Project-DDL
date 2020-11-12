@@ -32,6 +32,7 @@ if (isset($_POST['submit'])) {
                 $_SESSION['email'] = $id[0]['email'];
                 $_SESSION['username'] = $id[0]['username'];
                 $_SESSION['authenticated'] = TRUE;
+                $_SESSION['guest'] = FALSE;
                 redir();
             } else {
                 $_SESSION['authenticated'] = FALSE;
@@ -41,6 +42,17 @@ if (isset($_POST['submit'])) {
             $errors[] = 'Credenciales incorrectas.';
             $_SESSION['authenticated'] = FALSE;
         }
+    }
+}
+
+if (isset($_POST['guest'])) {
+    if (isset($conn)) {
+        $_SESSION['id'] = -1;
+        $_SESSION['email'] = 'Invitado(a)';
+        $_SESSION['username'] = 'Invitado(a)';
+        $_SESSION['authenticated'] = TRUE;
+        $_SESSION['guest'] = TRUE;
+        redir();
     }
 }
 
@@ -98,7 +110,11 @@ if (isset($_POST['submit'])) {
                 <label for="pwd">Contraseña</label>
                 <input type="password" class="form-control" name="pwd" id="pwd" placeholder="password" value="hello-password" required>
             </div>
-            <button type="submit" name="submit" value="submit" class="btn btn-outline-success my-2 my-sm-0" style="width:100%;height:100%;">Iniciar Sesión <i class="fas fa-sign-in-alt"></i></button>
+            <div class="btn-group" role="group" aria-label="Basic example" style="width: 100%">
+                <button type="submit" name="guest" value="guest" class="btn btn-outline-success" style="width: 100%">Continuar como Invitado(a) <i class="fas fa-hiking"></i></button>
+                <button type="submit" name="submit" value="submit" class="btn btn-outline-primary" style="width: 100%">Iniciar Sesión <i class="fas fa-sign-in-alt"></i></button>
+            </div>
+
         </form>
     </main>
 

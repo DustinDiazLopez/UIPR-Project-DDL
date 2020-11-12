@@ -148,15 +148,22 @@ function getIcon(str) {
             return '<i class="fas fa-file-archive"></i>';
 
         case "code":
+        case "codigo":
+        case "código":
         case "programming":
             return '<i class="fas fa-file-code"></i>';
 
         case "video":
+        case "vídeo":
+        case "película":
+        case "pelicula":
         case "movie":
         case "animation":
             return '<i class="far fa-file-video"></i>';
 
         case "audio":
+        case "cancion":
+        case "canción":
         case "song":
         case "music":
             return '<i class="far fa-file-audio"></i>';
@@ -166,14 +173,19 @@ function getIcon(str) {
 
         case "atlas":
         case "map":
+        case "mapa":
             return '<i class="fas fa-atlas"></i>';
 
+        case "biblia":
         case "bible":
             return '<i class="fas fa-bible"></i>';
 
+        case "coran":
+        case "corán":
         case "quran":
             return '<i class="fas fa-quran"></i>';
 
+        case "tora":
         case "torah":
             return '<i class="fas fa-torah"></i>';
 

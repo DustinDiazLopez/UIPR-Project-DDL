@@ -151,6 +151,14 @@ function search($conn, $q, $only='all') {
 
             }
 
+            $files_query = query(GET_FILES_ITEM_ID . $types . " AND (`f`.`filename` LIKE '%{$keyword}%')");
+
+            if (count($files_query) == 0) {
+                $files_query = query(GET_FILES_ITEM_ID . $types . " AND (`f`.`filename` LIKE '%{$clean_keyword}%')");
+            }
+
+            $query = array_unique(array_merge($query, $files_query));
+
             break;
     }
 

@@ -4,6 +4,7 @@ include_once('utils/utils.php');
 
 authenticate();
 
+
 $errors = array();
 function exe_sql($sql) {
     global $conn;

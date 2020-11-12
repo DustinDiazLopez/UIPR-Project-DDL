@@ -17,6 +17,8 @@ $types = query(SQL_GET_DOC_TYPES);
 $o_types = SQL_GET_ORPHANED_TYPES();
 $files = SQL_GET_ORPHANED_FILES();
 
+$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+
 
 ?>
 
@@ -60,26 +62,35 @@ $files = SQL_GET_ORPHANED_FILES();
 </div>
 
 <div class="container-fluid">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item">
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <a class="nav-link active" id="admins-tab" data-toggle="tab" href="#admins" role="tab" aria-controls="admins" aria-selected="true"><i class="fas fa-user-shield"></i> Administradores</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="authors-tab" data-toggle="tab" href="#authors" role="tab" aria-controls="authors" aria-selected="false"><i class="fas fa-users-cog"></i> Autores</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="subjects-tab" data-toggle="tab" href="#subjects" role="tab" aria-controls="subjects" aria-selected="false"><i class="fas fa-sitemap"></i> Sujetos</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="types-tab" data-toggle="tab" href="#types" role="tab" aria-controls="types" aria-selected="false"><i class="fas fa-link"></i> Tipos</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="oprphaned-type-tab" data-toggle="tab" href="#oprphaned-type" role="tab" aria-controls="oprphaned-type" aria-selected="false"><i class="fas fa-unlink"></i> Tipos Huérfanos</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false"><i class="fas fa-archive"></i> Archivos Huérfanos</a>
-        </li>
-    </ul>
+            <a class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false"><i class="fas fa-database"></i> Data</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+
+        <div class="tab-pane fade" id="nav-data" role="tabpanel" aria-labelledby="nav-data-tab">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" id="authors-tab" data-toggle="tab" href="#authors" role="tab" aria-controls="authors" aria-selected="false"><i class="fas fa-users-cog"></i> Autores</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="subjects-tab" data-toggle="tab" href="#subjects" role="tab" aria-controls="subjects" aria-selected="false"><i class="fas fa-sitemap"></i> Sujetos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="types-tab" data-toggle="tab" href="#types" role="tab" aria-controls="types" aria-selected="false"><i class="fas fa-link"></i> Tipos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="oprphaned-type-tab" data-toggle="tab" href="#oprphaned-type" role="tab" aria-controls="oprphaned-type" aria-selected="false"><i class="fas fa-unlink"></i> Tipos Huérfanos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false"><i class="fas fa-archive"></i> Archivos Huérfanos</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="admins" role="tabpanel" aria-labelledby="admins-tab">
             <div class="row">
@@ -352,63 +363,70 @@ $files = SQL_GET_ORPHANED_FILES();
             </div>
         </div>
         <div class="tab-pane fade" id="types" role="tabpanel" aria-labelledby="types-tab">
-            <div class="container-fluid dialog-window">
-                <div class="scrollable-content">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Nombre del Tipo</th>
-                                <th scope="col">Editar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if (count($types) > 0) :
-                                foreach ($types as $type) :
-                            ?>
-                                    <tr>
-                                        <th scope="row"><?php echo $type['id']; ?></th>
-                                        <td><?php echo $type['type']; ?></td>
-                                        <td>
-                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editType<?php echo $type['id']; ?>"><i class="fas fa-pencil-alt"></i></button>
-                                        </td>
-                                    </tr>
+            <div class="row">
+                <div class="col-sm-4 bg-light">
+                    <?php include_once('templates/create.type.view.php'); ?>
+                </div>
+                <div class="col-sm-8">
+                    <div class="container-fluid dialog-window">
+                        <div class="scrollable-content">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Nombre del Tipo</th>
+                                    <th scope="col">Editar</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                if (count($types) > 0) :
+                                    foreach ($types as $type) :
+                                        ?>
+                                        <tr>
+                                            <th scope="row"><?php echo $type['id']; ?></th>
+                                            <td><?php echo $type['type']; ?></td>
+                                            <td>
+                                                <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editType<?php echo $type['id']; ?>"><i class="fas fa-pencil-alt"></i></button>
+                                            </td>
+                                        </tr>
 
-                                    <!-- Edit Modal START -->
-                                    <div class="modal fade" id="editType<?php echo $type['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="confirm edit for <?php echo $type['type']; ?>" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="modalType<?php echo $type['id']; ?>">Editar el sujeto <strong><?php echo $type['type']; ?></strong></h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label for="edit-type-name">Tipo:</label>
-                                                            <input type="text" class="form-control" id="edit-type-name" name="edit-type-name" aria-describedby="edit type name" value="<?php echo $type['type']; ?>" placeholder="<?php echo $type['type']; ?>" required>
+                                        <!-- Edit Modal START -->
+                                        <div class="modal fade" id="editType<?php echo $type['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="confirm edit for <?php echo $type['type']; ?>" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="modalType<?php echo $type['id']; ?>">Editar el sujeto <strong><?php echo $type['type']; ?></strong></h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label for="edit-type-name">Tipo:</label>
+                                                                <input type="text" class="form-control" id="edit-type-name" name="edit-type-name" aria-describedby="edit type name" value="<?php echo $type['type']; ?>" placeholder="<?php echo $type['type']; ?>" required>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <input type="hidden" id="confirmTypeEdit<?php echo $type['id']; ?>" name="type-to-edit" value="<?php echo $type['id']; ?>">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                        <button type="submit" class="btn btn-primary" name="edit-type">Editar <?php echo $type['type']; ?></button>
-                                                    </div>
-                                                </form>
+                                                        <div class="modal-footer">
+                                                            <input type="hidden" id="confirmTypeEdit<?php echo $type['id']; ?>" name="type-to-edit" value="<?php echo $type['id']; ?>">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                            <button type="submit" class="btn btn-primary" name="edit-type">Editar <?php echo $type['type']; ?></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- Edit Modal END -->
-                            <?php
-                                endforeach;
-                            endif;
-                            ?>
+                                        <!-- Edit Modal END -->
+                                    <?php
+                                    endforeach;
+                                endif;
+                                ?>
 
-                        </tbody>
-                    </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -540,8 +558,9 @@ $files = SQL_GET_ORPHANED_FILES();
                                 <th scope="col">Nombre del Archivo</th>
                                 <th scope="col">Tipo de Archivo</th>
                                 <th scope="col">Tamaño del Archivo</th>
-                                <th scope="col">En una Pestaña Nueva</th>
-                                <th scope="col">En Ventana Emergente</th>
+                                <th scope="col">Compartir</th>
+                                <th scope="col">Pestaña Nueva</th>
+                                <th scope="col">Ventana Emergente</th>
                                 <?php
                                 $num_of_files = count($files);
                                 $disabled = $num_of_files === 0 ? 'disabled' : '';
@@ -585,13 +604,20 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <td scope="row" class="font-weight-light"><?php echo $f['type']; ?></td>
                                         <td scope="row" class="font-weight-light"><?php echo $f['size'] / 1e+6; ?> MB</td>
                                         <td scope="row">
-                                            <form action="file.php" method="POST" style="padding:0px;margin:0px;" target="_blank">
+                                            <input type="text" style="display: none" value="<?php echo "$url/file.php?file={$f['id']}"; ?>" id="share-admin-<?php echo $f['id']; ?>">
+                                            <button type="submit" class="btn btn-light"
+                                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>')">
+                                                <i class="fas fa-share-alt"></i>
+                                            </button>
+                                        </td>
+                                        <td scope="row">
+                                            <form action="file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
                                                 <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
                                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="fas fa-external-link-alt"></i></button>
                                             </form>
                                         </td>
                                         <td scope="row">
-                                            <form action="file.php" method="POST" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")' target="open-pdf-view-">
+                                            <form action="file.php" method="GET" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")' target="open-pdf-view-">
                                                 <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
                                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="far fa-window-restore"></i></button>
                                             </form>

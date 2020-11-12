@@ -2,7 +2,7 @@
 include_once('connect.php');
 include_once('utils/utils.php');
 
-authenticate();
+authenticate(TRUE);
 
 if (isset($_POST['file']) && !empty($_POST['file']) && is_valid_int($_POST['file'])) {
     $file = SQL_GET_FILE(intval($_POST['file']));
@@ -77,6 +77,9 @@ if (isset($file['content']) || !empty($file['content'])) {
             window.open(blobUrl);
         }
     }
+
+    // hacky fix to loading animation after content has been loaded (don't know why it's happening though...)
+    stopLoadingAnimation();
 </script>
 
 </body>

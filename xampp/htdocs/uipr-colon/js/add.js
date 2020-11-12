@@ -3,7 +3,7 @@ let allowReload = false;
 const loadingImg = document.getElementById('overlay');
 
 /*initiate the autocomplete function on the "type" element, and pass along the types array as possible autocomplete values:*/
-autocomplete(document.getElementById("type"), types);
+//autocomplete(document.getElementById("type"), types);
 
 /* Show files start */
 let counter = 0;
@@ -544,20 +544,28 @@ function addToReadonly(input, output) {
     if (fieldVal === "") {
         field.value = "";
         return;
-    } else if (fieldVal.includes(',')) {
-        field.value = field.value.replaceAll(",", "");
-        return;
     }
 
+    const arr = field.value.split(',');
+    const val = arr.pop();
+
     if (readonly.value === "") {
-        readonly.value += `${fieldVal.trim()}`
+        readonly.value += val;
     } else {
-        readonly.value += `, ${fieldVal.trim()}`
+        readonly.value += `, ${val}`;
     }
 
     readonly.value = titleCase(readonly.value.trim());
     readonly.title = readonly.value.trim();
+
     field.value = "";
+    for (let i = 0; i < arr.length; i++) {
+        if (field.value === "") {
+            field.value += `${arr[i].trim()}`
+        } else {
+            field.value += `, ${arr[i].trim()}`
+        }
+    }
 
     function titleCase(str) {
         let splitStr = str.toLowerCase().split(' ');
@@ -643,7 +651,6 @@ const pHeading = document.getElementById('progress-heading');
 function validate() {
     const files = counter > 0;
     const title = document.getElementById('title').value.trim().length > 0;
-    const type = document.getElementById('type').value.trim().length > 0;
     const description = document.getElementById('description').value.trim().length > 0;
     const date = document.getElementById('published_date').value.trim().length > 0;
     const authors = document.getElementById('authors').value;
@@ -656,14 +663,13 @@ function validate() {
     const no = "list-group-item list-group-item-danger";
     const yes = "list-group-item list-group-item-success";
     pTitle.className = title ? yes : no;
-    pType.className = type ? yes : no;
     pDate.className = date ? yes : no;
     pAuthors.className = auths ? yes : no;
     pSubjects.className = subs ? yes : no;
     pDescription.className = description ? yes : no;
     pFiles.className = files ? yes : no;
 
-    const allow = files && title && description && type && date && subs && auths;
+    const allow = files && title && description && date && subs && auths;
     document.getElementById('submitButton').disabled = !allow;
     allowReload = allow;
 
@@ -698,6 +704,7 @@ function createElementFromHTML(htmlString) {
  * @param {HTMLElement} element Output element (the i tag)
  */
 function changeIcon(input, element) {
+    console.log(input.value)
     element.className = createElementFromHTML(getIcon(input.value)).className;
 }
 

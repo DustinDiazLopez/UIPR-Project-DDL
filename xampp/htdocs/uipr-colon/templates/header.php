@@ -1,7 +1,7 @@
 <?php
 include_once('connect.php');
 include_once('utils/utils.php');
-authenticate();
+authenticate(isset($allow_guests) ? $allow_guests : FALSE);
 ?>
 
 <!DOCTYPE html>
@@ -38,6 +38,7 @@ include_once('templates/loading.php');
         </button>
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav mr-auto">
+                <?php if (isset($_SESSION['guest']) && $_SESSION['guest'] === FALSE): ?>
                 <li class="nav-item">
                     <a class="nav-link" href="add.php"><i class="fas fa-plus-circle"></i> Añadir un Artículo</a>
                 </li>
@@ -58,6 +59,8 @@ include_once('templates/loading.php');
                         <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/license.php"><i class="far fa-copyright"></i> Licencia (<span style="font-family:courier new,courier,monospace; font-size:16px;">MIT</span>)</a>
                     </div>
                 </li>
+
+                <?php endif; ?>
             </ul>
             <span class="navbar-text">
                 <?php
@@ -69,7 +72,10 @@ include_once('templates/loading.php');
                 }
                 ?>
 
-                <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:green;" title="cerrar sessión"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?> <i class="fas fa-sign-out-alt"></i></a>
+                <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:green;" title="cerrar sessión">
+                    <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>
+                    <i class="fas fa-sign-out-alt"><span class="sr-only">cerrar su sessión</span></i>
+                </a>
             </span>
         </div>
     </nav>

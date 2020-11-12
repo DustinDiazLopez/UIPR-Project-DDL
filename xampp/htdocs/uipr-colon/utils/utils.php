@@ -14,19 +14,26 @@ define('APP_NAME', 'Catálogo UIPR CMS');
  */
 define('LANG', 'es');
 
+
 /**
  * Checks to see if the user has logged in, if not redirects to the login page, and if the user had tried to access a
  * url they will be redirected to that url once they've logged in.
- * @param float|int $secondsOfInactivity (optional) seconds to wait to log out user (default: 1 hour, i.e., 3600 seconds)
+ * @param boolean $allowGuests (optional) whether to allow guests on the page where this function is specified.
  */
-function authenticate($secondsOfInactivity=3600)
+function authenticate($allowGuests=FALSE)
 {
     $current_path = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
 
     if (session_status() == PHP_SESSION_NONE) session_start();
     if (isset($_SESSION['session_started'])){
-        if ((mktime() - $_SESSION['session_started'] - $secondsOfInactivity) > 0){
-            header("Location: logout.php?se&noauth=$current_path");
+        $expirationTime = isset($GLOBALS['secondsOfInactivity']) ? $GLOBALS['secondsOfInactivity'] : 3600;
+
+        if ((mktime() - $_SESSION['session_started'] - $expirationTime) > 0){
+            if (!($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['REQUEST_URI'], 'add.php'))) {
+                header("Location: logout.php?se&noauth=$current_path");
+            } else {
+                $_SESSION['session_started'] = mktime();
+            }
         } else {
             $_SESSION['session_started'] = mktime();
         }
@@ -41,6 +48,10 @@ function authenticate($secondsOfInactivity=3600)
         } else {
             header("Location: login.php");
         }
+    }
+
+    if (isset($_SESSION['guest']) && $_SESSION['guest'] === TRUE && $allowGuests === FALSE) {
+        header("Location: index.php?error=403");
     }
 }
 
@@ -494,14 +505,13 @@ function authorsToCSV($authors, $atr='author_name')
  * Formats an inputted date into a easily (intuitively) readable format.
  * @param string $date date to format (e.g., 10-30-2020, could also be in another format).
  * @param false $yearOnly (optional) shows the year only
- * @param string $locale (optional) language to use (e.g., en, es, etc.). See {@link LANG}
  * @param string $format (optional) format of the date to return
  * @return string returns the formatted date as a string.
  */
-function formatDate($date, $yearOnly = false, $locale = LANG, $format = "%e de %B de %Y")
+function formatDate($date, $yearOnly = false, $format = "%e de %B de %Y")
 {
     $currentLocale = setlocale(LC_ALL, 0);
-    setlocale(LC_ALL, $locale);
+    setlocale(LC_ALL, LANG);
     if ($yearOnly === true || $yearOnly == '1') {
         $re = strftime("%Y", strtotime($date));
     } else {
@@ -643,7 +653,7 @@ function round_ddl($var, $places=2)
  */
 function icon($icon_name='') 
 {
-    switch (strtolower($icon_name)) {
+    switch (mb_strtolower($icon_name, 'UTF-8')) {
         case "libro":
         case "book":
             return '<i class="fas fa-book"></i>';
@@ -655,7 +665,7 @@ function icon($icon_name='')
         case "arte":
         case "art":
             return '<i class="fas fa-paint-brush"></i>';
-            
+
         case "foto":
         case "photo":
         case "picture":
@@ -679,6 +689,7 @@ function icon($icon_name='')
         case "doc":
         case "docx":
             return '<i class="far fa-file-word"></i>';
+
         case "ppt":
         case "pptx":
         case "powerpoint":
@@ -704,15 +715,22 @@ function icon($icon_name='')
             return '<i class="fas fa-file-archive"></i>';
 
         case "code":
+        case "codigo":
+        case "código":
         case "programming":
             return '<i class="fas fa-file-code"></i>';
 
         case "video":
+        case "vídeo":
+        case "película":
+        case "pelicula":
         case "movie":
         case "animation":
             return '<i class="far fa-file-video"></i>';
 
         case "audio":
+        case "cancion":
+        case "canción":
         case "song":
         case "music":
             return '<i class="far fa-file-audio"></i>';
@@ -722,14 +740,19 @@ function icon($icon_name='')
 
         case "atlas":
         case "map":
+        case "mapa":
             return '<i class="fas fa-atlas"></i>';
 
+        case "biblia":
         case "bible":
             return '<i class="fas fa-bible"></i>';
 
+        case "coran":
+        case "corán":
         case "quran":
             return '<i class="fas fa-quran"></i>';
 
+        case "tora":
         case "torah":
             return '<i class="fas fa-torah"></i>';
 

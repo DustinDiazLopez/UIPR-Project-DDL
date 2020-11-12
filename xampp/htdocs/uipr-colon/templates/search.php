@@ -65,7 +65,7 @@
             <div>
                 <?php
                 $all = $file = $description = $title = $checked = NULL;
-                $types = query(SQL_GET_DOC_TYPES);
+                $types = query(SQL_GET_TYPES_W_RELATION);
                 if (count($types) > 0) {
                     echo '<p>Incluir en la búsqueda sólo:</p>';
                     foreach ($types as $type) {
@@ -92,7 +92,7 @@
                 <select class="custom-select" id="type" name="type">
                     <option selected>Elige un tipo...</option>
                     <?php
-                    $types = query(SQL_GET_DOC_TYPES);
+                    //$types = query(SQL_GET_DOC_TYPES);
                     foreach ($types as $type) {
                         echo "<option value=\"{$type['id']}\">{$type['type']}</option>";
                     }

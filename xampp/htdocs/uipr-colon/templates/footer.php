@@ -53,6 +53,16 @@ if (isset($_GET['q']) && isset($only) && !empty($only)) {
     $(function() {
         $('[data-toggle="tooltip"]').tooltip()
     })
+
+    function copyValueToClipboard(inputId) {
+        let copyText = document.getElementById(inputId);
+        copyText.style.display = "block";
+        copyText.select();
+        copyText.setSelectionRange(0, 99999)
+        document.execCommand("copy");
+        copyText.style.display = "none";
+        alert("Copied the text: " + copyText.value);
+    }
 </script>
 
 </body>

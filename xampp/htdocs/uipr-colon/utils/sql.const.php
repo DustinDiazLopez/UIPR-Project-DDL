@@ -66,6 +66,7 @@ define('SQL_GET_ORPHANED_AUTHORS', 'SELECT a.id, a.author_name FROM author a WHE
 define('SQL_GET_ORPHANED_SUBJECTS', 'SELECT a.id, a.`subject` FROM `subject` a WHERE NOT EXISTS (SELECT * FROM item_has_subject ai WHERE a.id = ai.subject_id)');
 define('SQL_GET_ORPHANED_IMAGES', 'SELECT a.id FROM `image` a WHERE NOT EXISTS (SELECT * FROM item i WHERE a.id = i.image_id)');
 define('SQL_GET_ORPHANED_TYPES', 'SELECT a.id, a.`type` FROM `type` a WHERE NOT EXISTS (SELECT * FROM item i WHERE a.id = i.type_id)');
+define('SQL_GET_TYPES_W_RELATION', 'SELECT a.id, a.`type` FROM `type` a WHERE EXISTS (SELECT * FROM item i WHERE a.id = i.type_id)');
 
 //insert admin
 define('SQL_INSERT_ADMIN', 'INSERT INTO `admin` (`email`, `username`, `password`) VALUES ');

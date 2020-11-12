@@ -283,7 +283,6 @@ if (isset($errors_present) && $errors_present) {
     </div>
     <ul class="list-group list-group-flush">
         <li class="list-group-item list-group-item-danger" id="progress-title">Título</li>
-        <li class="list-group-item list-group-item-danger" id="progress-type">Tipo</li>
         <li class="list-group-item list-group-item-danger" id="progress-date">Fecha de Publicación</li>
         <li class="list-group-item list-group-item-danger" id="progress-description">Descripción del artículo</li>
         <li class="list-group-item list-group-item-danger" id="progress-author">Autores</li>
@@ -313,23 +312,20 @@ if (isset($errors_present) && $errors_present) {
                     <div class="col-md-5 mb-3 autocomplete">
                         <label for="type"><i id="iconShowType" class=""></i> Tipo
                             <?php
-                            $str = '';
-                            $types = query(SQL_GET_DOC_TYPES);
-                            $len = count($types);
-                            for ($i = 0; $i < $len; $i++) {
-                                $str = $str . $types[$i]['type'];
-                                if ($i != $len - 1) $str = $str . ', ';
-                            }
-
-                            hint('Los tipos disponibles son: ' . $str . '. Si no existe uno cual describe su artículo lo puede añadir y luego estará como opción en el sistema.');
-
-                            unset($types);
-                            unset($len);
+                            hint('Si desea un tipo no existente lo puede añadir a traves del Panel del Administrador > Data > Tipos');
                             ?>
 
                         </label>
-                        <input type="text" id="type" name="type" placeholder="<?php echo $str; ?>" title="Por ejemplo, <?php echo $str; ?>" class="form-control <?php not_valid_class($valid_type); ?>" value="<?php echo $item['type']; ?>" oninput="changeIcon(this, document.getElementById('iconShowType'))" required>
-                        <?php echo_invalid_feedback(!$valid_type, $errors['type']); ?>
+                        <select class="custom-select" id="type" name="type" onclick="changeIcon(this, document.getElementById('iconShowType'))">
+                            <?php
+                            $types = query(SQL_GET_DOC_TYPES);
+                            foreach ($types as $type) {
+                                echo "<option value=\"{$type['type']}\"><span>{$type['type']}</span></option>";
+                            }
+
+                            ?>
+                        </select>
+
 
                     </div>
                 </div>

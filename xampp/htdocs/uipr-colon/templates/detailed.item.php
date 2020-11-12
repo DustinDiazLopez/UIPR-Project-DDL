@@ -17,7 +17,7 @@
 
     <div class="inline">
         <!-- TITLE START -->
-        <h4 title="Nombre del artículo" class="title"><a href="#"><?php echo $item['title']; ?></a></h4>
+        <h4 title="Nombre del artículo" class="title"><a href="#<?php echo $item['id']; ?>"><?php echo $item['title']; ?></a></h4>
         <!-- TITLE END -->
 
         <!-- AUTHORS START -->
@@ -70,8 +70,9 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Nombre del Archivo</th>
-                    <th scope="col">En una Pestaña Nueva</th>
-                    <th scope="col">En Ventana Emergente</th>
+                    <th scope="col">Compartir</th>
+                    <th scope="col">Pestaña Nueva</th>
+                    <th scope="col">Ventana Emergente</th>
                     <th scope="col">Tipo de Archivo</th>
                     <th scope="col">Tamaño del Archivo</th>
                 </tr>
@@ -87,15 +88,22 @@
                         <th scope="row"><?php echo $f['id']; ?></th>
                         <td scope="row" class="file"><?php echo $f['filename']; ?></td>
                         <td scope="row">
+                            <input type="text" style="display: none" value="<?php echo "$url/file.php?file={$f['id']}"; ?>" id="share-<?php echo $f['id']; ?>">
+                            <button type="submit" class="btn btn-light"
+                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>')">
+                                <i class="fas fa-share-alt"></i> <span class="sr-only">Compartir el documento <?php echo $f['filename']; ?>.</span>
+                            </button>
+                        </td>
+                        <td scope="row">
                             <form action="file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
                                 <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
-                                <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="fas fa-external-link-alt"></i></button>
+                                <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="fas fa-external-link-alt"></i> <span class="sr-only">Abrir documento <?php echo $f['filename']; ?> en una pestaña nueva</span></button>
                             </form>
                         </td>
                         <td scope="row">
                             <form action="file.php" method="GET" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")' target="open-pdf-view-">
                                 <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
-                                <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="far fa-window-restore"></i></button>
+                                <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="far fa-window-restore"></i> <span class="sr-only">Abrir documento <?php echo $f['filename']; ?> en una ventana emergente</span></button>
                             </form>
                         </td>
                         <td scope="row" class="font-weight-light"><?php echo $f['type']; ?></td>
@@ -117,6 +125,8 @@
     </p>
     <!-- MOD DATE END -->
 
+    <!-- OVERLAY START -->
+    <?php if (isset($_SESSION['guest']) && $_SESSION['guest'] === FALSE): ?>
     <form action="edit.php" method="POST" style="padding:0;margin:0;">
         <div class="overlay">
             <input type="hidden" value="<?php echo $item['id']; ?>" id="editItem" name="editItem">
@@ -124,6 +134,8 @@
             <button class="icon-btn delete" type="button" data-toggle="modal" data-target="#deleteItem<?php echo $item['id']; ?>"><i class="fa fa-trash" title="Borrar <?php echo $item['title']; ?>."></i><span class="sr-only"><?php echo 'Borrar ' . $item['title']; ?></span></button>
         </div>
     </form>
+    <?php endif; ?>
+    <!-- OVERLAY END -->
 
     <!-- Delete Modal START -->
     <div class="modal fade" id="deleteItem<?php echo $item['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="confirm deletion" aria-hidden="true">
