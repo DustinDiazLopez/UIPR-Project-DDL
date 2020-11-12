@@ -28,9 +28,13 @@ Please follow these steps ***carefully***.
 
 ### Step 0: Configuring PHP & MySQL
 
-Consider modifying the `php.ini` and the `my.ini` (`mysqldump.cnf` in LAMP) file to be more flexible.
+#### Installing a library for LAMP (not required for xampp)
+```terminal
+sudo apt-get install php7.4-mbstring
+```
+Replace `7.4` with your version of PHP
 
-#### Recommened settings for `php.ini`
+#### Recommended settings for `php.ini`
 
 ```ini
 ; This sets the maximum time in seconds a script is allowed to run before it is terminated by the parser.
@@ -53,7 +57,7 @@ upload_max_filesize = 256M
 max_file_uploads = 25
 ```
 
-#### Recommened settings for `my.ini` (or `mysqldump.cnf`)
+#### Recommened settings for `my.ini` (or `mysqldump.cnf` on LAMP)
 ```ini
 # the same value as upload_max_filesize in the php.ini file
 max_allowed_packet = 256M

@@ -1,6 +1,6 @@
 <?php
 //define('DDL_PATH', '../../colon-uipr-cms-ddl-files-and-config');
-define('DDL_PATH', '../../../../../../colon-uipr-cms-ddl-files-and-config');
+define('DDL_PATH', '../../../../../../../colon-uipr-cms-ddl-files-and-config');
 
 // DO NOT CHANGE ANYTHING AFTER THIS LINE
 define('PATH_TO_CONFIG', DDL_PATH . "/mysql_uiprcmsddl_config.json");
@@ -17,6 +17,8 @@ if (!file_exists(PATH_TO_CONFIG)) {
 }
 
 $config = json_decode(file_get_contents(PATH_TO_CONFIG), true);
+
+// SHA-526
 $config['salt'] = '$6$rounds=5000$' . $config['salt'] . '$';
 
 /**

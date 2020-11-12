@@ -89,8 +89,8 @@
                         <td scope="row" class="file"><?php echo $f['filename']; ?></td>
                         <td scope="row">
                             <input type="text" style="display: none" value="<?php echo "$url/file.php?file={$f['id']}"; ?>" id="share-<?php echo $f['id']; ?>">
-                            <button type="submit" class="btn btn-light"
-                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>')">
+                            <button type="submit" class="btn btn-light copy-btn"
+                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', this)" onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
                                 <i class="fas fa-share-alt"></i> <span class="sr-only">Compartir el documento <?php echo $f['filename']; ?>.</span>
                             </button>
                         </td>

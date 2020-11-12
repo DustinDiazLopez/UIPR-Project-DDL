@@ -54,14 +54,31 @@ if (isset($_GET['q']) && isset($only) && !empty($only)) {
         $('[data-toggle="tooltip"]').tooltip()
     })
 
-    function copyValueToClipboard(inputId) {
+    function copyValueToClipboard(inputId, btn) {
         let copyText = document.getElementById(inputId);
         copyText.style.display = "block";
         copyText.select();
         copyText.setSelectionRange(0, 99999)
         document.execCommand("copy");
         copyText.style.display = "none";
-        alert("Copied the text: " + copyText.value);
+        btn.innerHTML = "<i class=\"fas fa-check\"></i> Copiado";
+        btn.style.opacity = 0.5;
+        btn.copied = true;
+    }
+
+    const copyIcon = '<i class="far fa-copy"></i>';
+    const shareIcon = '<i class="fas fa-share-alt"></i>';
+
+    function changeIcon(btn) {
+        if (!btn.copied) {
+            btn.innerHTML = copyIcon;
+        }
+    }
+
+    function revertIcon(btn) {
+        if (!btn.copied) {
+            btn.innerHTML = shareIcon;
+        }
     }
 </script>
 

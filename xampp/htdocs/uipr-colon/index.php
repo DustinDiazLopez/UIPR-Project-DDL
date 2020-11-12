@@ -1,9 +1,9 @@
 <?php
 $title_tag = 'Inicio';
 $allow_guests = TRUE;
+
 include_once('templates/header.php');
 
-$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
 ?>
 
 <div class="container-fluid">
@@ -58,7 +58,7 @@ $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http
             if (isset($_GET['error'])) {
                 if ($_GET['error'] == "file") {
                     echo showWarn(
-                            "Warning:",
+                            "Advertencia:",
                             "A request for a file was made, but failed. You may be missing form data expected key <code>view-file</code> or <code>download-file</code> to be present with another key <code>file</code>, specifying the path (path in the database)."
                     );
                 } elseif ($_GET['error'] == "no-pdf") {
@@ -85,6 +85,7 @@ $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http
                 <text x="100" y="100" style="fill:black;font-size:50px;" transform="rotate(0,0,0)">Nada encontrado, añadir un articulo.</text> 
                 </a></svg></div>';
             } else {
+                $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
                 foreach ($items as $item) include('templates/detailed.item.php');
             }
             ?>

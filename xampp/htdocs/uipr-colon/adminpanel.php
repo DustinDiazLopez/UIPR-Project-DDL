@@ -17,9 +17,6 @@ $types = query(SQL_GET_DOC_TYPES);
 $o_types = SQL_GET_ORPHANED_TYPES();
 $files = SQL_GET_ORPHANED_FILES();
 
-$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
-
-
 ?>
 
 
@@ -606,7 +603,7 @@ $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http
                                         <td scope="row">
                                             <input type="text" style="display: none" value="<?php echo "$url/file.php?file={$f['id']}"; ?>" id="share-admin-<?php echo $f['id']; ?>">
                                             <button type="submit" class="btn btn-light"
-                                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>')">
+                                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>', this)" onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
                                                 <i class="fas fa-share-alt"></i>
                                             </button>
                                         </td>

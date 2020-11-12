@@ -14,6 +14,16 @@ define('APP_NAME', 'Catálogo UIPR CMS');
  */
 define('LANG', 'es');
 
+$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+if (strEndsWith($url, '.php')) {
+    $url = str_replace(basename($_SERVER['SCRIPT_FILENAME']), '', $url);
+}
+
+if (strEndsWith($url, '/'))  {
+    $url = substr($url, 0, strlen($url) - 1);
+}
+
 
 /**
  * Checks to see if the user has logged in, if not redirects to the login page, and if the user had tried to access a
@@ -647,116 +657,121 @@ function round_ddl($var, $places=2)
 
 /**
  * Returns html string with an icon corresponding to the inputted text (look at source code for the options).
+ * <p>If it keeps returning the same icon, and you are on Linux (LAMP) you have to install {@link mb_strtolower}
+ * with this command: <br>'<code>sudo apt-get install php7.4-mbstring</code>' (will require a reboot of <b>PHP</b> or
+ * <b>Apache</b>, e.g., '<code>sudo systemctl restart apache2</code>').
  *
  * @param string $icon_name (optional) name of the icon
  * @return string returns an italic tag with the appropriate font
  */
 function icon($icon_name='') 
 {
-    switch (mb_strtolower($icon_name, 'UTF-8')) {
-        case "libro":
-        case "book":
-            return '<i class="fas fa-book"></i>';
+    if(function_exists('mb_strtolower')) {
+        switch (mb_strtolower($icon_name, 'UTF-8')) {
+            case "libro":
+            case "book":
+                return '<i class="fas fa-book"></i>';
 
-        case "novel":
-        case "novela":
-            return '<i class="fas fa-book-reader"></i>';
+            case "novel":
+            case "novela":
+                return '<i class="fas fa-book-reader"></i>';
 
-        case "arte":
-        case "art":
-            return '<i class="fas fa-paint-brush"></i>';
+            case "arte":
+            case "art":
+                return '<i class="fas fa-paint-brush"></i>';
 
-        case "foto":
-        case "photo":
-        case "picture":
-            return '<i class="far fa-image"></i>';
+            case "foto":
+            case "photo":
+            case "picture":
+                return '<i class="far fa-image"></i>';
 
-        case "periódico":
-        case "periodico":
-        case "newspaper":
-            return '<i class="far fa-newspaper"></i>';
+            case "periódico":
+            case "periodico":
+            case "newspaper":
+                return '<i class="far fa-newspaper"></i>';
 
-        case "revista":
-        case "magazine":
-            return '<i class="fas fa-book-open"></i>';
+            case "revista":
+            case "magazine":
+                return '<i class="fas fa-book-open"></i>';
 
-        case "document":
-        case "documento":
-            return '<i class="fas fa-file-invoice"></i>';
+            case "document":
+            case "documento":
+                return '<i class="fas fa-file-invoice"></i>';
 
-        case "word":
-        case "word document":
-        case "doc":
-        case "docx":
-            return '<i class="far fa-file-word"></i>';
+            case "word":
+            case "word document":
+            case "doc":
+            case "docx":
+                return '<i class="far fa-file-word"></i>';
 
-        case "ppt":
-        case "pptx":
-        case "powerpoint":
-        case "powerpoint presentation":
-            return '<i class="far fa-file-powerpoint"></i>';
+            case "ppt":
+            case "pptx":
+            case "powerpoint":
+            case "powerpoint presentation":
+                return '<i class="far fa-file-powerpoint"></i>';
 
-        case "excel":
-        case "xlsx":
-        case "xls":
-        case "excel spreadsheet":
-            return '<i class="far fa-file-excel"></i>';
+            case "excel":
+            case "xlsx":
+            case "xls":
+            case "excel spreadsheet":
+                return '<i class="far fa-file-excel"></i>';
 
-        case "csv":
-        case "comma-separated values":
-        case "comma separated values":
-            return '<i class="fas fa-file-csv"></i>';
+            case "csv":
+            case "comma-separated values":
+            case "comma separated values":
+                return '<i class="fas fa-file-csv"></i>';
 
-        case "pdf":
-            return '<i class="fas fa-file-pdf"></i>';
+            case "pdf":
+                return '<i class="fas fa-file-pdf"></i>';
 
-        case "zip":
-        case "archive":
-            return '<i class="fas fa-file-archive"></i>';
+            case "zip":
+            case "archive":
+                return '<i class="fas fa-file-archive"></i>';
 
-        case "code":
-        case "codigo":
-        case "código":
-        case "programming":
-            return '<i class="fas fa-file-code"></i>';
+            case "code":
+            case "codigo":
+            case "código":
+            case "programming":
+                return '<i class="fas fa-file-code"></i>';
 
-        case "video":
-        case "vídeo":
-        case "película":
-        case "pelicula":
-        case "movie":
-        case "animation":
-            return '<i class="far fa-file-video"></i>';
+            case "video":
+            case "vídeo":
+            case "película":
+            case "pelicula":
+            case "movie":
+            case "animation":
+                return '<i class="far fa-file-video"></i>';
 
-        case "audio":
-        case "cancion":
-        case "canción":
-        case "song":
-        case "music":
-            return '<i class="far fa-file-audio"></i>';
+            case "audio":
+            case "cancion":
+            case "canción":
+            case "song":
+            case "music":
+                return '<i class="far fa-file-audio"></i>';
 
-        case "media":
-            return '<i class="fas fa-photo-video"></i>';
+            case "media":
+                return '<i class="fas fa-photo-video"></i>';
 
-        case "atlas":
-        case "map":
-        case "mapa":
-            return '<i class="fas fa-atlas"></i>';
+            case "atlas":
+            case "map":
+            case "mapa":
+                return '<i class="fas fa-atlas"></i>';
 
-        case "biblia":
-        case "bible":
-            return '<i class="fas fa-bible"></i>';
+            case "biblia":
+            case "bible":
+                return '<i class="fas fa-bible"></i>';
 
-        case "coran":
-        case "corán":
-        case "quran":
-            return '<i class="fas fa-quran"></i>';
+            case "coran":
+            case "corán":
+            case "quran":
+                return '<i class="fas fa-quran"></i>';
 
-        case "tora":
-        case "torah":
-            return '<i class="fas fa-torah"></i>';
+            case "tora":
+            case "torah":
+                return '<i class="fas fa-torah"></i>';
 
-        default:
-            return '<i class="far fa-file-alt"></i>';
-    }
+            default:
+                return '<i class="far fa-file-alt"></i>';
+        }
+    } else return '<i class="far fa-file-alt"></i>';
 }
