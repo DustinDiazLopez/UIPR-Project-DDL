@@ -71,7 +71,7 @@ function search($conn, $q, $only='all') {
 
             if (count($query) == 0) {
                 $append = ' AND (';
-                $clean_sep = array_unique($clean_sep);
+                $clean_sep = array_unique($clean_sep, SORT_REGULAR);
                 foreach ($clean_sep as $word) {
                     $append .= "(`i`.`title` LIKE '%{$word}%') AND ";
                 }
@@ -125,7 +125,7 @@ function search($conn, $q, $only='all') {
 
             if (count($query) == 0) {
                 $sql_2 = $sql . ' AND (';
-                $clean_sep = array_unique($clean_sep);
+                $clean_sep = array_unique($clean_sep, SORT_REGULAR);
 
                 for ($i = 0; $i < count($clean_sep); $i++) {
                     if (empty($clean_sep[$i])) {
@@ -157,7 +157,11 @@ function search($conn, $q, $only='all') {
                 $files_query = query(GET_FILES_ITEM_ID . $types . " AND (`f`.`filename` LIKE '%{$clean_keyword}%')");
             }
 
-            $query = array_unique(array_merge($query, $files_query));
+            if (is_array($query) && is_array($files_query)) {
+                $query = array_merge($query, $files_query);
+            }
+
+            $query = array_unique($query, SORT_REGULAR);
 
             break;
     }

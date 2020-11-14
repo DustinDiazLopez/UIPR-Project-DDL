@@ -705,6 +705,25 @@ function shareURL($id, $path='/file.php?file=') {
     return $url.$path.$encoded_id;
 }
 
+/**
+ * Removes tags from the inputted HTML text.
+ * @param $html string The HTML text
+ * @param string[] $tags the tags to remove from the HTML
+ * @return string returns the cleaned HTML
+ */
+function cleanHTML ($html, $tags= ['script','style','object','iframe','embed','button','input','canvas','h1','h2','h3','a']) {
+    $dom = new DOMDocument();
+    $dom->loadHTML($html);
+    $remove = [];
+    foreach ($tags as $tag) {
+        $script = $dom->getElementsByTagName($tag);
+        foreach($script as $item) $remove[] = $item;
+    }
+
+    // remove all tags
+    foreach ($remove as $item) $item->parentNode->removeChild($item);
+    return $dom->saveHTML();
+}
 
 /**
  * Returns html string with an icon corresponding to the inputted text (look at source code for the options).

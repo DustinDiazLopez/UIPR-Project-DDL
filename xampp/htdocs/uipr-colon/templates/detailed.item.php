@@ -57,7 +57,7 @@
     <br class="clearBoth" />
 
     <!-- DESCRIPTION START -->
-    <p class="border-right-0 description"><?php echo $item['description']; ?></p>
+    <p class="border-right-0 description"><?php echo cleanHTML($item['description']); ?></p>
     <!-- DESCRIPTION END -->
 
 

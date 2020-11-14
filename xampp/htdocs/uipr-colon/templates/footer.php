@@ -1,11 +1,13 @@
-<footer class="bg-light">
-    <div style="text-align: center;">
-        <p><a href="LICENSE">Copyright &copy; 2020, Dustin A. Díaz López</a></p>
-        <p>
-            <a href="#">Volver Arriba</a>
-        </p>
-    </div>
-</footer>
+<div style="width: 100%; height: 100%">
+    <footer class="bg-light">
+        <div style="text-align: center;">
+            <p><a href="LICENSE">Licencia</a></p>
+            <p>
+                <a href="#">Volver Arriba</a>
+            </p>
+        </div>
+    </footer>
+</div>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script charset="utf-8" src="js/jquery-3.2.1.slim.min.js"></script>

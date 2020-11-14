@@ -23,6 +23,11 @@ function SQL_SEND_LONG_BLOB($file, &$error_buffer, $key='tmp_path')
     return $success ? $mysqli->insert_id : NULL;
 }
 
+function SQL_GET_ITEM_COUNT()
+{
+    return intval(query(SQL_GET_ITEM_COUNT)[0]['count(*)']);
+}
+
 /**
  * @param $sql string the sql script
  * @param $sql_fallback_get string the fallback sql when sql fails

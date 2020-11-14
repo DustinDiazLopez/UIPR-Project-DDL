@@ -47,7 +47,7 @@ if (isset($_POST['submit'])) {
         'published_date' => htmlspecialchars($_POST['published_date']),
         'authors' => $authors,
         'subjects' => $subjects,
-        'description' => trim(htmlspecialchars($_POST['description'])),
+        'description' => trim(cleanHTML($_POST['description'])),
         'metadata' => trim(htmlspecialchars($_POST['metadata'])),
         'image' => $image,
         'files' => $files,
@@ -311,6 +311,7 @@ if (isset($errors_present) && $errors_present) {
     </ul>
 </div>
 
+
 <!-- PROGRESS CARD END -->
 
 <div class="container-fluid">
@@ -371,17 +372,18 @@ if (isset($errors_present) && $errors_present) {
                 <!-- DESCRIPTION -->
                 <div class="form-group">
                     <label for="description">Descripción del artículo</label>
-                    <textarea class="form-control <?php not_valid_class($valid_description); ?>" id="description" name="description" aria-describedby="descriptionHelp" rows="3" required><?php echo $item['description']; ?></textarea>
-                    <small id="descriptionHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
+                    <textarea width="1000px" class="form-control <?php not_valid_class($valid_description); ?>" id="description" name="description" aria-describedby="descriptionHelp" rows="3" required><?php echo $item['description']; ?></textarea>
                     <?php echo_invalid_feedback(!$valid_description, $errors['description']); ?>
                 </div>
+
                 <hr />
+
+                <!-- METADATA -->
                 <div class="form-group">
                     <label for="metadata">Metadata
                         <?php hint('Información que no será visible, pero que se utilizará en la búsqueda (por ejemplo, texto completo del artículo, otros títulos, etc.). En otras palabras, cualquier información relacionada con el artículo.'); ?>
                     </label>
                     <textarea class="form-control" id="metadata" name="metadata" rows="3" aria-describedby="metaHelp"><?php echo $item['metadata']; ?></textarea>
-                    <small id="metaHelp" class="form-text text-muted">Presione control y enter (<code>CTRL+ENTER</code>) para una nueva línea donde esta el cursor</small>
                 </div>
                 <hr />
                 <!-- AUTHORS -->
@@ -439,7 +441,7 @@ if (isset($errors_present) && $errors_present) {
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control <?php not_valid_class($valid_subjects); ?>" placeholder="Caballerias" aria-label="Sujetos del articulo" id="subjectsInput">
+                        <input type="text" class="form-control <?php not_valid_class($valid_subjects); ?>" placeholder="Novela De Aventuras, Caballerías, Novela Realista" aria-label="Sujetos del articulo" id="subjectsInput">
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Añadir todos loss sujetos separados por commas (CSV)"><i class="fas fa-project-diagram"></i></button>
                             <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Añadir sujeto"><i class="fab fa-hive"></i></button>
@@ -503,7 +505,7 @@ if (isset($errors_present) && $errors_present) {
                 </div>
                 <br>
 
-                <div class="form-row">
+                <div class="form-row" style="display: none">
                     <label for="o-files-selected">Archivos Huérfanos Seleccionados</label>
                     <input class="form-control" placeholder="" id="o-files-selected" name="orphaned-files" type="text" readonly>
                 </div>
@@ -528,6 +530,10 @@ if (isset($errors_present) && $errors_present) {
                     <div class="col-xs-1 text-center">
                         <input class="form-control btn <?php not_valid_class($valid_files); ?>" type="file" id="files" multiple="multiple" accept=".pdf" required>
                     </div>
+                    <small class="form-text text-muted">
+                        Los archivos van a estar filtrados por PDFs, si quiere otro tipo de archivo tendrá que cambiar
+                        el filtro en su explorador de archivos (arriba de los botones Open y Cancel en Windows).
+                    </small>
                     <?php echo_invalid_feedback(!$valid_files, $errors['files']); ?>
 
                 </div>
@@ -558,7 +564,7 @@ if (isset($errors_present) && $errors_present) {
                         <?php hint('La imagen será la primera página del primer documento PDF.'); ?>
                     </label>
                     <div class="form-row">
-                        <small id="customImage" class="form-text text-muted">
+                        <small class="form-text text-muted">
                             Déjelo en blanco si desea utilizar una página del archivo. Si no aparece la imagen
                             adecuada, recorra las páginas para restablecerla.
                         </small>
@@ -636,5 +642,23 @@ if (isset($errors_present) && $errors_present) {
 <script src="js/generic.js"></script>
 <script src="js/add.js"></script>
 
+<link href="css/summernote.min.css" rel="stylesheet">
+<script src="js/summernote.min.js"></script>
+<script>
+
+    $('#description').summernote({
+        placeholder: '<b>Don Quijote de la Mancha</b> es una novela escrita por el <u>español</u> <i>Miguel de Cervantes Saavedra</i>...',
+        tabsize: 4,
+        height: 340,
+        toolbar: [
+            ['font', ['bold', 'underline', 'italic', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol']],
+            ['table', ['table']],
+        ]
+    });
+</script>
+
 <?php include_once('templates/footer.php'); ?>
+
 

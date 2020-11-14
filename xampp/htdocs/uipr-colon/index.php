@@ -4,6 +4,7 @@ $allow_guests = TRUE;
 
 include_once('templates/header.php');
 
+
 ?>
 
 <div class="container-fluid">
@@ -53,7 +54,24 @@ include_once('templates/header.php');
                     }
                 }
             } else {
-                $items = SQL_GET_ALL_ITEMS('ORDER BY i.create_at DESC');
+                $total = SQL_GET_ITEM_COUNT();
+                $limit = 10;
+                $pages = ceil($total / $limit);
+                $page = min($pages, filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT, array(
+                    'options' => array(
+                        'default'   => 1,
+                        'min_range' => 1,
+                    ),
+                )));
+
+                $offset = ($page - 1)  * $limit;
+                // Some information to display to the user
+                $start = $offset + 1;
+                $end = min(($offset + $limit), $total);
+
+
+                $items = SQL_GET_ALL_ITEMS("ORDER BY i.create_at DESC LIMIT $limit OFFSET $offset");
+                $current_count = count($items);
             }
             if (isset($_GET['error'])) {
                 if ($_GET['error'] == "file") {
@@ -63,12 +81,17 @@ include_once('templates/header.php');
                     );
                 } elseif ($_GET['error'] == "no-pdf") {
                     echo showWarn(
-                        "Advertencia:",
-                        "El archivo solicitado no parece existir ..."
+                        "404:",
+                        "El archivo solicitado no parece existir..."
+                    );
+                } elseif ($_GET['error'] == "no-item") {
+                    echo showWarn(
+                        "404:",
+                        "El articulo solicitado no parece existir..."
                     );
                 } elseif ($_GET['error'] == "403") {
                     echo showDanger(
-                        "Advertencia:",
+                        "403:",
                         "No tiene los privilegios para acceder esa área"
                     );
                 }
@@ -85,8 +108,8 @@ include_once('templates/header.php');
                 <text x="100" y="100" style="fill:black;font-size:50px;" transform="rotate(0,0,0)">Nada encontrado, añadir un articulo.</text> 
                 </a></svg></div>';
             } else {
-                $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
                 foreach ($items as $item) include('templates/detailed.item.php');
+                include_once ('templates/pagination.php');
             }
             ?>
 

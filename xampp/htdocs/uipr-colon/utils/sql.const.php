@@ -16,6 +16,7 @@ define('SEND_LONG_BLOB_BUFFER_SIZE', 256000);
 define('SQL_INSERT_FILE_CONTENT', 'INSERT INTO `file` (`content`) VALUES (?);');
 
 // get all
+define('SQL_GET_ITEM_COUNT', 'SELECT count(*) FROM item ');
 define('SQL_ALL_ITEMS', 'SELECT i.id, i.title, t.`type`, i.image_id, i.description, i.create_at, i.published_date, i.year_only FROM item i INNER JOIN `type` t ON i.type_id = t.id ');
 define('SQL_GET_AUTHORS', "SELECT id, author_name FROM author");
 define('SQL_GET_SUBJECTS', 'SELECT `id`, `subject` FROM `subject`');
