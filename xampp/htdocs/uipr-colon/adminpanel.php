@@ -41,8 +41,10 @@ $files = SQL_GET_ORPHANED_FILES();
     }
 </style>
 
-<h1>Panel de Administrador</h1>
-<p>En este panel, podrá editar, ver o eliminar varios metadatos de los artículos.</p>
+<header style="margin: 10px;">
+    <h1>Panel del Administrador</h1>
+    <p>En este panel, podrá editar, ver o eliminar varios datos del sistema.</p>
+</header>
 <hr />
 
 <div class="container-fluid">
@@ -129,13 +131,13 @@ $files = SQL_GET_ORPHANED_FILES();
                                                 if ($is_root) {
                                                 ?>
                                                     <td>
-                                                        <button class="btn btn-primary disabled" style="width:100%;height:100%;" disabled aria-disabled="true"><i class="fas fa-user-edit"></i></button>
+                                                        <button class="btn btn-primary disabled" style="width:100%;height:100%;" disabled aria-disabled="true"><i class="fas fa-user-edit"></i><span class="sr-only">editar usuario <?php echo $obj['username']; ?></span></button>
                                                     </td>
                                                 <?php
                                                 } else {
                                                 ?>
                                                     <td>
-                                                        <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editAdmin<?php echo $obj['id']; ?>"><i class="fas fa-user-edit"></i></button>
+                                                        <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editAdmin<?php echo $obj['id']; ?>"><span class="sr-only">editar usuario <?php echo $obj['username'];?> </span><i class="fas fa-user-edit"></i></button>
                                                     </td>
 
                                                     <!-- Edit Modal START -->
@@ -155,15 +157,15 @@ $files = SQL_GET_ORPHANED_FILES();
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <label for="username">Nuevo Nombre de Usuario</label>
-                                                                            <input type="text" class="form-control" id="username" name="username" aria-describedby="newUsername" value="<?php echo $obj['username']; ?>" placeholder="<?php echo $obj['username']; ?>" required>
+                                                                            <input type="text" class="form-control" id="username<?php echo $obj['id']; ?>" name="username" aria-describedby="newUsername" value="<?php echo $obj['username']; ?>" placeholder="<?php echo $obj['username']; ?>" required>
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <label for="email">Nuevo Correo Electrónico</label>
-                                                                            <input type="email" class="form-control" id="email" name="email" aria-describedby="newEmail" value="<?php echo $obj['email']; ?>" placeholder="<?php echo $obj['email']; ?>" required>
+                                                                            <input type="email" class="form-control" id="email<?php echo $obj['id']; ?>" name="email" aria-describedby="newEmail" value="<?php echo $obj['email']; ?>" placeholder="<?php echo $obj['email']; ?>" required>
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <label for="newpwd">Nueva Contraseña</label>
-                                                                            <input type="password" class="form-control" id="newpwd" name="newpwd" required>
+                                                                            <input type="password" class="form-control" id="newpwd<?php echo $obj['id']; ?>" name="newpwd" required>
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-footer">
@@ -184,16 +186,16 @@ $files = SQL_GET_ORPHANED_FILES();
                                                     if (($obj['id'] == $_SESSION['id'][0]['id']) || $is_root) {
                                                         if ($is_root) {
                                                     ?>
-                                                            <button class="btn btn-danger disabled" style="width:100%;height:100%;" disabled aria-disabled="true"><i class="fas fa-user-alt-slash"></i></button>
+                                                            <button class="btn btn-danger disabled" style="width:100%;height:100%;" disabled aria-disabled="true"><span class="sr-only">borrar usuario <?php echo $obj['username'];?> </span><i class="fas fa-user-alt-slash"></i></button>
                                                         <?php
                                                         } else {
                                                         ?>
-                                                            <button class="btn btn-danger disabled" style="width:100%;height:100%;" disabled aria-disabled="true"><i class="fas fa-user-alt-slash"></i></button>
+                                                            <button class="btn btn-danger disabled" style="width:100%;height:100%;" disabled aria-disabled="true"><span class="sr-only">borrar usuario <?php echo $obj['username'];?> </span><i class="fas fa-user-alt-slash"></i></button>
                                                         <?php
                                                         }
                                                     } else {
                                                         ?>
-                                                        <button type="submit" class="btn btn-danger" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteAdmin<?php echo $obj['id']; ?>"><i class="fas fa-user-alt-slash"></i></button>
+                                                        <button type="submit" class="btn btn-danger" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteAdmin<?php echo $obj['id']; ?>"><span class="sr-only">borrar usuario <?php echo $obj['username'];?> </span><i class="fas fa-user-alt-slash"></i></button>
 
                                                         <!-- Delete Modal START -->
                                                         <div class="modal fade" id="deleteAdmin<?php echo $obj['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="confirm deletion for <?php echo $obj['username']; ?>" aria-hidden="true">
@@ -393,7 +395,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="modalType<?php echo $type['id']; ?>">Editar el sujeto <strong><?php echo $type['type']; ?></strong></h5>
+                                                        <h5 class="modal-title" id="modalType<?php echo $type['id']; ?>">Editar el tipo <strong><?php echo $type['type']; ?></strong></h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
@@ -401,8 +403,8 @@ $files = SQL_GET_ORPHANED_FILES();
                                                     <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
                                                         <div class="modal-body">
                                                             <div class="form-group">
-                                                                <label for="edit-type-name">Tipo:</label>
-                                                                <input type="text" class="form-control" id="edit-type-name" name="edit-type-name" aria-describedby="edit type name" value="<?php echo $type['type']; ?>" placeholder="<?php echo $type['type']; ?>" required>
+                                                                <label for="edit-type-name-for-<?php echo $type['id']; ?>">Tipo:</label>
+                                                                <input type="text" class="form-control" id="edit-type-name-for-<?php echo $type['id']; ?>" name="edit-type-name" aria-describedby="edit type name" value="<?php echo $type['type']; ?>" placeholder="<?php echo $type['type']; ?>" required>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -475,15 +477,15 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <th scope="row"><?php echo $type['id']; ?></th>
                                         <td><?php echo $type['type']; ?></td>
                                         <td>
-                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editOprhanedType<?php echo $type['id']; ?>"><i class="fas fa-pencil-alt"></i></button>
+                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editOrphanedType<?php echo $type['id']; ?>Modal"><i class="fas fa-pencil-alt"></i></button>
                                         </td>
                                         <td>
-                                            <button type="submit" class="btn btn-danger" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteOprhanedType<?php echo $type['id']; ?>"><i class="fas fa-eraser"></i></button>
+                                            <button type="submit" class="btn btn-danger" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteOprhanedType<?php echo $type['id']; ?>Modal"><i class="fas fa-eraser"></i></button>
                                         </td>
                                     </tr>
 
                                     <!-- Edit Modal START -->
-                                    <div class="modal fade" id="editOprhanedType<?php echo $type['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="confirm edit for <?php echo $type['type']; ?>" aria-hidden="true">
+                                    <div class="modal fade" id="editOrphanedType<?php echo $type['id']; ?>Modal" tabindex="-1" role="dialog" aria-labelledby="confirm edit for <?php echo $type['type']; ?>" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -495,8 +497,8 @@ $files = SQL_GET_ORPHANED_FILES();
                                                 <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
                                                     <div class="modal-body">
                                                         <div class="form-group">
-                                                            <label for="edit-o-type-name">Tipo:</label>
-                                                            <input type="text" class="form-control" id="edit-o-type-name" name="new-o-type-name" aria-describedby="edit orphaned type name" value="<?php echo $type['type']; ?>" placeholder="<?php echo $type['type']; ?>" required>
+                                                            <label for="edit-o-type-name-for-<?php echo $type['id']; ?>">Tipo:</label>
+                                                            <input type="text" class="form-control" id="edit-o-type-name-for-<?php echo $type['id']; ?>" name="new-o-type-name" aria-describedby="edit orphaned type name" value="<?php echo $type['type']; ?>" placeholder="<?php echo $type['type']; ?>" required>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -511,7 +513,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                     <!-- Edit Modal END -->
 
                                     <!-- Delete Modal START -->
-                                    <div class="modal fade" id="deleteOprhanedType<?php echo $type['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="confirm deletion" aria-hidden="true">
+                                    <div class="modal fade" id="deleteOprhanedType<?php echo $type['id']; ?>Modal" tabindex="-1" role="dialog" aria-labelledby="confirm deletion" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -603,37 +605,24 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <td scope="row">
                                             <input type="text" style="display: none" value="<?php
 
-                                            $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
-
-                                            $basename = basename($_SERVER['REQUEST_URI'], '?' . $_SERVER['QUERY_STRING']);
-                                            $pos = strpos($url, $basename);
-                                            if ($pos) {
-                                                $url = substr($url, 0, $pos);
-                                            }
-
-
-                                            if (strEndsWith($url, '/'))  {
-                                                $url = substr($url, 0, strlen($url) - 1);
-                                            }
-
-                                            echo "$url/file.php?file={$f['id']}";
+                                            $encoded_id = urlencode(base64_encode('head-' . $f['id']));
+                                            echo shareURL($f['id']);
 
                                             ?>" id="share-admin-<?php echo $f['id']; ?>">
-                                            <button type="submit" class="btn btn-light"
-                                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>', this)" onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
-                                                <i class="fas fa-share-alt"></i> <span class="sr-only">Compartir el documento <?php echo $f['filename']; ?>.</span>
+                                            <button type="submit" class="btn btn-light" id="share-admin-btn-<?php echo $f['id']; ?>"
+                                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>', 'share-admin-btn-<?php echo $f['id']; ?>', true)"  onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
+                                                <i class="fas fa-share-alt" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>', 'share-admin-btn-<?php echo $f['id']; ?>', true)"></i> <span class="sr-only">Compartir el documento <?php echo $f['filename']; ?>.</span>
                                             </button>
                                         </td>
                                         <td scope="row">
                                             <form action="file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
-                                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
+                                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewTab" name="file" value="<?php echo $encoded_id; ?>">
                                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="fas fa-external-link-alt"></i></button>
                                             </form>
                                         </td>
                                         <td scope="row">
                                             <form action="file.php" method="GET" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")' target="open-pdf-view-">
-                                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
+                                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewPopup" name="file" value="<?php echo $encoded_id; ?>">
                                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="far fa-window-restore"></i></button>
                                             </form>
                                         </td>

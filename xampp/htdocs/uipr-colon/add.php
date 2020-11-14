@@ -5,6 +5,7 @@ include_once('utils/utils.php');
 authenticate();
 set_time_limit(0);
 
+$orphaned_files = SQL_GET_ORPHANED_FILES();
 $errors = $item = ['title' => '', 'type' => '', 'published_date' => '', 'authors' => '', 'subjects' => '', 'description' => '', 'metadata' => '', 'files' => ''];
 $sql_errors = ['item' => '', 'authors' => '', 'subjects' => '', 'type' => '', 'image' => '', 'files' => '', 'item_has_subject' => '', 'file_has_item' => '', 'author_has_item' => ''];
 $valid_title = $valid_type = $valid_date = $valid_authors = $valid_subjects = $valid_description = $valid_image = $valid_files = '';
@@ -139,7 +140,26 @@ if (isset($_POST['submit'])) {
 
             /*********/
 
+            /* GET ORPHANED FILES START */
+            if (isset($_POST['orphaned-files']) && !empty(trim($_POST['orphaned-files']))) {
+                $oFiles = explode(',', trim($_POST['orphaned-files']));
+                $oFilesLen = count($oFiles);
+                if ($oFilesLen > 0) {
+                    for ($i = 0; $i < $oFilesLen; $i++) {
+                        $oFiles[$i] = intval(trim($oFiles[$i]));
+                    }
+                }
+
+                for ($i = 0; $i < $oFilesLen; $i++) {
+                    $file_ids[] = $oFiles[$i];
+                }
+            }
+            /* GET ORPHANED FILES END */
+
+            /*********/
+
             /* INSERT FILES_HAS_ITEM START */
+
             foreach ($file_ids as $id) {
                 $ihs = INSERT(
                     SQL_INSERT_FILE_HAS_ITEM($id, $item_id),
@@ -433,14 +453,73 @@ if (isset($errors_present) && $errors_present) {
 
             <hr />
 
+            <!-- ORPHANED FILES START -->
+            <?php if (count($orphaned_files) > 0): ?>
+
+                <div class="form-row" style="padding-top: 10px;">
+                    <label for="o-files">Seleccionar los Archivos Huérfanos
+                        <?php hint(
+                            'Aquí podrá seleccionar los archivos cual no tienen una relación (un archivo huérfano) con 
+                        un artículo. Si desea borrar estos archivos vaya al Panel del Administrador > Data > Archivos 
+                        Huérfanos'
+                        ); ?>
+                    </label>
+
+                    <div class="input-group">
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="selectedFileInput">Seleccionar</label>
+                        </div>
+                        <select class="custom-select" id="o-files">
+                            <?php
+                            foreach ($orphaned_files as $oFile) {
+                                echo "<option value=\"{$oFile['id']}\"><span>{$oFile['filename']}</span></option>";
+                            }
+
+                            ?>
+                        </select>
+
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button"
+                                    title="Añadir el archivo huérfano seleccionado"
+                                    id="add-o-file-btn"
+                                    onclick="addOrphanedFile();">
+                                <i class="fas fa-link"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-row" style="width: 100%">
+                        <div class="col-xs-1 container-fluid">
+                            <br>
+                            <p id="orphaned-file-info"></p>
+                            <ul id="orphanedFileList" class="list-group">
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <div class="form-row">
+                    <label for="o-files-selected">Archivos Huérfanos Seleccionados</label>
+                    <input class="form-control" placeholder="" id="o-files-selected" name="orphaned-files" type="text" readonly>
+                </div>
+             <?php endif; ?>
+            <!-- ORPHANED FILES END -->
+
+            <hr />
+
             <!-- FILES -->
             <div class="form-row">
                 <label for="files">Seleccionar los Archivos
                     <?php hint(
-                        'Puede seleccionar más de un archivo. 
-                El máximo tamaño combinado es de 40 megabytes. Este limite esta expuesto por el servidor
-                Si desea un tamaño mas grande habla con el webmaster para que edite la configuración de PHP 
-                (php.ini -> upload_max_filesize y post_max_size, Requerirá un reinicio de XAMPP).'
+                        'Puede seleccionar más de un archivo. El máximo tamaño combinado es de 40 megabytes. Este 
+                        límite está expuesto por el servidor Favor de referirse al README en los enlaces, la parte de 
+                        Configuring PHP & MySLQ (Step 0), en la sección de la configuración recomendada para PHP y 
+                        MySQL.'
                     ); ?>
                 </label>
 
@@ -521,6 +600,7 @@ if (isset($errors_present) && $errors_present) {
                             <button class="btn btn-outline-danger" type="button"
                                     onclick="clearImage();">
                                 <i class="far fa-trash-alt"></i>
+                                <span class="sr-only">borrar la imagen actual</span>
                             </button>
                         </div>
 

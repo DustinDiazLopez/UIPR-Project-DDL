@@ -30,6 +30,8 @@ $color = isset($background_color) ? $background_color : 'rgba(0, 0, 0, 0.75)';
 </div>
 
 <script>
-    function stopLoadingAnimation(){ document.getElementById("loading").style.display = "none"; }
+    function stopLoadingAnimation() {
+        document.getElementById("loading").style.display = "none";
+    }
     window.onload = stopLoadingAnimation;
 </script>

@@ -68,7 +68,9 @@
         <table class="table table-hover">
             <thead>
                 <tr>
+                    <?php if (isset($_SESSION['guest']) && $_SESSION['guest'] === FALSE): ?>
                     <th scope="col">ID</th>
+                    <?php endif; ?>
                     <th scope="col">Nombre del Archivo</th>
                     <th scope="col">Compartir</th>
                     <th scope="col">Pestaña Nueva</th>
@@ -85,41 +87,30 @@
                 ?>
 
                     <tr>
+                        <?php if (isset($_SESSION['guest']) && $_SESSION['guest'] === FALSE): ?>
                         <th scope="row"><?php echo $f['id']; ?></th>
+                        <?php endif; ?>
                         <td scope="row" class="file"><?php echo $f['filename']; ?></td>
                         <td scope="row">
                             <input type="text" style="display: none" value="<?php
-                            $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
-
-                            $basename = basename($_SERVER['REQUEST_URI'], '?' . $_SERVER['QUERY_STRING']);
-                            $pos = strpos($url, $basename);
-                            if ($pos) {
-                                $url = substr($url, 0, $pos);
-                            }
-
-
-                            if (strEndsWith($url, '/'))  {
-                                $url = substr($url, 0, strlen($url) - 1);
-                            }
-
-                            echo "$url/file.php?file={$f['id']}";
+                            $encoded_id = urlencode(base64_encode('head-' . $f['id']));
+                            echo shareURL($f['id']);
 
                             ?>" id="share-<?php echo $f['id']; ?>">
-                            <button type="submit" class="btn btn-light copy-btn"
-                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', this)" onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
-                                <i class="fas fa-share-alt"></i> <span class="sr-only">Compartir el documento <?php echo $f['filename']; ?>.</span>
+                            <button type="submit" class="btn btn-light copy-btn" id="share-btn-<?php echo $f['id']; ?>"
+                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', 'share-btn-<?php echo $f['id']; ?>', true)" onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
+                                <i class="fas fa-share-alt" onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', 'share-btn-<?php echo $f['id']; ?>', true)"></i> <span class="sr-only">Compartir el documento <?php echo $f['filename']; ?>.</span>
                             </button>
                         </td>
                         <td scope="row">
                             <form action="file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
-                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
-                                <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="fas fa-external-link-alt"></i> <span class="sr-only">Abrir documento <?php echo $f['filename']; ?> en una pestaña nueva</span></button>
+                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewTab" name="file" value="<?php echo $encoded_id; ?>">
+                                <button type="submit" class="btn btn-light"  name="view-file" style="width:100%;height:100%;"><i class="fas fa-external-link-alt"></i> <span class="sr-only">Abrir documento <?php echo $f['filename']; ?> en una pestaña nueva</span></button>
                             </form>
                         </td>
                         <td scope="row">
                             <form action="file.php" method="GET" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")' target="open-pdf-view-">
-                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>View" name="file" value="<?php echo $f['id']; ?>">
+                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewPopup" name="file" value="<?php echo $encoded_id; ?>">
                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="far fa-window-restore"></i> <span class="sr-only">Abrir documento <?php echo $f['filename']; ?> en una ventana emergente</span></button>
                             </form>
                         </td>
@@ -143,15 +134,26 @@
     <!-- MOD DATE END -->
 
     <!-- OVERLAY START -->
-    <?php if (isset($_SESSION['guest']) && $_SESSION['guest'] === FALSE): ?>
     <form action="edit.php" method="POST" style="padding:0;margin:0;">
         <div class="overlay">
+            <input type="text" style="display: none" value="<?php
+
+
+            echo shareURL($item['id'], '/item.view.php?item=');
+
+            ?>" id="share-item-<?php echo $item['id']; ?>">
+            <button type="button" class="icon-btn green" id="share-item-btn-<?php echo $item['id']; ?>"
+                    onclick="copyValueToClipboard('share-item-<?php echo $item['id']; ?>', 'share-item-btn-<?php echo $item['id']; ?>', false)">
+                <i class="fas fa-share-alt" title="Compartir el articulo <?php echo $item['title']; ?>"></i>
+            </button>
+            <?php if (isset($_SESSION['guest']) && $_SESSION['guest'] === FALSE): ?>
             <input type="hidden" value="<?php echo $item['id']; ?>" id="editItem" name="editItem">
             <button class="icon-btn edit" type="submit"><i class="fa fa-edit" title="Editar <?php echo $item['title']; ?>."></i><span class="sr-only"><?php echo 'Editar ' . $item['title']; ?></span></button>
             <button class="icon-btn delete" type="button" data-toggle="modal" data-target="#deleteItem<?php echo $item['id']; ?>"><i class="fa fa-trash" title="Borrar <?php echo $item['title']; ?>."></i><span class="sr-only"><?php echo 'Borrar ' . $item['title']; ?></span></button>
+            <?php endif; ?>
         </div>
     </form>
-    <?php endif; ?>
+
     <!-- OVERLAY END -->
 
     <!-- Delete Modal START -->

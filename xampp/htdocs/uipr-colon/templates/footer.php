@@ -54,15 +54,17 @@ if (isset($_GET['q']) && isset($only) && !empty($only)) {
         $('[data-toggle="tooltip"]').tooltip()
     })
 
-    function copyValueToClipboard(inputId, btn) {
+    function copyValueToClipboard(inputId, btnId, showText) {
         let copyText = document.getElementById(inputId);
         copyText.style.display = "block";
         copyText.select();
         copyText.setSelectionRange(0, 99999)
         document.execCommand("copy");
         copyText.style.display = "none";
-        btn.innerHTML = "<i class=\"fas fa-check\"></i> Copiado";
-        btn.style.opacity = 0.5;
+
+        let btn = document.getElementById(btnId)
+        btn.innerHTML = `<i class="fas fa-check"></i> ` + (showText ? 'Copiado' : '');
+        btn.style.opacity = "0.5";
         btn.copied = true;
     }
 
@@ -72,6 +74,7 @@ if (isset($_GET['q']) && isset($only) && !empty($only)) {
     function changeIcon(btn) {
         if (!btn.copied) {
             btn.innerHTML = copyIcon;
+
         }
     }
 

@@ -674,6 +674,10 @@ function validate() {
     document.getElementById('submitButton').disabled = !allow;
     allowReload = allow;
 
+    if (!title && !date && !auths && !subs && !description && !files) {
+        allowReload = true;
+    }
+
     if (allow) {
         pHeading.innerHTML = "<b>¡Completado!</b>";
         pMsg.innerHTML = "La forma se puede subir.";
@@ -683,11 +687,11 @@ function validate() {
         pMsg.innerHTML = "Favor de completar la forma";
         document.getElementById('stick-top').style.display = 'block';
         document.getElementById('close-btn-progress').style.display = 'none';
-
     }
+
+    hideProgressHelper();
 }
 
-//document.getElementById('form').addEventListener('submit', on);
 
 /**
  * Converts the inputted string as an HTMLElement
@@ -713,3 +717,80 @@ function hideProgressHelper() {
 }
 
 window.onresize = hideProgressHelper;
+
+const oFileList = document.getElementById('orphanedFileList');
+const inputOFiles = document.getElementById('o-files-selected');
+const oFileElement = document.getElementById('o-files');
+const addOFileBtn = document.getElementById('add-o-file-btn');
+
+function addOrphanedFile() {
+    if (oFileElement.selectedIndex > -1) {
+        const selected = oFileElement.options[oFileElement.selectedIndex];
+        const id = selected.value;
+        const name = selected.innerText;
+        console.log(selected);
+        oFileElement.remove(oFileElement.selectedIndex);
+
+        if (oFileElement.options.length === 0) {
+            addOFileBtn.disabled = true;
+        }
+
+        oFileList.innerHTML += genOrphanedListItem(id, name);
+
+        if (inputOFiles.value === "") {
+            inputOFiles.value = `${id}`;
+        } else {
+            inputOFiles.value += `, ${id}`;
+        }
+    }
+}
+
+function removeOFileFromList(id, name) {
+    let arr = inputOFiles.value.split(',')
+    for (let i = 0; i < arr.length; i++) arr[i] = arr[i].trim();
+    const index = arr.indexOf(id);
+
+    if (index > -1) {
+        // remove from readonly
+        arr.splice(index, 1);
+        console.log(arr);
+        inputOFiles.value = "";
+        for (let i = 0; i < arr.length; i++) {
+            if (inputOFiles.value === "") {
+                inputOFiles.value = `${arr[i].trim()}`;
+            } else {
+                inputOFiles.value += `, ${arr[i].trim()}`;
+            }
+        }
+
+        // remove from list
+        let children = oFileList.children;
+        oFileList.removeChild(children[index]);
+
+        //add back to select
+        oFileElement.innerHTML += `<option value="${id}">${name}</option>`;
+
+        if (oFileElement.options.length > 0) {
+            addOFileBtn.disabled = false;
+        }
+    }
+}
+
+function genOrphanedListItem(id, name) {
+    const encodedId = btoa('head-' + id);
+    return `<li class="list-group-item d-flex justify-content-between align-items-center" id="${id}-${name}">
+        ${name}
+
+        <div class="input-group-append">
+            <a type="button" class="btn btn-outline-success" target="_blank" href="file.php?file=${encodedId}"
+            title="Abrir archivo huérfano '${name}' en nueva pestaña">
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            &nbsp;
+            <button type="button" class="btn btn-outline-danger" title="Remover archivo huérfanos '${name}' de la lista"
+            onclick="removeOFileFromList('${id}', '${name}')">
+                <i class="fas fa-unlink"></i>
+            </button>
+        </div>
+    </li>`
+}

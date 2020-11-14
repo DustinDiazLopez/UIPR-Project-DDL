@@ -645,6 +645,67 @@ function round_ddl($var, $places=2)
     return round($var * $round_val) / $round_val;
 }
 
+
+function encrypt($plaintext, $cipher="AES-128-CBC")
+{
+    global $config;
+    $key = $config['salt'];
+    $ivlen = openssl_cipher_iv_length($cipher);
+    $iv = openssl_random_pseudo_bytes($ivlen);
+    $ciphertext_raw = openssl_encrypt($plaintext, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
+    $hmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
+    return base64_encode( $iv.$hmac.$ciphertext_raw );
+
+}
+
+function decrypt($ciphertext, $cipher="AES-128-CBC")
+{
+    global $config;
+    $key = $config['salt'];
+    $ivlen = openssl_cipher_iv_length($cipher);
+    $c = base64_decode($ciphertext);
+    $iv = substr($c, 0, $ivlen);
+    $hmac = substr($c, $ivlen, $sha2len=32);
+    $ciphertext_raw = substr($c, $ivlen+$sha2len);
+    $calcmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
+
+    //PHP 5.6+ timing attack safe comparison
+    return hash_equals($hmac, $calcmac)
+        ? openssl_decrypt($ciphertext_raw, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv)
+        : FALSE;
+
+}
+
+$url_share = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+$head_share='head-';
+
+/**
+ * Generates the URL to the file or item to be shared.
+ * @param $id string|int the id of the item or file
+ * @param string $path the sub-path to the file or item
+ * @return string the complete url path to the item or file
+ */
+function shareURL($id, $path='/file.php?file=') {
+    global $head_share;
+    global $url_share;
+    $url = $url_share;
+    $basename = basename($_SERVER['REQUEST_URI'], '?');
+    if (strpos($basename, '.php')) {
+        $pos2 = strpos($url, $basename);
+        if ($pos2) {
+            $url = substr($url, 0, $pos2);
+        }
+    }
+
+    if (strEndsWith($url, '/'))  {
+        $url = substr($url, 0, strlen($url) - 1);
+    }
+
+    $encoded_id = urlencode(base64_encode($head_share . $id));
+    return $url.$path.$encoded_id;
+}
+
+
 /**
  * Returns html string with an icon corresponding to the inputted text (look at source code for the options).
  * <p>If it keeps returning the same icon, and you are on Linux (LAMP) you have to install {@link mb_strtolower}

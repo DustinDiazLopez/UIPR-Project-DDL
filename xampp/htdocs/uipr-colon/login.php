@@ -14,6 +14,12 @@ if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === TRUE) {
     redir();
 }
 
+function not_valid(&$SESSION, &$errors, $msg= 'Credenciales no válidas.')
+{
+    $SESSION['authenticated'] = FALSE;
+    $errors[] = $msg;
+}
+
 if (isset($_POST['submit'])) {
     $email = $_POST['email'];
     if (empty($email)) {
@@ -35,12 +41,10 @@ if (isset($_POST['submit'])) {
                 $_SESSION['guest'] = FALSE;
                 redir();
             } else {
-                $_SESSION['authenticated'] = FALSE;
-                $errors[] = 'Credenciales incorrectas.';
+                not_valid($_SESSION, $errors);
             }
         } else {
-            $errors[] = 'Credenciales incorrectas.';
-            $_SESSION['authenticated'] = FALSE;
+            not_valid($_SESSION, $errors);
         }
     }
 }
@@ -94,6 +98,15 @@ if (isset($_POST['guest'])) {
                 </div>
             <?php endif; ?>
 
+            <?php if (isset($_GET['noauth'])): ?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <?php echo 'Favor de iniciar la sesión o continuar como invitado(a) para acceder el enlace pedido'; ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php endif; ?>
+
             <?php if (isset($_POST['submit']) && array_filter($errors)) : ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <?php foreach ($errors as $error) echo "$error"; ?>
@@ -111,7 +124,7 @@ if (isset($_POST['guest'])) {
                 <input type="password" class="form-control" name="pwd" id="pwd" placeholder="password" value="hello-password" required>
             </div>
             <div class="btn-group" role="group" aria-label="Basic example" style="width: 100%">
-                <button type="submit" name="guest" value="guest" class="btn btn-outline-success" style="width: 100%">Continuar como Invitado(a) <i class="fas fa-hiking"></i></button>
+                <button type="submit" name="guest" value="guest" class="btn btn-outline-secondary" style="width: 100%">Continuar como Invitado(a) <i class="fas fa-hiking"></i></button>
                 <button type="submit" name="submit" value="submit" class="btn btn-outline-primary" style="width: 100%">Iniciar Sesión <i class="fas fa-sign-in-alt"></i></button>
             </div>
 
