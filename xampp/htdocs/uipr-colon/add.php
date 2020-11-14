@@ -69,6 +69,12 @@ if (isset($_POST['submit'])) {
                 'metadata' => mysqli_real_escape_string($conn, $item['metadata'])
             ];
 
+
+            var_dump($_POST['description']);
+            var_dump($item['description']);
+            var_dump($upload_item['description']);
+            die('');
+
             /*********/
 
             /* INSERT TYPE START */
@@ -665,6 +671,7 @@ if (isset($errors_present) && $errors_present) {
             ['color', ['color']],
             ['para', ['ul', 'ol']],
             ['table', ['table']],
+            ['insert', ['link']],
         ]
     });
 </script>

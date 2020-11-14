@@ -715,9 +715,9 @@ function shareURL($id, $path='/file.php?file=') {
  * @param string[] $tags the tags to remove from the HTML
  * @return string returns the cleaned HTML
  */
-function cleanHTML ($html, $tags= ['script','style','object','iframe','embed','button','input','canvas','h1','h2','h3','a']) {
+function cleanHTML ($html, $tags= ['script','style','object','iframe','embed','button','input','canvas','h1','h2','h3']) {
     $dom = new DOMDocument();
-    $dom->loadHTML($html);
+    $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
     $remove = [];
     foreach ($tags as $tag) {
         $script = $dom->getElementsByTagName($tag);
@@ -726,7 +726,7 @@ function cleanHTML ($html, $tags= ['script','style','object','iframe','embed','b
 
     // remove all tags
     foreach ($remove as $item) $item->parentNode->removeChild($item);
-    return $dom->saveHTML();
+    return str_replace("href=\"javascript:", "", $dom->saveHTML());
 }
 
 /**
