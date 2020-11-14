@@ -31,6 +31,7 @@ Please follow these steps ***carefully***.
 #### Installing a library for LAMP (not required for xampp)
 ```terminal
 sudo apt-get install php7.4-mbstring
+sudo apt-get install php7.4-dom
 ```
 Replace `7.4` with your version of PHP
 
