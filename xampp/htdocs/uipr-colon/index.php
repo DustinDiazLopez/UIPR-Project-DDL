@@ -55,23 +55,25 @@ include_once('templates/header.php');
                 }
             } else {
                 $total = SQL_GET_ITEM_COUNT();
-                $limit = 10;
-                $pages = ceil($total / $limit);
-                $page = min($pages, filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT, array(
-                    'options' => array(
-                        'default'   => 1,
-                        'min_range' => 1,
-                    ),
-                )));
+                if ($total > 0) {
+                    $limit = 10;
+                    $pages = ceil($total / $limit);
+                    $page = min($pages, filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT, array(
+                        'options' => array(
+                            'default'   => 1,
+                            'min_range' => 1,
+                        ),
+                    )));
 
-                $offset = ($page - 1)  * $limit;
-                // Some information to display to the user
-                $start = $offset + 1;
-                $end = min(($offset + $limit), $total);
+                    $offset = ($page - 1)  * $limit;
+                    // Some information to display to the user
+                    $start = $offset + 1;
+                    $end = min(($offset + $limit), $total);
 
 
-                $items = SQL_GET_ALL_ITEMS("ORDER BY i.create_at DESC LIMIT $limit OFFSET $offset");
-                $current_count = count($items);
+                    $items = SQL_GET_ALL_ITEMS("ORDER BY i.create_at DESC LIMIT $limit OFFSET $offset");
+                    $current_count = count($items);
+                }
             }
             if (isset($_GET['error'])) {
                 if ($_GET['error'] == "file") {

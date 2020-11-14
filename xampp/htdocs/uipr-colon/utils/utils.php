@@ -178,6 +178,11 @@ function validate_ddl_image(&$POST, &$is_valid, $key='image')
     return NULL;
 }
 
+function escapeMySQL($str) {
+    global $conn;
+    return mysqli_real_escape_string($conn, $str);
+}
+
 /**
  * Validates to see if the filenames are in the array and checks if the tmp_name is set and not <b>NULL</b>.
  * @param $FILES array the array containing the files (<b>$_FILES</b>)
@@ -203,10 +208,9 @@ function validate_ddl_files($FILES, $file_names, &$error_buffer)
             // checks to see if the file has a temp location (or if it is empty)
             if (isset($file['tmp_name']) && !empty($file['tmp_name'])) {
                 $files[] = [
-                    'file_name' => $file['name'],
+                    'file_name' => escapeMySQL($file['name']),
                     'tmp_path' => $file['tmp_name'],
-                    'size' => $file['size'],
-                    'type' => $file['type']
+                    'path' => ''
                 ];
             } else {
                 // file tmp path is empty or was not set!

@@ -217,13 +217,12 @@ function SQL_GET_ID_OF_SUBJECT_BY_SUBJECT($subject)
 
 /**
  * SQL script that sets the file information in the database
- * @param array $file array containing the file_name, type, tmp_path, and size
- * @param integer $id (optional) id of the file, default is NULL (i.e., will autoincrement)
+ * @param array $file array containing the file_name, type, tmp_path, path, and size
  * @return string returns the sql script to insert a file
  */
-function SQL_FILE_INSERT($id, $file)
+function SQL_INSERT_FILE($file)
 {
-    return "UPDATE `file` SET `filename` = '{$file['file_name']}', `type` = '{$file['type']}', `size` = '{$file['size']}' WHERE `file`.`id` = $id;";
+    return sprintf(SQL_INSERT_FILE_PATH, $file['file_name'], $file['path']);
 }
 
 /**
@@ -654,8 +653,6 @@ function SQL_GET_FILES($item_id)
         $files[] = [
             'id' => $f['id'],
             'filename' => $f['filename'],
-            'type' => $f['type'],
-            'size' => intval($f['size']),
             'path' => $f['path']
         ];
     }

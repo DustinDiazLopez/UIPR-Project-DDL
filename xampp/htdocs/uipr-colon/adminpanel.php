@@ -600,8 +600,8 @@ $files = SQL_GET_ORPHANED_FILES();
                                     <tr>
                                         <th scope="row"><?php echo $f['id']; ?></th>
                                         <td scope="row" class="file"><?php echo $f['filename']; ?></td>
-                                        <td scope="row" class="font-weight-light"><?php echo $f['type']; ?></td>
-                                        <td scope="row" class="font-weight-light"><?php echo $f['size'] / 1e+6; ?> MB</td>
+                                        <td scope="row" class="font-weight-light"><?php echo mime_content_type(PATH_TO_FILES_FOLDER . $f['path']); ?></td>
+                                        <td scope="row" class="font-weight-light"><?php echo filesize(PATH_TO_FILES_FOLDER . $f['path']) / 1e+6; ?> MB</td>
                                         <td scope="row">
                                             <input type="text" style="display: none" value="<?php
 

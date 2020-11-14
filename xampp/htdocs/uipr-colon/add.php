@@ -120,22 +120,32 @@ if (isset($_POST['submit'])) {
 
             /* INSERT FILES START */
 
-            $file_ids = array();
-            $num_of_files = count($files);
-            foreach ($files as $file) {
-                // sends the file piece by piece
-                $insert_id = SQL_SEND_LONG_BLOB($file, $sql_errors['files']);
-                if ($insert_id !== NULL) {
-                    // adds the inserted id to the list of ids
-                    $file_ids[] = $insert_id;
-                    // updates the inserted file information to match the inputted file object.
-                    query(SQL_FILE_INSERT($insert_id, $file));
-                } else {
-                    error_log('FAILED TO UPLOAD FILE: ' . $file['file_name']);
-                    error_log('Possible cause: ' . $sql_errors['files']);
-                }
-            }
+            define('PATH_TO_FILES', PATH_TO_FILES_FOLDER . $item_id . '/');
+            if (mkdir(PATH_TO_FILES) || is_dir(PATH_TO_FILES)) {
+                $file_ids = array();
+                $num_of_files = count($files);
+                $target = $path = NULL;
+                foreach ($files as $file) {
+                    $target = PATH_TO_FILES . $file['file_name'];
+                    $file['path'] = escapeMySQL($item_id . '/' . $file['file_name']);
 
+                    $moved = move_uploaded_file($file['tmp_path'], $target);
+
+                    $insert_id = NULL;
+                    if ($moved !== FALSE) {
+                        query(SQL_INSERT_FILE($file));
+                        $insert_id = mysqli_insert_id($conn);
+                        $file_ids[] = mysqli_insert_id($conn);
+                    } else {
+                        $sql_errors['files'] = 'Failed to move file to folder ' . PATH_TO_FILES_FOLDER . ' ' . $item_id;
+                        error_log($sql_errors['files']);
+                    }
+
+                }
+            } else {
+                $sql_errors['files'] = 'Failed to create folder in ' . PATH_TO_FILES_FOLDER . ' ' . $item_id;
+                error_log($sql_errors['files']);
+            }
             /* INSERT FILES END */
 
             /*********/

@@ -73,9 +73,6 @@ CREATE TABLE `author_has_item` (
 CREATE TABLE `file` (
   `id` int(11) NOT NULL,
   `filename` varchar(255) DEFAULT NULL,
-  `content` longblob DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
-  `size` float DEFAULT NULL,
   `path` mediumtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

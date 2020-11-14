@@ -114,8 +114,8 @@
                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="far fa-window-restore"></i> <span class="sr-only">Abrir documento <?php echo $f['filename']; ?> en una ventana emergente</span></button>
                             </form>
                         </td>
-                        <td scope="row" class="font-weight-light"><?php echo $f['type']; ?></td>
-                        <td scope="row" class="font-weight-light"><?php echo $f['size'] / 1e+6; ?> MB</td>
+                        <td scope="row" class="font-weight-light"><?php echo mime_content_type(PATH_TO_FILES_FOLDER . $f['path']); ?></td>
+                        <td scope="row" class="font-weight-light"><?php echo filesize(PATH_TO_FILES_FOLDER . $f['path']) / 1e+6; ?> MB</td>
                     </tr>
 
                 <?php endforeach; ?>
