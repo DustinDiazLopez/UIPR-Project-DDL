@@ -87,9 +87,12 @@ if (isset($conn)) {
             foreach ($arr as $obj) {
                 if (isset($obj['id'])) {
                     query(sql_delete_file_by_id($obj['id']));
-                    $count += mysqli_affected_rows($conn);
                     if (mysqli_affected_rows($conn) > 0) {
-                        $total_size += $obj['size'];
+                        $size = filesize(PATH_TO_FILES_FOLDER . $obj['path']);
+                        if (unlink(PATH_TO_FILES_FOLDER . $obj['path'])) {
+                            $count += mysqli_affected_rows($conn);
+                            $total_size += $size;
+                        }
                     }
                 }
             }
