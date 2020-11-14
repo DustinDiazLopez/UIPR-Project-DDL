@@ -1,6 +1,6 @@
 <?php
 $title_tag = 'Añadir un Artículo';
-include_once('connect.php');
+include_once('../connect.php');
 include_once('utils/utils.php');
 authenticate();
 set_time_limit(0);
