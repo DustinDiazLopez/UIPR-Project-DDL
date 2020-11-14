@@ -70,10 +70,6 @@ if (isset($_POST['submit'])) {
             ];
 
 
-            var_dump($_POST['description']);
-            var_dump($item['description']);
-            var_dump($upload_item['description']);
-            die('');
 
             /*********/
 
@@ -127,8 +123,8 @@ if (isset($_POST['submit'])) {
             /* INSERT FILES START */
 
             define('PATH_TO_FILES', PATH_TO_FILES_FOLDER . $item_id . '/');
+            $file_ids = array();
             if (mkdir(PATH_TO_FILES) || is_dir(PATH_TO_FILES)) {
-                $file_ids = array();
                 $num_of_files = count($files);
                 $target = $path = NULL;
                 foreach ($files as $file) {
