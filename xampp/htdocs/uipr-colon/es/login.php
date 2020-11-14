@@ -14,7 +14,7 @@ if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === TRUE) {
     redir();
 }
 
-function not_valid(&$SESSION, &$errors, $msg= 'Credenciales no válidas.')
+function not_valid(&$SESSION, &$errors, $msg = 'Credenciales no válidas.')
 {
     $SESSION['authenticated'] = FALSE;
     $errors[] = $msg;
@@ -69,9 +69,9 @@ if (isset($_POST['guest'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo "Iniciar Sesión - " . APP_NAME; ?></title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/selection.color.css">
-    <link href="css/fa/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="./../css/bootstrap.min.css">
+    <link rel="stylesheet" href="./../css/selection.color.css">
+    <link rel="stylesheet" href="./../css/fa/css/all.css">
 
     <style>
         form {
@@ -89,7 +89,7 @@ if (isset($_POST['guest'])) {
             <div class="form-group">
                 <h1>Iniciar Sesión</h1>
             </div>
-            <?php if (isset($_GET['se'])): ?>
+            <?php if (isset($_GET['se'])) : ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <?php echo 'Se ha cerrado la sesión por inactividad.'; ?>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -98,7 +98,7 @@ if (isset($_POST['guest'])) {
                 </div>
             <?php endif; ?>
 
-            <?php if (isset($_GET['noauth'])): ?>
+            <?php if (isset($_GET['noauth'])) : ?>
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <?php echo 'Favor de iniciar la sesión o continuar como invitado(a) para acceder el enlace pedido'; ?>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">

@@ -1,5 +1,5 @@
 <?php
-//define('DDL_PATH', '../../colon-uipr-cms-ddl-files-and-config');
+//define('DDL_PATH', '../../../colon-uipr-cms-ddl-files-and-config');
 define('DDL_PATH', '../../../../../../../colon-uipr-cms-ddl-files-and-config');
 
 // DO NOT CHANGE ANYTHING AFTER THIS LINE

@@ -91,8 +91,9 @@ if (isset($_POST['submit'])) {
             if ($valid_image === TRUE) {
                 $image_id = INSERT(
                     SQL_INSERT_IMAGE(
-                            $image['image_type'], $image['image_size'],
-                            mysqli_real_escape_string($conn, $image['content'])
+                        $image['image_type'],
+                        $image['image_size'],
+                        mysqli_real_escape_string($conn, $image['content'])
                     ),
                     '',
                     $sql_errors['image']
@@ -109,8 +110,13 @@ if (isset($_POST['submit'])) {
 
             $item_id = INSERT(
                 SQL_INSERT_ITEM(
-                        $upload_item['title'], $type_id, $image_id, $upload_item['published_date'], $yearOnly,
-                        $upload_item['description'], $upload_item['metadata']
+                    $upload_item['title'],
+                    $type_id,
+                    $image_id,
+                    $upload_item['published_date'],
+                    $yearOnly,
+                    $upload_item['description'],
+                    $upload_item['metadata']
                 ),
                 '',
                 $sql_errors['item']
@@ -142,7 +148,6 @@ if (isset($_POST['submit'])) {
                         $sql_errors['files'] = 'Failed to move file to folder ' . PATH_TO_FILES_FOLDER . ' ' . $item_id;
                         error_log($sql_errors['files']);
                     }
-
                 }
             } else {
                 $sql_errors['files'] = 'Failed to create folder in ' . PATH_TO_FILES_FOLDER . ' ' . $item_id;
@@ -295,18 +300,17 @@ if (isset($errors_present) && $errors_present) {
             echo showWarn('Important: ', 'The item was created)');
         }
     }
-
 }
 
 ?>
 
-<link rel="stylesheet" href="css/autocomplete.css">
-<link rel="stylesheet" href="css/add.css">
+<link rel="stylesheet" href="./../css/autocomplete.css">
+<link rel="stylesheet" href="./../css/add.css">
+<link rel="stylesheet" href="./../css/summernote.min.css">
 
 <!-- PROGRESS CARD START -->
 <div class="card" id="stick-top" style="width: 18rem;">
-    <span class="badge badge-dark badge-pill close-progress" id="close-btn-progress"
-          style="display: none;" onclick="document.getElementById('stick-top').style.display = 'none';">
+    <span class="badge badge-dark badge-pill close-progress" id="close-btn-progress" style="display: none;" onclick="document.getElementById('stick-top').style.display = 'none';">
         <i class="fas fa-times"></i>
     </span>
     <div class="card-body">
@@ -401,7 +405,8 @@ if (isset($errors_present) && $errors_present) {
                 <!-- AUTHORS -->
                 <div class="form-row">
                     <label for="authors">Autores
-                        <?php //hint('Favor no utilizar commas, especificar el nombre completo sin commas. Si se detectan commas, se eliminarán.'); ?>
+                        <?php //hint('Favor no utilizar commas, especificar el nombre completo sin commas. Si se detectan commas, se eliminarán.'); 
+                        ?>
                     </label>
                     <div class="input-group mb-3">
                         <ul class="list-group container-fluid" id="readOnlyListViewAuthor">
@@ -410,10 +415,10 @@ if (isset($errors_present) && $errors_present) {
                     </div>
                     <div class="input-group mb-3">
                         <input class="form-control <?php not_valid_class($valid_authors); ?>" type="text" placeholder="" id="authors" name="authors" value="<?php
-                        if ($item['authors'] !== '') {
-                            echo listToCSV($item['authors']);
-                        }
-                        ?>" readonly required>
+                                                                                                                                                            if ($item['authors'] !== '') {
+                                                                                                                                                                echo listToCSV($item['authors']);
+                                                                                                                                                            }
+                                                                                                                                                            ?>" readonly required>
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Editar todos los autores."><i class="fas fa-users-cog"></i></button>
                             <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Editar el último autor(a) entrado(a)."><i class="fas fa-user-cog"></i></button>
@@ -434,7 +439,8 @@ if (isset($errors_present) && $errors_present) {
                 <!-- SUBJECTS -->
                 <div class="form-row">
                     <label for="subjects">Sujetos
-                        <?php //hint('Favor no utilizar commas, especificar el sujeto sin commas. Si se detectan commas, se eliminarán.'); ?>
+                        <?php //hint('Favor no utilizar commas, especificar el sujeto sin commas. Si se detectan commas, se eliminarán.'); 
+                        ?>
                     </label>
                     <div class="input-group mb-3">
                         <ul class="list-group container-fluid" id="readOnlyListViewSubject">
@@ -443,10 +449,10 @@ if (isset($errors_present) && $errors_present) {
                     </div>
                     <div class="input-group mb-3">
                         <input class="form-control <?php not_valid_class($valid_subjects); ?>" type="text" placeholder="" id="subjects" name="subjects" value="<?php
-                        if ($item['subjects'] !== '') {
-                            echo listToCSV($item['subjects']);
-                        }
-                        ?>" readonly required>
+                                                                                                                                                                if ($item['subjects'] !== '') {
+                                                                                                                                                                    echo listToCSV($item['subjects']);
+                                                                                                                                                                }
+                                                                                                                                                                ?>" readonly required>
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Editar todos los sujetos."><i class="fas fa-cogs"></i></button>
                             <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Editar el último sujeto entrado."><i class="fas fa-cog"></i></button>
@@ -468,7 +474,7 @@ if (isset($errors_present) && $errors_present) {
             <hr />
 
             <!-- ORPHANED FILES START -->
-            <?php if (count($orphaned_files) > 0): ?>
+            <?php if (count($orphaned_files) > 0) : ?>
 
                 <div class="form-row" style="padding-top: 10px;">
                     <label for="o-files">Seleccionar los Archivos Huérfanos
@@ -493,10 +499,7 @@ if (isset($errors_present) && $errors_present) {
                         </select>
 
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button"
-                                    title="Añadir el archivo huérfano seleccionado"
-                                    id="add-o-file-btn"
-                                    onclick="addOrphanedFile();">
+                            <button class="btn btn-outline-secondary" type="button" title="Añadir el archivo huérfano seleccionado" id="add-o-file-btn" onclick="addOrphanedFile();">
                                 <i class="fas fa-link"></i>
                             </button>
                         </div>
@@ -521,7 +524,7 @@ if (isset($errors_present) && $errors_present) {
                     <label for="o-files-selected">Archivos Huérfanos Seleccionados</label>
                     <input class="form-control" placeholder="" id="o-files-selected" name="orphaned-files" type="text" readonly>
                 </div>
-             <?php endif; ?>
+            <?php endif; ?>
             <!-- ORPHANED FILES END -->
 
             <hr />
@@ -569,7 +572,7 @@ if (isset($errors_present) && $errors_present) {
             <hr />
 
             <!-- COL 2 START -->
-            <div >
+            <div>
                 <!-- IMAGE -->
                 <div class="form-row">
                     <label for="image">Imágen
@@ -596,8 +599,7 @@ if (isset($errors_present) && $errors_present) {
                         <div class="input-group-append">
                             <label class="input-group-text" for="selectedFileInput">Archivo</label>
                         </div>
-                        <select class="custom-select" id="selectedFileInput"
-                                onchange="changeImage(
+                        <select class="custom-select" id="selectedFileInput" onchange="changeImage(
                                             document.getElementById('selectedFileInput').value,
                                             document.getElementById('pageNumber').value,
                                             true
@@ -610,13 +612,12 @@ if (isset($errors_present) && $errors_present) {
                         <input type="number" class="form-control" min="1" value="1" id="pageNumber" onchange="changeImage(
                                             document.getElementById('selectedFileInput').value,
                                             document.getElementById('pageNumber').value
-                                        );" >
+                                        );">
 
 
 
                         <div class="input-group-append">
-                            <button class="btn btn-outline-danger" type="button"
-                                    onclick="clearImage();">
+                            <button class="btn btn-outline-danger" type="button" onclick="clearImage();">
                                 <i class="far fa-trash-alt"></i>
                                 <span class="sr-only">borrar la imagen actual</span>
                             </button>
@@ -638,7 +639,7 @@ if (isset($errors_present) && $errors_present) {
 <div id="overlay">
     <div class="floatCenter" id="loading-splash">
         <object data="images/processing.svg" type="image/svg+xml">
-            <img loading="lazy" alt="espere mientras procesamos la información" src="images/processing.gif"/>
+            <img loading="lazy" alt="espere mientras procesamos la información" src="images/processing.gif" />
         </object>
     </div>
 </div>
@@ -653,11 +654,8 @@ if (isset($errors_present) && $errors_present) {
 <script type="text/javascript" src="js/pdf.js"></script>
 <script src="js/generic.js"></script>
 <script src="js/add.js"></script>
-
-<link href="css/summernote.min.css" rel="stylesheet">
 <script src="js/summernote.min.js"></script>
 <script>
-
     $('#description').summernote({
         placeholder: '<b>Don Quijote de la Mancha</b> es una novela escrita por el <u>español</u> <i>Miguel de Cervantes Saavedra</i>...',
         tabsize: 4,
@@ -673,5 +671,3 @@ if (isset($errors_present) && $errors_present) {
 </script>
 
 <?php include_once('templates/footer.php'); ?>
-
-
