@@ -1,5 +1,5 @@
 
-<?php if (isset($page) && isset($pages)): ?>
+<?php if (isset($total) && isset($page) && isset($pages)): ?>
 <nav aria-describedby="paginación">
     <ul class="pagination justify-content-center">
         <?php if ($page > 1) { ?>

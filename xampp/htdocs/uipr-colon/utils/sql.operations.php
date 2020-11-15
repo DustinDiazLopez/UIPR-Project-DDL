@@ -36,6 +36,42 @@ function SQL_GET_ITEM_COUNT()
 }
 
 /**
+ * Counts the number of authors in the database with a relation
+ * @param $author string the id of the author
+ * @return int returns the number of items in the database
+ * @author Dustin Díaz
+ */
+function SQL_GET_ITEM_COUNT_AUTHOR($author)
+{
+    $author = SQL_GET_AUTHOR_BY_ID($author)[0]['author_name'];
+    return intval(query(sprintf(SQL_GET_ITEM_COUNT_AUTHOR, $author))[0]['count(*)']);
+}
+
+/**
+ * Counts the number of subjects in the database with a relation
+ * @param $subject string the id of the subject
+ * @return int returns the number of items in the database
+ * @author Dustin Díaz
+ */
+function SQL_GET_ITEM_COUNT_SUBJECT($subject)
+{
+    $subject = SQL_GET_SUBJECT_BY_ID($subject)[0]['subject'];
+    return intval(query(sprintf(SQL_GET_ITEM_COUNT_SUBJECT, $subject))[0]['count(*)']);
+}
+
+/**
+ * Counts the number of types in the database with a relation
+ * @param $type string the id of the type
+ * @return int returns the number of items in the database
+ * @author Dustin Díaz
+ */
+function SQL_GET_ITEM_COUNT_TYPE($type)
+{
+    $type = SQL_GET_TYPE_BY_ID($type)[0]['type'];
+    return intval(query(sprintf(SQL_GET_ITEM_COUNT_TYPE, $type))[0]['count(*)']);
+}
+
+/**
  * @param $sql string the sql script
  * @param $sql_fallback_get string the fallback sql when sql fails
  * @param $error_buffer string where to put the error
@@ -572,12 +608,13 @@ function SQL_INSERT_ADMIN($email, $username, $password) {
 /**
  * Queries the database for items related to an author given its id.
  * @param integer $author_id the author id
+ * @param string $append
  * @return array|null returns the associative array of the author related to the id
  * @author Dustin Díaz
  */
-function SQL_GET_ITEMS_BY_AUTHOR_ID($author_id)
+function SQL_GET_ITEMS_BY_AUTHOR_ID($author_id, $append = '')
 {
-    return query(SQL_GET_ITEMS_BY_AUTHOR_ID . $author_id);
+    return query(SQL_GET_ITEMS_BY_AUTHOR_ID . $author_id . ' ' . $append);
 }
 
 
@@ -617,23 +654,25 @@ function SQL_GET_TYPE_BY_ID($type_id)
 /**
  * Queries the database for items related to a subject given its id.
  * @param integer $subject_id the subject id
+ * @param string $append
  * @return array|null returns the associative array of the subject related to the id
  * @author Dustin Díaz
  */
-function SQL_GET_ITEMS_BY_SUBJECT_ID($subject_id)
+function SQL_GET_ITEMS_BY_SUBJECT_ID($subject_id, $append = '')
 {
-    return query(SQL_GET_ITEMS_BY_SUBJECT_ID . $subject_id);
+    return query(SQL_GET_ITEMS_BY_SUBJECT_ID . $subject_id . ' ' . $append);
 }
 
 /**
  * Queries the database for items related to a type given its id.
  * @param integer $type_id the type id
+ * @param string $append
  * @return array|null returns the associative array of the subject related to the id
  * @author Dustin Díaz
  */
-function SQL_GET_ITEMS_BY_TYPE_ID($type_id)
+function SQL_GET_ITEMS_BY_TYPE_ID($type_id, $append = '')
 {
-    return query(SQL_GET_ITEMS_BY_TYPE_ID . $type_id);
+    return query(SQL_GET_ITEMS_BY_TYPE_ID . $type_id . ' ' . $append);
 }
 
 /**

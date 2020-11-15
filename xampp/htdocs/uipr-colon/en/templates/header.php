@@ -97,7 +97,10 @@ include_once('templates/loading.php');
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
-                            <?php for ($i = 0; $i < count($GLOBALS['AVAILABLE_LANGS']); $i++): ?>
+                            <?php
+                            for ($i = 0; $i < count($GLOBALS['AVAILABLE_LANGS']); $i++):
+                                if ($GLOBALS['AVAILABLE_LANGS'][$i] === LANG) continue;
+                            ?>
                                 <a class="dropdown-item"
                                    href="./../<?php echo $GLOBALS['AVAILABLE_LANGS'][$i]; ?>"><?php echo '<span class="cap">' . $GLOBALS['_LANG_ASSOC'][$GLOBALS['AVAILABLE_LANGS'][$i]] . '</span> (' . $GLOBALS['AVAILABLE_LANGS'][$i] . ')'; ?></a>
                             <?php endfor; ?>

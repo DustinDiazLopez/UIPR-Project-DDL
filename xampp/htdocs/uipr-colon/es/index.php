@@ -2,8 +2,12 @@
 $title_tag = 'Inicio';
 $allow_guests = TRUE;
 
-include_once('templates/header.php');
+// limit of items per page
+$limit = isset($_GET['item-per-page']) && is_valid_int($_GET['item-per-page']) ? intval($_GET['item-per-page']) : 10;
 
+$items = NULL;
+$_APPEND_LIMITER = ''; // will be overwritten
+include_once('templates/header.php');
 ?>
 
 <div class="container-fluid">
@@ -24,56 +28,62 @@ include_once('templates/header.php');
         <!-- ITEMS START -->
         <div class="col-sm-9" id="items">
             <?php
-            
+
+            // custom search
             if (isset($_GET['q'])) {
                 $only = 'all';
                 if (isset($_GET['only'])) {
                     $only = $_GET['only'];
                 }
                 if (isset($conn)) {
-                    $items = search($conn, $_GET['q'], isset($_GET['only']) ? $_GET['only'] : 'all');
+                    $items = search($conn, $_GET['q'], $only);
                 }
 
             } elseif (isset($_GET['author-search'])) {
                 if (isset($_GET['author'])) {
-                    if (isset($conn)) {
-                        $items = SQL_GET_ITEMS_BY_AUTHOR_ID(mysqli_real_escape_string($conn, $_GET['author']));
+                    $author = escapeMySQL($_GET['author']);
+                    $total = SQL_GET_ITEM_COUNT_AUTHOR($author);
+                    if ($total > 0) {
+                        if (isset($conn)) {
+                            include ('templates/pagination.setter.php');
+                            $items = SQL_GET_ITEMS_BY_AUTHOR_ID($author, $_APPEND_LIMITER);
+                            $current_count = count($items);
+                        }
                     }
                 }
             } elseif (isset($_GET['subject-search'])) {
                 if (isset($_GET['subject'])) {
-                    if (isset($conn)) {
-                        $items = SQL_GET_ITEMS_BY_SUBJECT_ID(mysqli_real_escape_string($conn, $_GET['subject']));
+                    $subject = escapeMySQL($_GET['subject']);
+                    $total = SQL_GET_ITEM_COUNT_SUBJECT($subject);
+                    if ($total > 0) {
+                        if (isset($conn)) {
+                            include ('templates/pagination.setter.php');
+                            $items = SQL_GET_ITEMS_BY_SUBJECT_ID($subject, $_APPEND_LIMITER);
+                            $current_count = count($items);
+                        }
                     }
                 }
             } elseif (isset($_GET['type-search'])) {
                 if (isset($_GET['type'])) {
-                    if (isset($conn)) {
-                        $items = SQL_GET_ITEMS_BY_TYPE_ID(mysqli_real_escape_string($conn, $_GET['type']));
+                    $type = escapeMySQL($_GET['type']);
+                    $total = SQL_GET_ITEM_COUNT_TYPE($type);
+                    var_dump($total);
+                    if ($total > 0) {
+                        include ('templates/pagination.setter.php');
+                        $items = SQL_GET_ITEMS_BY_TYPE_ID($type, $_APPEND_LIMITER);
+                        $current_count = count($items);
                     }
                 }
             } else {
                 $total = SQL_GET_ITEM_COUNT();
                 if ($total > 0) {
-                    $limit = 10;
-                    $pages = ceil($total / $limit);
-                    $page = min($pages, filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT, array(
-                        'options' => array(
-                            'default'   => 1,
-                            'min_range' => 1,
-                        ),
-                    )));
-
-                    $offset = ($page - 1)  * $limit;
-                    // Some information to display to the user
-                    $start = $offset + 1;
-                    $end = min(($offset + $limit), $total);
-
-
-                    $items = SQL_GET_ALL_ITEMS("ORDER BY i.create_at DESC LIMIT $limit OFFSET $offset");
+                    include ('templates/pagination.setter.php');
+                    $items = SQL_GET_ALL_ITEMS("ORDER BY i.create_at DESC $_APPEND_LIMITER");
                     $current_count = count($items);
                 }
             }
+
+            // errors
             if (isset($_GET['error'])) {
                 if ($_GET['error'] == "invalid-item-id") {
                     echo showWarn(
@@ -108,7 +118,7 @@ include_once('templates/header.php');
                 echo showSuccess("Éxito:", "Se creo el articulo \"$t\"");
             }
             // IF NOTHING IS FOUND
-            if (empty($items) || $items === NULL || count($items) == 0 || !array_filter($items)) {
+            if (empty($items)) {
                 echo '<div class="center-content">
                 <svg height="100%" width="100%" xmlns:xlink="http://www.w3.org/1999/xlink"><a xlink:href="add.php"> 
                 <text x="100" y="100" style="fill:black;font-size:50px;" transform="rotate(0,0,0)">Nada encontrado, añadir un articulo.</text> 

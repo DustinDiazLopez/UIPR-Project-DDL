@@ -40,7 +40,7 @@
 
         <!-- PUBLISHED DATE START -->
         <h5 title="Fecha de Publicación"><span class="fa fa-calendar-alt"></span>
-            <?php echo formatDate($item['published_date'], $item['year_only'] == '1'); ?>
+            <?php echo formatDate($item['published_date'], $item['year_only'] == '1', "%e de %B de %Y"); ?>
         </h5>
         <!-- PUBLISHED DATE END -->
 
@@ -137,7 +137,7 @@
     <!-- MOD DATE START -->
     <p class="card-text" style="position: relative;bottom:0;right:0;">
         <small class="text-muted">
-            <?php echo 'Últimamente editado el ' . formatDate($item['create_at']); ?>
+            <?php echo 'Últimamente editado el ' . formatDate($item['create_at'], false, "%e de %B de %Y"); ?>
         </small>
     </p>
     <!-- MOD DATE END -->

@@ -83,11 +83,11 @@ function validateDate($date, $format = 'Y-m-d')
 }
 
 
-
 /**
  * Tests to see if the image is set, if it is processes it accordingly (expects image to be a base64 object,
  * <code>data:image/[...];base64,[...]</code>).
  * @param $POST array the array containing the image
+ * @param &$is_valid boolean
  * @param $key string [optional] the key value of the image in the array (default is 'image')
  * @return array|null returns null if an error occurs or the key is not set or empty. returns an array containing the
  * <code>content</code> (i.e., the image binary data),  <code>image_size</code>, <code>image_type</code>
@@ -118,6 +118,12 @@ function validate_ddl_image(&$POST, &$is_valid, $key='image')
                 $image_type = $image_info["mime"];
                 // decodes the image to binary
                 $image = base64_decode(str_replace("data:$image_type;base64,", '', $POST[$key]));
+
+                if (strStartsWith('data:', $image) && strEndsWith('.jpg', $image)) {
+                    $is_valid = FALSE;
+                    return NULL;
+                }
+
                 // gets the image size
                 $image_size = strlen($image);
 
@@ -376,7 +382,7 @@ function authorsToCSV($authors, $atr='author_name')
  * Formats an inputted date into a easily (intuitively) readable format.
  * @param string $date date to format (e.g., 10-30-2020, could also be in another format).
  * @param false $yearOnly (optional) shows the year only
- * @param string $format (optional) format of the date to return
+ * @param string $format (optional) format of the date to return {@link strftime()}
  * @return string returns the formatted date as a string.
  * @author Dustin Díaz
  */
@@ -623,7 +629,7 @@ function shareURL($id, $path='/file.php?file=') {
  * @return string returns the cleaned HTML
  * @author Dustin Díaz
  */
-function cleanHTML ($html, $tags= ['script','style','object','iframe','embed','button','input','canvas','h1','h2','h3']) {
+function cleanHTML ($html, $tags=['script','style','object','iframe','embed','button','input','canvas','h1','h2','h3', 'img', 'picture', 'textarea', 'video']) {
     $dom = new DOMDocument();
     $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
     $remove = [];
@@ -635,6 +641,7 @@ function cleanHTML ($html, $tags= ['script','style','object','iframe','embed','b
     foreach ($remove as $item) $item->parentNode->removeChild($item);
 
     $rms = ['onclick=\'', 'onclick="', 'href=\'javascript:', 'href="javascript:'];
+
     return str_replace($rms, '', $dom->saveHTML());
 }
 

@@ -17,10 +17,15 @@ define('SEND_LONG_BLOB_BUFFER_SIZE', 256000);
  * @deprecated
  * For {@link SQL_SEND_LONG_BLOB}
  */
-define('SQL_INSERT_FILE_CONTENT', 'INSERT INTO `file` (`content`) VALUES (?);');
+define('SQL_INSERT_FILE_CONTENT', 'INSERT INTO `file` (`content`) VALUES (?)');
+
+// count
+define('SQL_GET_ITEM_COUNT', 'SELECT count(*) FROM item ');
+define('SQL_GET_ITEM_COUNT_AUTHOR', "SELECT count(*) FROM `author` a WHERE EXISTS (SELECT * FROM author_has_item ai WHERE a.id = ai.author_id AND a.author_name = '%s')");
+define('SQL_GET_ITEM_COUNT_SUBJECT', 'SELECT count(*) FROM `subject` a WHERE EXISTS (SELECT * FROM item_has_subject ai WHERE a.id = ai.subject_id AND a.`subject` = "%s")');
+define('SQL_GET_ITEM_COUNT_TYPE', "SELECT count(*) FROM item i INNER JOIN `type` t ON i.type_id = t.id WHERE t.`type` = '%s'");
 
 // get all
-define('SQL_GET_ITEM_COUNT', 'SELECT count(*) FROM item ');
 define('SQL_ALL_ITEMS', 'SELECT i.id, i.title, t.`type`, i.image_id, i.description, i.create_at, i.published_date, i.year_only FROM item i INNER JOIN `type` t ON i.type_id = t.id ');
 define('SQL_GET_AUTHORS', "SELECT id, author_name FROM author");
 define('SQL_GET_SUBJECTS', 'SELECT `id`, `subject` FROM `subject`');
