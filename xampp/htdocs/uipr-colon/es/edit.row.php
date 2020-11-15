@@ -5,8 +5,6 @@ include_once('utils/utils.php');
 
 authenticate();
 
-print_r($_POST);
-
 if (isset($_POST['edit-admin']) && isset($_POST['admin-to-edit']) && isset($_POST['newpwd'])
     && isset($_POST['username']) && isset($_POST['email']) && isset($_POST['userid']) && !empty($_POST['admin-to-edit'])
     && !empty($_POST['newpwd']) && !empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['userid'])) {

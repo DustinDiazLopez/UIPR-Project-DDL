@@ -4,15 +4,10 @@ include_once('../connect.php');
 include_once('utils/utils.php');
 
 authenticate();
+
+$redirTitle = 'Crear Administrador:';
 $min_pwd_len = 6;
 
-function redir_error($title, $msg, $username, $email)
-{
-    redir_fatal_error($title, "$msg&username=$username&email=$email");
-}
-
-print_r($_POST);
-$redirTitle = 'Crear Administrador:';
 $errors = ['username' => '', 'email' => '', 'pwd' => '', 'repwd' => ''];
 if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['pwd']) && isset($_POST['repwd']) && isset($conn)) {
     $username = $_POST['username'];

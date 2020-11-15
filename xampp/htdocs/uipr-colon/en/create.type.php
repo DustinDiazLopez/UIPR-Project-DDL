@@ -5,12 +5,6 @@ include_once('utils/utils.php');
 
 authenticate();
 
-function redir_error($title, $msg, $type)
-{
-    redir_fatal_error($title, "$msg&type=$type");
-}
-
-print_r($_POST);
 $redirTitle = 'Create Type:';
 $errors = ['type' => ''];
 

@@ -2,10 +2,12 @@
 // this file is included in utils.php
 
 /**
+ * @deprecated
  * @param array $file array containing the file_name, type, tmp_path, and size (binary)
  * @param string $error_buffer variable to put the error if it occurs
  * @param string $key the key of the array containing the path of the file.
  * @return mixed returns the insert id
+ * @author Dustin Díaz
  */
 function SQL_SEND_LONG_BLOB($file, &$error_buffer, $key='tmp_path')
 {
@@ -23,6 +25,11 @@ function SQL_SEND_LONG_BLOB($file, &$error_buffer, $key='tmp_path')
     return $success ? $mysqli->insert_id : NULL;
 }
 
+/**
+ * Counts the number of items in the database
+ * @return int returns the number of items in the database
+ * @author Dustin Díaz
+ */
 function SQL_GET_ITEM_COUNT()
 {
     return intval(query(SQL_GET_ITEM_COUNT)[0]['count(*)']);
@@ -36,6 +43,7 @@ function SQL_GET_ITEM_COUNT()
  * Returns the insert id of the inserted item, or if it already exists ({@link SQL_DUPLICATE_ERROR}) it returns the id of the existing item.
  * Returns false for another type of error (do {@link mysqli_error()}), the error will be passed to the
  * <b>$error_buffer</b>, if not fallback sql is set then returns true.
+ * @author Dustin Díaz
  */
 function INSERT($sql, $sql_fallback_get, &$error_buffer)
 {
@@ -70,6 +78,7 @@ function INSERT($sql, $sql_fallback_get, &$error_buffer)
  * returns NULL if an error occurs while fetching the objects (unlikely)
  * returns true or false on success or failure
  * returns the array of objects fetched.
+ * @author Dustin Díaz
  */
 function SQL_INSERT_TYPE($type)
 {
@@ -86,6 +95,7 @@ function SQL_INSERT_TYPE($type)
  * returns NULL if an error occurs while fetching the objects (unlikely)
  * returns true or false on success or failure
  * returns the array of objects fetched.
+ * @author Dustin Díaz
  */
 function SQL_INSERT_IMAGE($type, $size, $image)
 {
@@ -100,6 +110,7 @@ function SQL_INSERT_IMAGE($type, $size, $image)
  * returns NULL if an error occurs while fetching the objects (unlikely)
  * returns true or false on success or failure
  * returns the array of objects fetched.
+ * @author Dustin Díaz
  */
 function SQL_INSERT_AUTHOR($author_name)
 {
@@ -114,6 +125,7 @@ function SQL_INSERT_AUTHOR($author_name)
  * returns NULL if an error occurs while fetching the objects (unlikely)
  * returns true or false on success or failure
  * returns the array of objects fetched.
+ * @author Dustin Díaz
  */
 function SQL_INSERT_SUBJECT($subject)
 {
@@ -134,6 +146,7 @@ function SQL_INSERT_SUBJECT($subject)
  * returns NULL if an error occurs while fetching the objects (unlikely)
  * returns true or false on success or failure
  * returns the array of objects fetched.
+ * @author Dustin Díaz
  */
 function SQL_INSERT_ITEM($title, $type_id, $image_id, $pub_date, $year_only, $description, $metadata)
 {
@@ -149,6 +162,7 @@ function SQL_INSERT_ITEM($title, $type_id, $image_id, $pub_date, $year_only, $de
  * returns NULL if an error occurs while fetching the objects (unlikely)
  * returns true or false on success or failure
  * returns the array of objects fetched.
+ * @author Dustin Díaz
  */
 function SQL_INSERT_ITEM_HAS_SUBJECT($item_id, $subject_id)
 {
@@ -164,6 +178,7 @@ function SQL_INSERT_ITEM_HAS_SUBJECT($item_id, $subject_id)
  * returns NULL if an error occurs while fetching the objects (unlikely)
  * returns true or false on success or failure
  * returns the array of objects fetched.
+ * @author Dustin Díaz
  */
 function SQL_INSERT_FILE_HAS_ITEM($file_id, $item_id)
 {
@@ -179,6 +194,7 @@ function SQL_INSERT_FILE_HAS_ITEM($file_id, $item_id)
  * returns NULL if an error occurs while fetching the objects (unlikely)
  * returns true or false on success or failure
  * returns the array of objects fetched.
+ * @author Dustin Díaz
  */
 function SQL_INSERT_AUTHOR_HAS_ITEM($item_id, $author_id)
 {
@@ -189,6 +205,7 @@ function SQL_INSERT_AUTHOR_HAS_ITEM($item_id, $author_id)
  * SQL script to find the id of the specified type
  * @param $type string the name of the type
  * @return string returns the sql script
+ * @author Dustin Díaz
  */
 function SQL_GET_ID_OF_TYPE_BY_TYPE($type)
 {
@@ -199,6 +216,7 @@ function SQL_GET_ID_OF_TYPE_BY_TYPE($type)
  * SQL script to find the id of the specified author
  * @param $author_name string the name of the author
  * @return string returns the sql script
+ * @author Dustin Díaz
  */
 function SQL_GET_ID_OF_AUTHOR_BY_AUTHOR_NAME($author_name)
 {
@@ -209,6 +227,7 @@ function SQL_GET_ID_OF_AUTHOR_BY_AUTHOR_NAME($author_name)
  * SQL script to find the id of the specified subject
  * @param $subject string the name of the subject
  * @return string returns the sql script
+ * @author Dustin Díaz
  */
 function SQL_GET_ID_OF_SUBJECT_BY_SUBJECT($subject)
 {
@@ -219,6 +238,7 @@ function SQL_GET_ID_OF_SUBJECT_BY_SUBJECT($subject)
  * SQL script that sets the file information in the database
  * @param array $file array containing the file_name, type, tmp_path, path, and size
  * @return string returns the sql script to insert a file
+ * @author Dustin Díaz
  */
 function SQL_INSERT_FILE($file)
 {
@@ -228,6 +248,7 @@ function SQL_INSERT_FILE($file)
 /**
  * Queries the database for all the files that do not have an item associated with them.
  * @return array|null returns the associative array of the files (id, and path), or NULL if something went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_ORPHANED_FILES()
 {
@@ -238,6 +259,7 @@ function SQL_GET_ORPHANED_FILES()
  * Queries the database for all the authors that do not have an item associated with them.
  * @return array|null returns the associative array of the authors (id, and author_name), or NULL if something went
  * wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_ORPHANED_AUTHORS()
 {
@@ -247,6 +269,7 @@ function SQL_GET_ORPHANED_AUTHORS()
 /**
  * Queries the database for all the subjects that do not have an item associated with them.
  * @return array|null returns the associative array of the subjects (id, and subject), or NULL if something went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_ORPHANED_SUBJECTS()
 {
@@ -256,6 +279,7 @@ function SQL_GET_ORPHANED_SUBJECTS()
 /**
  * Queries the database for all the images that do not have an item associated with them.
  * @return array|null returns the associative array of the images (id), or NULL if something went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_ORPHANED_IMAGES()
 {
@@ -265,6 +289,7 @@ function SQL_GET_ORPHANED_IMAGES()
 /**
  * Queries the database for all the types that do not have an item associated with them.
  * @return array|null returns the associative array of the types (id, and type), or NULL if something went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_ORPHANED_TYPES()
 {
@@ -274,6 +299,7 @@ function SQL_GET_ORPHANED_TYPES()
 /**
  * Queries the database for all the admins (users).
  * @return array|null returns the associative array of the admins, or NULL if something went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_ADMINS()
 {
@@ -285,6 +311,7 @@ function SQL_GET_ADMINS()
  * @param integer $id the id of the admin.
  * @return array|null returns the associative array of the admin (id, email, username, password), or NULL if something
  * went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_ADMIN_BY_ID($id) {
     global $conn;
@@ -297,6 +324,7 @@ function SQL_GET_ADMIN_BY_ID($id) {
  * @param string $username the username of the admin.
  * @return array|null returns the associative array of the admin (id, email, username, password), or NULL if something
  * went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_ADMIN_BY_USERNAME($username) {
     global $conn;
@@ -309,6 +337,7 @@ function SQL_GET_ADMIN_BY_USERNAME($username) {
  * @param string $email the email of the admin.
  * @return array|null returns the associative array of the admin (id, email, username, password), or NULL if something
  * went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_ADMIN_BY_EMAIL($email)
 {
@@ -321,6 +350,7 @@ function SQL_GET_ADMIN_BY_EMAIL($email)
  * Tests whether the email exists
  * @param string $email the email of the admin.
  * @return bool true if a user exists with the specified email
+ * @author Dustin Díaz
  */
 function SQL_ADMIN_EMAIL_EXIST($email)
 {
@@ -331,6 +361,7 @@ function SQL_ADMIN_EMAIL_EXIST($email)
  * Tests whether the username exists
  * @param string $username the username of the admin.
  * @return bool true if a user exists with the specified username
+ * @author Dustin Díaz
  */
 function SQL_ADMIN_USERNAME_EXIST($username)
 {
@@ -342,6 +373,7 @@ function SQL_ADMIN_USERNAME_EXIST($username)
  * @param string $email the email of the admin.
  * @param string $username the username of the admin.
  * @return bool true if a user exists with the specified email or username
+ * @author Dustin Díaz
  */
 function SQL_ADMIN_USERNAME_AND_EMAIL_EXIST($email, $username)
 {
@@ -353,7 +385,9 @@ function SQL_ADMIN_USERNAME_AND_EMAIL_EXIST($email, $username)
  * @param integer $id the id of the author
  * @param array $old_author the old author (id, author_name)
  * @param array $new_author the new author (id, author_name)
- * @return int|string|null returns the number of rows, a string ('author_name') when the author already exists, or null if ids do not match (or something is not set).
+ * @return int|string|null returns the number of rows, a string ('author_name') when the author already exists, or null
+ * if ids do not match (or something is not set).
+ * @author Dustin Díaz
  */
 function SQL_UPDATE_AUTHOR($id, $old_author, $new_author)
 {
@@ -385,6 +419,7 @@ function SQL_UPDATE_AUTHOR($id, $old_author, $new_author)
  * @param array $old_subject the old subject (id, subject)
  * @param array $new_subject the new subject (id, subject)
  * @return int|string|null returns the number of rows, a string ('subject') when the subject already exists, or null if ids do not match (or something is not set).
+ * @author Dustin Díaz
  */
 function SQL_UPDATE_SUBJECT($id, $old_subject, $new_subject)
 {
@@ -418,7 +453,9 @@ function SQL_UPDATE_SUBJECT($id, $old_subject, $new_subject)
  * @param integer $id the id of the type
  * @param array $old_type the old type (id, type)
  * @param array $new_type the new type (id, type)
- * @return int|string|null returns the number of rows, a string ('type') when the type already exists, or null if ids do not match (or something is not set).
+ * @return int|string|null returns the number of rows, a string ('type') when the type already exists, or null if ids
+ * do not match (or something is not set).
+ * @author Dustin Díaz
  */
 function SQL_UPDATE_TYPE($id, $old_type, $new_type)
 {
@@ -450,6 +487,7 @@ function SQL_UPDATE_TYPE($id, $old_type, $new_type)
  * @param array $updated_user the new user
  * @return integer|null|string if old_user is missing information or id mismatch it will return null, it will return
  * the number of affected rows, or a string indicating the field that already exists (email, username).
+ * @author Dustin Díaz
  */
 function SQL_UPDATE_ADMIN($id, $old_user, $updated_user)
 {
@@ -515,6 +553,7 @@ function SQL_UPDATE_ADMIN($id, $old_user, $updated_user)
  * @param string $username the username for the admin.
  * @param string $password the passowrd for the admin.
  * @return bool|null returns weather it was successful, or NULL if the admin already exists.
+ * @author Dustin Díaz
  */
 function SQL_INSERT_ADMIN($email, $username, $password) {
     global $conn;
@@ -534,6 +573,7 @@ function SQL_INSERT_ADMIN($email, $username, $password) {
  * Queries the database for items related to an author given its id.
  * @param integer $author_id the author id
  * @return array|null returns the associative array of the author related to the id
+ * @author Dustin Díaz
  */
 function SQL_GET_ITEMS_BY_AUTHOR_ID($author_id)
 {
@@ -545,6 +585,7 @@ function SQL_GET_ITEMS_BY_AUTHOR_ID($author_id)
  * Queries the database for an author given their id.
  * @param integer $author_id the author id
  * @return array|null returns the associative array of the author related to the id
+ * @author Dustin Díaz
  */
 function SQL_GET_AUTHOR_BY_ID($author_id)
 {
@@ -555,6 +596,7 @@ function SQL_GET_AUTHOR_BY_ID($author_id)
  * Queries the database for a subject given their id.
  * @param integer $subject_id the subject id
  * @return array|null returns the associative array of the subject related to the id
+ * @author Dustin Díaz
  */
 function SQL_GET_SUBJECT_BY_ID($subject_id)
 {
@@ -565,6 +607,7 @@ function SQL_GET_SUBJECT_BY_ID($subject_id)
  * Queries the database for a type given their id.
  * @param integer $type_id the type id
  * @return array|null returns the associative array of the type related to the id
+ * @author Dustin Díaz
  */
 function SQL_GET_TYPE_BY_ID($type_id)
 {
@@ -575,6 +618,7 @@ function SQL_GET_TYPE_BY_ID($type_id)
  * Queries the database for items related to a subject given its id.
  * @param integer $subject_id the subject id
  * @return array|null returns the associative array of the subject related to the id
+ * @author Dustin Díaz
  */
 function SQL_GET_ITEMS_BY_SUBJECT_ID($subject_id)
 {
@@ -585,6 +629,7 @@ function SQL_GET_ITEMS_BY_SUBJECT_ID($subject_id)
  * Queries the database for items related to a type given its id.
  * @param integer $type_id the type id
  * @return array|null returns the associative array of the subject related to the id
+ * @author Dustin Díaz
  */
 function SQL_GET_ITEMS_BY_TYPE_ID($type_id)
 {
@@ -595,6 +640,7 @@ function SQL_GET_ITEMS_BY_TYPE_ID($type_id)
  * Generates the SQL command needed to find the files given an item id
  * @param integer $id item id
  * @return string SQL command to find the file ids of an item.
+ * @author Dustin Díaz
  */
 function SQL_FILES_ID_BY_ITEM_ID($id)
 {
@@ -605,6 +651,7 @@ function SQL_FILES_ID_BY_ITEM_ID($id)
  * Generates the SQL command needed to find the subjects given an item id
  * @param integer $id item id
  * @return string SQL command to find the subjects of an item.
+ * @author Dustin Díaz
  */
 function SQL_SUBJECTS_ID_BY_ITEM_ID($id)
 {
@@ -615,6 +662,7 @@ function SQL_SUBJECTS_ID_BY_ITEM_ID($id)
  * Generates the SQL command needed to find the authors given an item id
  * @param integer $id item id
  * @return string SQL command to find the authors of an item.
+ * @author Dustin Díaz
  */
 function SQL_AUTHORS_ID_BY_ITEM_ID($id)
 {
@@ -625,6 +673,7 @@ function SQL_AUTHORS_ID_BY_ITEM_ID($id)
  * Generates the SQL command needed to find an image given an item id
  * @param integer $id item id
  * @return string SQL command to find an image.
+ * @author Dustin Díaz
  */
 function SQL_IMAGE_ID_BY_ITEM_ID($id)
 {
@@ -635,6 +684,7 @@ function SQL_IMAGE_ID_BY_ITEM_ID($id)
  * Queries the database for all the items.
  * @param string $append (optional) append a SQL command (e.g., ORDER BY ASC)
  * @return array|null returns the associative array of the items, or NULL if something went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_ALL_ITEMS($append = '')
 {
@@ -645,6 +695,7 @@ function SQL_GET_ALL_ITEMS($append = '')
  * Queries the database for the files matching an item id.
  * @param integer $item_id the item id.
  * @return array returns the associative array of the files matching the item id.
+ * @author Dustin Díaz
  */
 function SQL_GET_FILES($item_id)
 {
@@ -664,6 +715,7 @@ function SQL_GET_FILES($item_id)
  * Queries the database for the file matching an id.
  * @param integer $file_id the file id
  * @return array|null returns the associative array of the files, or NULL if something went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_FILE($file_id)
 {
@@ -676,6 +728,7 @@ function SQL_GET_FILE($file_id)
  * Queries the database for the subjects matching an item id.
  * @param integer $item_id the item id
  * @return array|null returns the associative array of the subjects, or NULL if something went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_SUBJECTS($item_id)
 {
@@ -688,6 +741,7 @@ function SQL_GET_SUBJECTS($item_id)
  * Queries the database for the password of an admin
  * @param integer $id admin identification number
  * @return array|null returns the associative array of the password, or NULL if something went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_PWD_BY_ID($id)
 {
@@ -698,6 +752,7 @@ function SQL_GET_PWD_BY_ID($id)
  * Returns the image as base64 (as a link) or a default image if none exist.
  * @param integer $image_id the image id.
  * @return string returns the image as a link (base64) or a default image if there is not image related to the id.
+ * @author Dustin Díaz
  */
 function SQL_GET_IMAGE($image_id)
 {
@@ -713,6 +768,7 @@ function SQL_GET_IMAGE($image_id)
  * Queries the database for the authors related to an item.
  * @param integer $item_id the item id.
  * @return array|null returns the authors related to the item or NULL if something went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_AUTHORS($item_id)
 {
@@ -723,6 +779,7 @@ function SQL_GET_AUTHORS($item_id)
  * Queries the database for a user matching an email or password.
  * @param string $user_or_email the username or email of the admin user
  * @return array|null returns the admin user or NULL if something went wrong.
+ * @author Dustin Díaz
  */
 function SQL_GET_USER_ID_BY_UE($user_or_email)
 {
@@ -734,6 +791,7 @@ function SQL_GET_USER_ID_BY_UE($user_or_email)
  * @param integer $item_id the item id related to the author
  * @param integer $author_id the author id
  * @return string returns the SQL script to delete an author
+ * @author Dustin Díaz
  */
 function sql_delete_author($item_id, $author_id)
 {
@@ -745,6 +803,7 @@ function sql_delete_author($item_id, $author_id)
  * @param integer $item_id the item id related to the subject
  * @param integer $subject_id the subject id
  * @return string returns the SQL script to delete a subject.
+ * @author Dustin Díaz
  */
 function sql_delete_subject($item_id, $subject_id)
 {
@@ -755,6 +814,7 @@ function sql_delete_subject($item_id, $subject_id)
  * Generates the SQL command needed to delete an author.
  * @param integer $author_id the author id
  * @return string returns the SQL script to delete an author
+ * @author Dustin Díaz
  */
 function sql_delete_author_id($author_id)
 {
@@ -765,6 +825,7 @@ function sql_delete_author_id($author_id)
  * Generates the SQL command needed to delete a subject.
  * @param integer $subject_id the subject id
  * @return string returns the SQL script to delete a subject
+ * @author Dustin Díaz
  */
 function sql_delete_subject_id($subject_id)
 {
@@ -776,6 +837,7 @@ function sql_delete_subject_id($subject_id)
  * @param integer $item_id the item id related to the file
  * @param integer $file_id the file id
  * @return string returns the SQL script to delete a file
+ * @author Dustin Díaz
  */
 function sql_delete_file($item_id, $file_id)
 {
@@ -787,6 +849,7 @@ function sql_delete_file($item_id, $file_id)
  * Generates the SQL command needed to delete a file.
  * @param integer $file_id the file id
  * @return string returns the SQL script to delete a file
+ * @author Dustin Díaz
  */
 function sql_delete_file_by_id($file_id)
 {
@@ -799,6 +862,7 @@ function sql_delete_file_by_id($file_id)
  * Generates the SQL command needed to delete a type.
  * @param integer $type_id the type id
  * @return string returns the SQL script to delete a type
+ * @author Dustin Díaz
  */
 function sql_delete_type_by_id($type_id)
 {
@@ -812,6 +876,7 @@ function sql_delete_type_by_id($type_id)
  * Generates the SQL command needed to delete an image.
  * @param integer $image_id the image id.
  * @return string returns the SQL script to delete an image
+ * @author Dustin Díaz
  */
 function sql_delete_image($image_id)
 {
@@ -822,6 +887,7 @@ function sql_delete_image($image_id)
  * Generates the SQL command needed to delete an item.
  * @param integer $item_id the id of the item to be deleted
  * @return string returns the SQL script to delete an item
+ * @author Dustin Díaz
  */
 function sql_delete_item($item_id)
 {
@@ -832,7 +898,8 @@ function sql_delete_item($item_id)
 /**
  * Returns the item in the database matching the id.
  * @param $item_id integer the id of the item
- * @return array|bool|null
+ * @return array|bool|null {@link query()}
+ * @author Dustin Díaz
  */
 function SQL_GET_ITEM_BY_ID($item_id)
 {
@@ -842,7 +909,8 @@ function SQL_GET_ITEM_BY_ID($item_id)
 /**
  * Returns the item (w/ meta) in the database matching the id.
  * @param $item_id integer the id of the item
- * @return array|bool|null
+ * @return array|bool|null {@link query()}
+ * @author Dustin Díaz
  */
 function SQL_GET_ITEM_BY_ID_META($item_id)
 {
@@ -852,6 +920,7 @@ function SQL_GET_ITEM_BY_ID_META($item_id)
 /**
  * Executes a SQL string on the database, this is a helper method for {@link DELETE_ITEM_AND_RELATIONS()}
  * @param $sql string SQL string to execute
+ * @author Dustin Díaz
  */
 function exe_sql($sql)
 {
@@ -879,6 +948,7 @@ function exe_sql($sql)
  * the files relationship (BUT NOT THE FILES),
  * it will also delete all subjects, authors, and images which don't have a relation.
  * @param $id integer the id of the item to delete
+ * @author Dustin Díaz
  */
 function DELETE_ITEM_AND_RELATIONS($id)
 {

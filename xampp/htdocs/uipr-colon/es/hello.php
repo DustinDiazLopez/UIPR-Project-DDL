@@ -20,7 +20,7 @@ include_once('utils/utils.php');
 if (isset($_GET['pwd']) && !empty($_GET['pwd'])) {
     $pwd = htmlspecialchars(ddl_hash($_GET['pwd']));
     echo $pwd === 'r4nwUWpjef1wJgwfW4WgSim2P0qskuBFmYQ/p56LZDONtVZiS6CHNBji25G9CTc/kOAjkvwnxeJw4Wr8CuTjS0'
-        ? "<p><b>(please don't use the example password)</b></p>" : "";
+        ? "<p><b>(favor de no utilizar la contraseña de ejemplo)</b></p>" : "";
 
 
     echo "<pre>USE UIPRCMSDDL;INSERT INTO `admin` (`email`, `username`, `password`) VALUES ('example@example.com', 'root', '$pwd');</pre>";

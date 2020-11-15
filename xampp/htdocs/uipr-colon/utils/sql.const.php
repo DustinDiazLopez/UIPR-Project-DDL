@@ -7,12 +7,16 @@
 define('SQL_DUPLICATE_ERROR', 1062);
 
 /**
+ * @deprecated
  * Buffer size (bytes) of the for the {@link fread} method, for the {@link send_long_data} method of the
  * {@link SQL_SEND_LONG_BLOB} method.
  */
 define('SEND_LONG_BLOB_BUFFER_SIZE', 256000);
 
-//insert file
+/**
+ * @deprecated
+ * For {@link SQL_SEND_LONG_BLOB}
+ */
 define('SQL_INSERT_FILE_CONTENT', 'INSERT INTO `file` (`content`) VALUES (?);');
 
 // get all

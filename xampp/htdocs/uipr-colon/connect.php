@@ -29,6 +29,7 @@ $config['salt'] = '$6$rounds=5000$' . $config['salt'] . '$';
 /**
  * Establishes a connection to the database with the login information specified in {@link DDL_PATH} / {@link PATH_TO_CONFIG}
  * @return false|mysqli object which represents the connection to a MySQL Server or false if an error occurred.
+ * @author Dustin Díaz
  */
 function connect() 
 {
@@ -39,6 +40,7 @@ function connect()
 /**
  * Establishes a connection to the database with the login information specified in {@link DDL_PATH} / {@link PATH_TO_CONFIG}
  * @return mysqli the {@link mysqli::__construct} object.
+ * @author Dustin Díaz
  */
 function connect_obj()
 {

@@ -2,9 +2,6 @@ PDFJS.disableWorker = true;
 let allowReload = false;
 const loadingImg = document.getElementById('overlay');
 
-/*initiate the autocomplete function on the "type" element, and pass along the types array as possible autocomplete values:*/
-//autocomplete(document.getElementById("type"), types);
-
 /* Show files start */
 let counter = 0;
 let fileInfo = document.getElementById('file-info');
@@ -19,7 +16,6 @@ const canvasImageShow = document.getElementById('the-canvas');
 const fileInputForThumbnail = document.getElementById('selectedFileInput');
 const pageNumberInput = document.getElementById('pageNumber');
 let imageSet = false;
-
 
 /**
  * Creates a FileList object for the dynamic uploading files system.
@@ -48,6 +44,7 @@ function _FileList(items) {
 
 /**
  * Turns on overlay on body
+ * @author Dustin Díaz
  */
 function on() {
     loadingImg.style.display = 'block';
@@ -55,6 +52,7 @@ function on() {
 
 /**
  * Turns off overlay on body
+ * @author Dustin Díaz
  */
 function off() {
     loadingImg.style.display = 'none';
@@ -63,6 +61,7 @@ function off() {
 /**
  * Cages the image to the uploaded image
  * @param {HTMLElement} event the input element
+ * @author Dustin Díaz
  */
 function insertCustomImage(event) {
     if (event.files && event.files[0]) {
@@ -102,6 +101,7 @@ filesInput.onchange = function(e) {
 /**
  * Clears everything related to the image.
  * @param {boolean} [clear=true] if true clears the image data else does nothing.
+ * @author Dustin Díaz
  */
 function clearImage(clear=true) {
     if (clear === true) {
@@ -116,6 +116,7 @@ function clearImage(clear=true) {
  * @param {string} fileId the id of the file html element
  * @param {number} filePage the desired page to show
  * @param {boolean} resetPageNumber whether to reset the page input element
+ * @author Dustin Díaz
  */
 function changeImage(fileId, filePage, resetPageNumber=false) {
     if (resetPageNumber) pageNumberInput.value = 1;
@@ -124,6 +125,7 @@ function changeImage(fileId, filePage, resetPageNumber=false) {
 
 /**
  * Generates the select element with all the files ending in pdf.
+ * @author Dustin Díaz
  */
 function generateFileInputForImage() {
 
@@ -156,6 +158,7 @@ function generateFileInputForImage() {
  * @param {HTMLElement} [id=filesInput] file html element
  * @param {number} [fileIdx=0] the index of the file in the element
  * @param {number} [pageNumber=1] the page number for the image
+ * @author Dustin Díaz
  */
 function updateImage(id = filesInput, fileIdx = 0, pageNumber=1) {
     file = id.files[fileIdx];
@@ -195,6 +198,7 @@ function updateImage(id = filesInput, fileIdx = 0, pageNumber=1) {
 /**
  * Updates the listView (ul element) in the interface, and other data related to the files.
  * @param {boolean} [updateListView=true] Whether to handle the updating of the files data.
+ * @author Dustin Díaz
  */
 function updateFilesData(updateListView = true) {
     counter = fileList.children.length;
@@ -231,6 +235,7 @@ function updateFilesData(updateListView = true) {
 /**
  * Removes a list item in the listView element (ul element)
  * @param {number} idx The index location of the list item in the ul element.
+ * @author Dustin Díaz
  */
 function remove(idx) {
     let fileListChildren = fileList.children;
@@ -246,6 +251,7 @@ function remove(idx) {
 /**
  * Updates the list view and image.
  * @param {boolean} [handle=true] weather to handle the view (i.e., execute the code)
+ * @author Dustin Díaz
  */
 function handleListView(handle = true) {
     if (handle === true) {
@@ -300,6 +306,7 @@ function formatBytes(bytes, decimals = 2) {
  * Formats the size of a file input element.
  * @param {string} id The id of the file input element
  * @returns {string} Returns the formatted size of the File
+ * @author Dustin Díaz
  */
 function formatSpecificFileSize(id) {
     return formatBytes(getFileSize(id));
@@ -311,6 +318,7 @@ let size = 0;
 /**
  * Calculates the total size of the file inputs (which match id of 'file-[number]')
  * @returns {string} Returns the formatted total size of the files.
+ * @author Dustin Díaz
  */
 function totalFileSize() {
     if (counter > 0) {
@@ -326,6 +334,7 @@ function totalFileSize() {
  * Returns the size of the file in a file input element.
  * @param {string} id The id of the file input element
  * @returns {number} returns the size of the File
+ * @author Dustin Díaz
  */
 function getFileSize(id) {
     let fileInput = document.getElementById(id);
@@ -345,6 +354,7 @@ function getFileSize(id) {
 
 /**
  * Wrapper function for parseReadonly for subjects fields
+ * @author Dustin Díaz
  */
 function parseReadonlySubject() {
     parseReadonly('subjectsInput', 'subjects', 'readOnlyListViewSubject', -1);
@@ -352,6 +362,7 @@ function parseReadonlySubject() {
 
 /**
  * Wrapper function for parseReadonly for authors fields
+ * @author Dustin Díaz
  */
 function parseReadonlyAuthors() {
     parseReadonly('authorInput', 'authors', 'readOnlyListViewAuthor', -1);
@@ -363,6 +374,7 @@ function parseReadonlyAuthors() {
  * @param {string} readonly id of the readonly element
  * @param {string} listView id of the list view
  * @param {number} rmElementIdx list item index number to remove
+ * @author Dustin Díaz
  */
 function parseReadonly(input, readonly, listView, rmElementIdx=-1) {
     let LV = document.getElementById(listView);
@@ -413,6 +425,7 @@ function parseReadonly(input, readonly, listView, rmElementIdx=-1) {
  * Erases the last value inserted into the readonly input.
  * @param {string} input The input id.
  * @param {string} output The input readonly id.
+ * @author Dustin Díaz
  */
 function deleteLastReadonly(input, output) {
     const field = document.getElementById(input);
@@ -432,6 +445,7 @@ function deleteLastReadonly(input, output) {
  * Erases the readonly input.
  * @param {string} input The input id.
  * @param {string} output The input readonly id.
+ * @author Dustin Díaz
  */
 function deleteReadonly(input, output) {
     const values = document.getElementById(output).value;
@@ -448,6 +462,7 @@ function deleteReadonly(input, output) {
  * Adds the csv from the input element to the output element.
  * @param {string} input The input id.
  * @param {string} output The input readonly id.
+ * @author Dustin Díaz
  */
 function addAllToReadonly(input, output) {
     const field = document.getElementById(input);
@@ -486,6 +501,7 @@ function addAllToReadonly(input, output) {
  * Adds the text from the input element to the output element.
  * @param {string} input The input id.
  * @param {string} output The input readonly id.
+ * @author Dustin Díaz
  */
 function addToReadonly(input, output) {
     const field = document.getElementById(input);
@@ -529,6 +545,7 @@ function addToReadonly(input, output) {
 /**
  * Changes the label of the calendar to Year only or Date only (when the checkbox is clicked).
  * @param {string} id The id string of the element
+ * @author Dustin Díaz
  */
 function changePubDateToYear(id) {
     const label = document.getElementById(id);
@@ -554,6 +571,7 @@ $(document).ready(
              * Consumes the keydown event (to avoid accidental submission)
              * @param event the keydown event.
              * @returns {boolean} returns false to the keydown function
+             * @author Dustin Díaz
              */
             function(event) {
                 if (event.keyCode === 13 && !allowReload) {
@@ -570,7 +588,7 @@ $(document).ready(
  */
 window.onbeforeunload = function(e) {
     if (!allowReload) {
-        e = e || window.event; //global event is deprecated D: TODO: find alternative
+        e = e || window.event;
 
         // For IE and Firefox prior to version 4
         if (e) e.returnValue = 'Sure?';
@@ -597,6 +615,7 @@ const pHeading = document.getElementById('progress-heading');
 
 /**
  * Validates the form, if it is not valid it disables the button util it is valid
+ * @author Dustin Díaz
  */
 function validate() {
     document.getElementById('iconShowType').innerHTML = getIcon(document.getElementById('type').value);
@@ -646,6 +665,7 @@ function validate() {
 /**
  * Converts the inputted string as an HTMLElement
  * @param {string} htmlString the html string to be converted to a Node (HTMLElement)
+ * @author Dustin Díaz
  */
 function createElementFromHTML(htmlString) {
     const div = document.createElement('div');
@@ -655,6 +675,7 @@ function createElementFromHTML(htmlString) {
 
 /**
  * Hides the progress div when the screen is too small
+ * @author Dustin Díaz
  */
 function hideProgressHelper() {
     const w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) - 80;
@@ -675,6 +696,10 @@ const inputOFiles = document.getElementById('o-files-selected');
 const oFileElement = document.getElementById('o-files');
 const addOFileBtn = document.getElementById('add-o-file-btn');
 
+/**
+ * Adds a file link to the list of files (and the hidden input)
+ * @author Dustin Díaz
+ */
 function addOrphanedFile() {
     if (oFileElement.selectedIndex > -1) {
         const selected = oFileElement.options[oFileElement.selectedIndex];
@@ -696,6 +721,10 @@ function addOrphanedFile() {
     }
 }
 
+/**
+ * Removes a file link to the list of files (and from the hidden input)
+ * @author Dustin Díaz
+ */
 function removeOFileFromList(id, name) {
     let arr = inputOFiles.value.split(',')
     for (let i = 0; i < arr.length; i++) arr[i] = arr[i].trim();
@@ -726,6 +755,10 @@ function removeOFileFromList(id, name) {
     }
 }
 
+/**
+ * Generates the list item for the list view in {@link addOrphanedFile}
+ * @author Dustin Díaz
+ */
 function genOrphanedListItem(id, name) {
     const encodedId = encodeURIComponent(btoa('head-' + id));
     return `<li class="list-group-item d-flex justify-content-between align-items-center" id="${id}-${name}">

@@ -8,6 +8,7 @@
  * @param string $to The value to replace the prefix with.
  * @param string $string the string to apply this change
  * @return string|string[]|null returns the new string anything else if something went wrong.
+ * @author Dustin Díaz
  */
 function strReplaceFirstStr($prefix, $to, $string)
 {
@@ -20,6 +21,7 @@ function strReplaceFirstStr($prefix, $to, $string)
  *
  * @param string $string the string to clean.
  * @return string|string[] returns the cleaned string, or anything else if something went wrong.
+ * @author Dustin Díaz
  */
 function cleanStr($string)
 {
@@ -37,6 +39,7 @@ function cleanStr($string)
  * @param string $q The text to find in the items.
  * @param string $only (optional) what attribute to use for the search [title, metadata, file, all], all by default.
  * @return array|null returns the result as an associative array or null if it couldn't find anything.
+ * @author Dustin Díaz
  */
 function search($conn, $q, $only='all') {
 
