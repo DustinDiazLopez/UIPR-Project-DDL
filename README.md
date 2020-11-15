@@ -16,7 +16,7 @@ Theoretically, it should work with `PHP5.5` or above, it is recommended to use `
 ```
 xampp (or var)/
 ├── htdocs (or www)/
-│   └── source/
+│   └── app-name/
 │      ├── connect.php
 │      └── ...   
 └── ddl-config/
