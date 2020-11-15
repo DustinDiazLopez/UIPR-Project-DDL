@@ -27,7 +27,7 @@ $color = isset($background_color) ? $background_color : 'rgba(0, 0, 0, 0.75)';
     </style>
 
     <div id="ddl-img-loading-div">
-        <img id="ddl-loading-image" src="images/processing.svg" alt="Processando..." />
+        <img id="ddl-loading-image" src="images/processing.svg" alt="Processing..." />
     </div>
 
     <script>

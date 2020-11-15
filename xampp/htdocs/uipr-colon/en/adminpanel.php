@@ -1,5 +1,5 @@
 <?php
-$title_tag = 'Panel';
+$title_tag = 'Admin Panel';
 include_once('templates/header.php');
 
 function ddlprint($arr, $name = 'debug')
@@ -42,8 +42,8 @@ $files = SQL_GET_ORPHANED_FILES();
 </style>
 
 <header style="margin: 10px;">
-    <h1>Panel del Administrador</h1>
-    <p>En este panel, podrá editar, ver o eliminar varios datos del sistema.</p>
+    <h1>Admin Panel</h1>
+    <p>In this panel, you will be able to edit, view or delete various data in the system</p>
 </header>
 <hr />
 
@@ -63,7 +63,7 @@ $files = SQL_GET_ORPHANED_FILES();
 <div class="container-fluid">
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-link active" id="admins-tab" data-toggle="tab" href="#admins" role="tab" aria-controls="admins" aria-selected="true"><i class="fas fa-user-shield"></i> Administradores</a>
+            <a class="nav-link active" id="admins-tab" data-toggle="tab" href="#admins" role="tab" aria-controls="admins" aria-selected="true"><i class="fas fa-user-shield"></i> Admins</a>
             <a class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false"><i class="fas fa-database"></i> Data</a>
         </div>
     </nav>
@@ -72,19 +72,19 @@ $files = SQL_GET_ORPHANED_FILES();
         <div class="tab-pane fade" id="nav-data" role="tabpanel" aria-labelledby="nav-data-tab">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link" id="authors-tab" data-toggle="tab" href="#authors" role="tab" aria-controls="authors" aria-selected="false"><i class="fas fa-users-cog"></i> Autores</a>
+                    <a class="nav-link" id="authors-tab" data-toggle="tab" href="#authors" role="tab" aria-controls="authors" aria-selected="false"><i class="fas fa-users-cog"></i> Authors</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="subjects-tab" data-toggle="tab" href="#subjects" role="tab" aria-controls="subjects" aria-selected="false"><i class="fas fa-sitemap"></i> Sujetos</a>
+                    <a class="nav-link" id="subjects-tab" data-toggle="tab" href="#subjects" role="tab" aria-controls="subjects" aria-selected="false"><i class="fas fa-sitemap"></i> Subjects</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="types-tab" data-toggle="tab" href="#types" role="tab" aria-controls="types" aria-selected="false"><i class="fas fa-link"></i> Tipos</a>
+                    <a class="nav-link" id="types-tab" data-toggle="tab" href="#types" role="tab" aria-controls="types" aria-selected="false"><i class="fas fa-link"></i> Types</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="oprphaned-type-tab" data-toggle="tab" href="#oprphaned-type" role="tab" aria-controls="oprphaned-type" aria-selected="false"><i class="fas fa-unlink"></i> Tipos Huérfanos</a>
+                    <a class="nav-link" id="oprphaned-type-tab" data-toggle="tab" href="#oprphaned-type" role="tab" aria-controls="oprphaned-type" aria-selected="false"><i class="fas fa-unlink"></i> Orphaned Types</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false"><i class="fas fa-archive"></i> Archivos Huérfanos</a>
+                    <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false"><i class="fas fa-archive"></i> Orphaned Files</a>
                 </li>
             </ul>
         </div>
@@ -104,10 +104,10 @@ $files = SQL_GET_ORPHANED_FILES();
                                 <thead>
                                     <tr>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Nombre de Usuario</th>
-                                        <th scope="col">Correo Electrónico</th>
-                                        <th scope="col">Editar <?php hint('Como notará, no puede editar el usuario root.'); ?></th>
-                                        <th scope="col">Borrar <?php hint('Como notará, no puede borrar el usuario root, ni su propia cuenta, tendrá que eliminar su propia cuenta a través de otra cuenta.'); ?></th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">E-mail</th>
+                                        <th scope="col">Edit <?php hint('As you\'ll notice, you cannot edit the root user.'); ?></th>
+                                        <th scope="col">Delete <?php hint('As you\'ll notice, you cannot delete the root user, nor your own account, you will have to delete your own account through another account.'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -131,13 +131,13 @@ $files = SQL_GET_ORPHANED_FILES();
                                                 if ($is_root) {
                                                 ?>
                                                     <td>
-                                                        <button class="btn btn-primary disabled" style="width:100%;height:100%;" disabled aria-disabled="true"><i class="fas fa-user-edit"></i><span class="sr-only">editar usuario <?php echo $obj['username']; ?></span></button>
+                                                        <button class="btn btn-primary disabled" style="width:100%;height:100%;" disabled aria-disabled="true"><i class="fas fa-user-edit"></i><span class="sr-only">edit user <?php echo $obj['username']; ?></span></button>
                                                     </td>
                                                 <?php
                                                 } else {
                                                 ?>
                                                     <td>
-                                                        <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editAdmin<?php echo $obj['id']; ?>"><span class="sr-only">editar usuario <?php echo $obj['username'];?> </span><i class="fas fa-user-edit"></i></button>
+                                                        <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editAdmin<?php echo $obj['id']; ?>"><span class="sr-only">edit user <?php echo $obj['username'];?> </span><i class="fas fa-user-edit"></i></button>
                                                     </td>
 
                                                     <!-- Edit Modal START -->
@@ -145,7 +145,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title" id="modalAdminEdit<?php echo $obj['id']; ?>">Editar el usuario <strong><?php echo $obj['username']; ?></strong></h5>
+                                                                    <h5 class="modal-title" id="modalAdminEdit<?php echo $obj['id']; ?>">Edit the user <strong><?php echo $obj['username']; ?></strong></h5>
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
@@ -156,22 +156,22 @@ $files = SQL_GET_ORPHANED_FILES();
                                                                             <input type="hidden" id="userid" name="userid" aria-describedby="userid" value="<?php echo $obj['id']; ?>" required>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label for="username">Nuevo Nombre de Usuario</label>
+                                                                            <label for="username">New Username</label>
                                                                             <input type="text" class="form-control" id="username<?php echo $obj['id']; ?>" name="username" aria-describedby="newUsername" value="<?php echo $obj['username']; ?>" placeholder="<?php echo $obj['username']; ?>" required>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label for="email">Nuevo Correo Electrónico</label>
+                                                                            <label for="email">New E-mail</label>
                                                                             <input type="email" class="form-control" id="email<?php echo $obj['id']; ?>" name="email" aria-describedby="newEmail" value="<?php echo $obj['email']; ?>" placeholder="<?php echo $obj['email']; ?>" required>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label for="newpwd">Nueva Contraseña</label>
+                                                                            <label for="newpwd">New Password</label>
                                                                             <input type="password" class="form-control" id="newpwd<?php echo $obj['id']; ?>" name="newpwd" required>
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <input type="hidden" id="confirmAdminEdit<?php echo $obj['id']; ?>" name="admin-to-edit" value="<?php echo $obj['id']; ?>">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                                        <button type="submit" class="btn btn-primary" name="edit-admin">Editar <?php echo $obj['username']; ?></button>
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                        <button type="submit" class="btn btn-primary" name="edit-admin">Edit <?php echo $obj['username']; ?></button>
 
                                                                     </div>
                                                                 </form>
@@ -186,35 +186,35 @@ $files = SQL_GET_ORPHANED_FILES();
                                                     if (($obj['id'] == $_SESSION['id'][0]['id']) || $is_root) {
                                                         if ($is_root) {
                                                     ?>
-                                                            <button class="btn btn-danger disabled" style="width:100%;height:100%;" disabled aria-disabled="true"><span class="sr-only">borrar usuario <?php echo $obj['username'];?> </span><i class="fas fa-user-alt-slash"></i></button>
+                                                            <button class="btn btn-danger disabled" style="width:100%;height:100%;" disabled aria-disabled="true"><span class="sr-only">delete user <?php echo $obj['username'];?> </span><i class="fas fa-user-alt-slash"></i></button>
                                                         <?php
                                                         } else {
                                                         ?>
-                                                            <button class="btn btn-danger disabled" style="width:100%;height:100%;" disabled aria-disabled="true"><span class="sr-only">borrar usuario <?php echo $obj['username'];?> </span><i class="fas fa-user-alt-slash"></i></button>
+                                                            <button class="btn btn-danger disabled" style="width:100%;height:100%;" disabled aria-disabled="true"><span class="sr-only">delete user <?php echo $obj['username'];?> </span><i class="fas fa-user-alt-slash"></i></button>
                                                         <?php
                                                         }
                                                     } else {
                                                         ?>
-                                                        <button type="submit" class="btn btn-danger" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteAdmin<?php echo $obj['id']; ?>"><span class="sr-only">borrar usuario <?php echo $obj['username'];?> </span><i class="fas fa-user-alt-slash"></i></button>
+                                                        <button type="submit" class="btn btn-danger" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteAdmin<?php echo $obj['id']; ?>"><span class="sr-only">delete user <?php echo $obj['username'];?> </span><i class="fas fa-user-alt-slash"></i></button>
 
                                                         <!-- Delete Modal START -->
                                                         <div class="modal fade" id="deleteAdmin<?php echo $obj['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="confirm deletion for <?php echo $obj['username']; ?>" aria-hidden="true">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="modalAdminDelete<?php echo $obj['id']; ?>">Borrar el usuario <strong><?php echo $obj['username']; ?></strong></h5>
+                                                                        <h5 class="modal-title" id="modalAdminDelete<?php echo $obj['id']; ?>">Delete the user <strong><?php echo $obj['username']; ?></strong></h5>
                                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                             <span aria-hidden="true">&times;</span>
                                                                         </button>
                                                                     </div>
                                                                     <div class="modal-body">
-                                                                        Tenga en cuenta que esta acción es <strong title="no se puede deshacer">irreversible</strong> y el usuario no tendra accesso al sistema.
+                                                                        Do keep in mind that this action is <strong title="cannot be undone">irreversible</strong>, and the user will no longer have access to the system.
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <form action="delete.row.php" method="POST" style="padding:0;margin:0;">
                                                                             <input type="hidden" id="confirmAdminDelete<?php echo $obj['id']; ?>" name="admin-to-delete" value="<?php echo $obj['id']; ?>">
-                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                                            <button type="submit" class="btn btn-danger" name="delete-admin">Entiendo Borrar <?php echo $obj['username']; ?></button>
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                            <button type="submit" class="btn btn-danger" name="delete-admin">I understand, delete <?php echo $obj['username']; ?>.</button>
                                                                         </form>
                                                                     </div>
                                                                 </div>
@@ -246,8 +246,8 @@ $files = SQL_GET_ORPHANED_FILES();
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
-                                <th scope="col">Nombre del Autor(a)</th>
-                                <th scope="col">Editar</th>
+                                <th scope="col">Author</th>
+                                <th scope="col">Edit</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -268,7 +268,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="modalAuthor<?php echo $obj['id']; ?>">Editar el autor(a) <strong><?php echo $obj['author_name']; ?></strong></h5>
+                                                    <h5 class="modal-title" id="modalAuthor<?php echo $obj['id']; ?>">Edit the author <strong><?php echo $obj['author_name']; ?></strong></h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -276,14 +276,14 @@ $files = SQL_GET_ORPHANED_FILES();
                                                 <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
                                                     <div class="modal-body">
                                                         <div class="form-group">
-                                                            <label for="edit-author-name">Nombre del Autor(a):</label>
+                                                            <label for="edit-author-name">Author:</label>
                                                             <input type="text" class="form-control" id="edit-author-name" name="edit-author-name" aria-describedby="edit author name" value="<?php echo $obj['author_name']; ?>" placeholder="<?php echo $obj['author_name']; ?>" required>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <input type="hidden" id="confirmAuthorEdit<?php echo $obj['id']; ?>" name="author-to-edit" value="<?php echo $obj['id']; ?>">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                        <button type="submit" class="btn btn-primary" name="edit-author">Editar <?php echo $obj['author_name']; ?></button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-primary" name="edit-author">Edit <?php echo $obj['author_name']; ?></button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -307,8 +307,8 @@ $files = SQL_GET_ORPHANED_FILES();
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
-                                <th scope="col">Nombre del Sujeto</th>
-                                <th scope="col">Editar</th>
+                                <th scope="col">Subject</th>
+                                <th scope="col">Edit</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -329,7 +329,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="modalSubject<?php echo $obj['id']; ?>">Editar el sujeto <strong><?php echo $obj['subject']; ?></strong></h5>
+                                                    <h5 class="modal-title" id="modalSubject<?php echo $obj['id']; ?>">Edit the subject <strong><?php echo $obj['subject']; ?></strong></h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -337,14 +337,14 @@ $files = SQL_GET_ORPHANED_FILES();
                                                 <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
                                                     <div class="modal-body">
                                                         <div class="form-group">
-                                                            <label for="edit-subject-name">Sujeto:</label>
+                                                            <label for="edit-subject-name">Subject:</label>
                                                             <input type="text" class="form-control" id="edit-subject-name" name="edit-subject-name" aria-describedby="edit subject name" value="<?php echo $obj['subject']; ?>" placeholder="<?php echo $obj['subject']; ?>" required>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <input type="hidden" id="confirmSubjectEdit<?php echo $obj['id']; ?>" name="subject-to-edit" value="<?php echo $obj['id']; ?>">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                        <button type="submit" class="btn btn-primary" name="edit-subject">Editar <?php echo $obj['subject']; ?></button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-primary" name="edit-subject">Edit <?php echo $obj['subject']; ?></button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -373,8 +373,8 @@ $files = SQL_GET_ORPHANED_FILES();
                                 <thead>
                                 <tr>
                                     <th scope="col">ID</th>
-                                    <th scope="col">Nombre del Tipo</th>
-                                    <th scope="col">Editar</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Edit</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -395,7 +395,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="modalType<?php echo $type['id']; ?>">Editar el tipo <strong><?php echo $type['type']; ?></strong></h5>
+                                                        <h5 class="modal-title" id="modalType<?php echo $type['id']; ?>">Edit the type <strong><?php echo $type['type']; ?></strong></h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
@@ -403,14 +403,14 @@ $files = SQL_GET_ORPHANED_FILES();
                                                     <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
                                                         <div class="modal-body">
                                                             <div class="form-group">
-                                                                <label for="edit-type-name-for-<?php echo $type['id']; ?>">Tipo:</label>
+                                                                <label for="edit-type-name-for-<?php echo $type['id']; ?>">Type:</label>
                                                                 <input type="text" class="form-control" id="edit-type-name-for-<?php echo $type['id']; ?>" name="edit-type-name" aria-describedby="edit type name" value="<?php echo $type['type']; ?>" placeholder="<?php echo $type['type']; ?>" required>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <input type="hidden" id="confirmTypeEdit<?php echo $type['id']; ?>" name="type-to-edit" value="<?php echo $type['id']; ?>">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                            <button type="submit" class="btn btn-primary" name="edit-type">Editar <?php echo $type['type']; ?></button>
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-primary" name="edit-type">Edit <?php echo $type['type']; ?></button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -436,13 +436,13 @@ $files = SQL_GET_ORPHANED_FILES();
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
-                                <th scope="col">Nombre del Tipo Huérfanos</th>
-                                <th scope="col">Editar</th>
+                                <th scope="col">Orphaned Type</th>
+                                <th scope="col">Edit</th>
                                 <?php
                                 $num_of_o_types = count($o_types);
                                 $disabled = $num_of_o_types === 0 ? 'disabled' : '';
                                 ?>
-                                <th scope="col"><button type="submit" class="btn btn-danger <?php echo $disabled; ?>" name="delete-file" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteAllOrphanedTypes" <?php echo $disabled; ?>>Borrar Todo</button></th>
+                                <th scope="col"><button type="submit" class="btn btn-danger <?php echo $disabled; ?>" name="delete-file" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteAllOrphanedTypes" <?php echo $disabled; ?>>Delete All</button></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -451,18 +451,18 @@ $files = SQL_GET_ORPHANED_FILES();
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteAllOrphanedTypesTitle">Borrar <strong>TODOS</strong> los Tipos Huerfanos:</h5>
+                                            <h5 class="modal-title" id="deleteAllOrphanedTypesTitle">Delete <strong>ALL</strong> orphaned types:</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            Esta acción es <strong title="no se puede deshacer">irreversible</strong>.
+                                            Do keep in mind that this action is <strong title="cannot be undone">irreversible</strong>, but safe.
                                         </div>
                                         <div class="modal-footer">
                                             <form action="delete.row.php" method="POST" style="padding:0px;margin:0px;">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                <button type="submit" class="btn btn-danger" name="delete-all-orphaned-types">Entiendo, borrar todos los tipos huérfanos.</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-danger" name="delete-all-orphaned-types">I understand, delete all orphaned types.</button>
                                             </form>
                                         </div>
                                     </div>
@@ -489,7 +489,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="modalOprhanedType<?php echo $type['id']; ?>">Editar el sujeto <strong><?php echo $type['type']; ?></strong></h5>
+                                                    <h5 class="modal-title" id="modalOprhanedType<?php echo $type['id']; ?>">Edit the orphaned type <strong><?php echo $type['type']; ?></strong></h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -497,14 +497,14 @@ $files = SQL_GET_ORPHANED_FILES();
                                                 <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
                                                     <div class="modal-body">
                                                         <div class="form-group">
-                                                            <label for="edit-o-type-name-for-<?php echo $type['id']; ?>">Tipo:</label>
+                                                            <label for="edit-o-type-name-for-<?php echo $type['id']; ?>">Orphaned Type:</label>
                                                             <input type="text" class="form-control" id="edit-o-type-name-for-<?php echo $type['id']; ?>" name="new-o-type-name" aria-describedby="edit orphaned type name" value="<?php echo $type['type']; ?>" placeholder="<?php echo $type['type']; ?>" required>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <input type="hidden" id="confirmOprhanedTypeEdit<?php echo $type['id']; ?>" name="oprphaned-type-to-edit" value="<?php echo $type['id']; ?>">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                        <button type="submit" class="btn btn-primary" name="edit-oprphaned-type">Editar <?php echo $type['type']; ?></button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-primary" name="edit-oprphaned-type">Edit <?php echo $type['type']; ?></button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -517,19 +517,19 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="modalOprhanedType<?php echo $type['id']; ?>">Borrar el tipo <strong><?php echo $type['type']; ?></strong></h5>
+                                                    <h5 class="modal-title" id="modalOprhanedType<?php echo $type['id']; ?>">Delete the orphaned type <strong><?php echo $type['type']; ?></strong></h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Tenga en cuenta que esta acción es <strong title="no se puede deshacer">irreversible</strong>.
+                                                    Do keep in mind that this action is <strong title="cannot be undone">irreversible</strong>.
                                                 </div>
                                                 <div class="modal-footer">
                                                     <form action="delete.row.php" method="POST" style="padding:0px;margin:0px;">
                                                         <input type="hidden" id="confirmOprhanedTypeDelete<?php echo $type['id']; ?>" name="oprphaned-type-to-delete" value="<?php echo $type['id']; ?>">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                        <button type="submit" class="btn btn-danger" name="delete-oprphaned-type">Borrar <?php echo $type['type']; ?></button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-danger" name="delete-oprphaned-type">Delete <?php echo $type['type']; ?></button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -554,18 +554,18 @@ $files = SQL_GET_ORPHANED_FILES();
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
-                                <th scope="col">Nombre del Archivo</th>
-                                <th scope="col">Tipo de Archivo</th>
-                                <th scope="col">Tamaño del Archivo</th>
-                                <th scope="col">Compartir</th>
-                                <th scope="col">Descargar</th>
-                                <th scope="col">Pestaña Nueva</th>
-                                <th scope="col">Ventana Emergente</th>
+                                <th scope = "col">File Name </th>
+                                <th scope = "col">File Type </th>
+                                <th scope = "col">File Size </th>
+                                <th scope = "col">Share </th>
+                                <th scope = "col">Download </th>
+                                <th scope = "col">New Tab </th>
+                                <th scope = "col">Popup Window </th>
                                 <?php
                                 $num_of_files = count($files);
                                 $disabled = $num_of_files === 0 ? 'disabled' : '';
                                 ?>
-                                <th scope="col"><button type="submit" class="btn btn-danger <?php echo $disabled; ?>" name="delete-file" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteAllOrphanedFiles" <?php echo $disabled; ?>>Borrar Todo</button></th>
+                                <th scope="col"><button type="submit" class="btn btn-danger <?php echo $disabled; ?>" name="delete-file" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteAllOrphanedFiles" <?php echo $disabled; ?>>Delete All</button></th>
                             </tr>
                         </thead>
 
@@ -575,18 +575,18 @@ $files = SQL_GET_ORPHANED_FILES();
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteAllOrphanedFilesTitle">Borrar <strong>TODOS</strong> los Archivos Huerfanos:</h5>
+                                            <h5 class="modal-title" id="deleteAllOrphanedFilesTitle">Delete <strong>ALL</strong> Orphaned Files:</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            Esta acción es <strong title="no se puede deshacer">irreversible</strong>.
+                                            Do keep in mind that this action is <strong title="cannot be undone">irreversible</strong>, and the orphaned files will be lost <strong title="a long time!">forever</strong>.
                                         </div>
                                         <div class="modal-footer">
                                             <form action="delete.row.php" method="POST" style="padding:0px;margin:0px;">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                <button type="submit" class="btn btn-danger" name="delete-all-orphaned-files">Entiendo, borrar todos los archivos huérfanos.</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-danger" name="delete-all-orphaned-files">I understand, delete all the orphaned files.</button>
                                             </form>
                                         </div>
                                     </div>
@@ -612,13 +612,13 @@ $files = SQL_GET_ORPHANED_FILES();
                                             ?>" id="share-admin-<?php echo $f['id']; ?>">
                                             <button type="submit" class="btn btn-light" id="share-admin-btn-<?php echo $f['id']; ?>"
                                                     style="width:100%;height:100%;" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>', 'share-admin-btn-<?php echo $f['id']; ?>', true)"  onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
-                                                <i class="fas fa-share-alt" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>', 'share-admin-btn-<?php echo $f['id']; ?>', true)"></i> <span class="sr-only">Compartir el documento <?php echo $f['filename']; ?>.</span>
+                                                <i class="fas fa-share-alt" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>', 'share-admin-btn-<?php echo $f['id']; ?>', true)"></i> <span class="sr-only">Share <?php echo $f['filename']; ?>.</span>
                                             </button>
                                         </td>
                                         <td scope="row">
                                             <form action="fetch.file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
                                                 <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewTab" name="file" value="<?php echo $encoded_id; ?>">
-                                                <button type="submit" class="btn btn-light"  name="download" style="width:100%;height:100%;"><i class="fas fa-download"></i> <span class="sr-only">Descargar documento <?php echo $f['filename']; ?> en una pestaña nueva</span></button>
+                                                <button type="submit" class="btn btn-light"  name="download" style="width:100%;height:100%;"><i class="fas fa-download"></i> <span class="sr-only">Download <?php echo $f['filename']; ?></span></button>
                                             </form>
                                         </td>
                                         <td scope="row">
@@ -644,19 +644,19 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="modalLabel<?php echo $f['id']; ?>">Borrar <strong><?php echo $f['path']; ?></strong></h5>
+                                                    <h5 class="modal-title" id="modalLabel<?php echo $f['id']; ?>">Delete <strong><?php echo $f['filename']; ?> (ID: <?php echo $f['id']; ?>)</strong></h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Tenga en cuenta que esta acción es <strong title="no se puede deshacer">irreversible</strong>.
+                                                    Do keep in mind that this action is <strong title="cannot be undone">irreversible</strong>, and the orphaned file will be lost <strong title="a long time!">forever</strong>.
                                                 </div>
                                                 <div class="modal-footer">
                                                     <form action="delete.row.php" method="POST" style="padding:0px;margin:0px;">
                                                         <input type="hidden" id="confirmFileDelete<?php echo $f['id']; ?>" name="file-to-delete" value="<?php echo $f['id']; ?>">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                        <button type="submit" class="btn btn-danger" name="delete-file">Borrar</button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-danger" name="delete-file">I understand, delete the orphaned file.</button>
                                                     </form>
                                                 </div>
                                             </div>

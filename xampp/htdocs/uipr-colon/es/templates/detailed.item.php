@@ -73,6 +73,7 @@
                     <?php endif; ?>
                     <th scope="col">Nombre del Archivo</th>
                     <th scope="col">Compartir</th>
+                    <th scope="col">Descargar</th>
                     <th scope="col">Pestaña Nueva</th>
                     <th scope="col">Ventana Emergente</th>
                     <th scope="col">Tipo de Archivo</th>
@@ -101,6 +102,12 @@
                                     style="width:100%;height:100%;" onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', 'share-btn-<?php echo $f['id']; ?>', true)" onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
                                 <i class="fas fa-share-alt" onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', 'share-btn-<?php echo $f['id']; ?>', true)"></i> <span class="sr-only">Compartir el documento <?php echo $f['filename']; ?>.</span>
                             </button>
+                        </td>
+                        <td scope="row">
+                            <form action="fetch.file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
+                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewTab" name="file" value="<?php echo $encoded_id; ?>">
+                                <button type="submit" class="btn btn-light"  name="download" style="width:100%;height:100%;"><i class="fas fa-download"></i> <span class="sr-only">Descargar documento <?php echo $f['filename']; ?> en una pestaña nueva</span></button>
+                            </form>
                         </td>
                         <td scope="row">
                             <form action="file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">

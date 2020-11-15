@@ -7,13 +7,14 @@ authenticate();
 
 if (isset($conn)) {
     if (isset($_POST['delete-file']) && isset($_POST['file-to-delete'])) {
-        $redirTitle = 'Archivos Huérfanos:';
+        $redirTitle = 'Orphaned Files:';
         $id = intval($_POST['file-to-delete']);
 
         if (is_valid_int($id)) {
-            $file = SQL_GET_FILE($id)[0];
+            $file = SQL_GET_FILE($id);
             // checks to see if it exists
             if (count($file) > 0) {
+                $file = $file[0];
                 // delete row from database
                 query(sql_delete_file_by_id($id));
                 if (mysqli_affected_rows($conn) > 0) {
@@ -25,19 +26,19 @@ if (isset($conn)) {
                         $total_size += $size;
 
                         $total_size = round_ddl($total_size / 1e+6);
-                        redir_success_error($redirTitle, "$count de 1 archivos huérfanos fueron borrados ($total_size MB).");
+                        redir_success_error($redirTitle, "$count of 1 orphaned files were deleted ($total_size MB).");
                     } else {
-                        redir_warn_error($redirTitle, "El archivo se pudo borrar " . mysqli_error($conn));
+                        redir_warn_error($redirTitle, "The file could not be deleted " . mysqli_error($conn));
                     }
                 }
             } else {
-                redir_warn_error($redirTitle, "El archivo no fue encontrado " . mysqli_error($conn));
+                redir_warn_error($redirTitle, "The file was not found " . mysqli_error($conn));
             }
         } else {
-            redir_warn_error($redirTitle, "$id no es un id válido.");
+            redir_warn_error($redirTitle, "$id is not a valid id.");
         }
     } elseif (isset($_POST['delete-oprphaned-type']) && isset($_POST['oprphaned-type-to-delete'])) {
-        $redirTitle = 'Tipo Huérfano:';
+        $redirTitle = 'Orphaned Type:';
         $id = intval($_POST['oprphaned-type-to-delete']);
         echo 'delete oprphaned type with id: ' . $_POST['oprphaned-type-to-delete'];
         if (is_valid_int($id)) {
@@ -50,18 +51,18 @@ if (isset($conn)) {
 
                 // delete database row
                 if (mysqli_affected_rows($conn) > 0) {
-                    redir_success_error($redirTitle, "El tipo {$type[0]['type']} fue borrado!");
+                    redir_success_error($redirTitle, "The type {$type[0]['type']} was deleted!");
                 } else {
-                    redir_warn_error($redirTitle, "El tipo {$type[0]['type']} no se pudo borrar de la base de datos " . mysqli_error($conn));
+                    redir_warn_error($redirTitle, "The type {$type[0]['type']} couldn't be deleted from the database " . mysqli_error($conn));
                 }
             } else {
-                redir_warn_error($redirTitle, "El tipo no fue encontrado " . mysqli_error($conn));
+                redir_warn_error($redirTitle, "Couldn't find the specified type " . mysqli_error($conn));
             }
         } else {
-            redir_warn_error($redirTitle, "$id no es un id válido.");
+            redir_warn_error($redirTitle, "$id is not a valid id.");
         }
     } elseif (isset($_POST['delete-admin']) && isset($_POST['admin-to-delete'])) {
-        $redirTitle = 'Borrar Administrador:';
+        $redirTitle = 'Delete Admin';
         $id = intval($_POST['admin-to-delete']);
         echo 'delete admin with id: ' . $_POST['admin-to-delete'];
         if (is_valid_int($id)) {
@@ -74,18 +75,18 @@ if (isset($conn)) {
 
                 // delete database row
                 if (mysqli_affected_rows($conn) > 0) {
-                    redir_success_error($redirTitle, "El administrador(a) {$admin[0]['username']} ({$admin[0]['email']}) fue borrado!");
+                    redir_success_error($redirTitle, "The admin {$admin[0]['username']} ({$admin[0]['email']}) was deleted!");
                 } else {
-                    redir_fatal_error($redirTitle, "El administrador(a) {$admin[0]['username']} ({$admin[0]['email']}) no se pudo borrar de la base de datos " . mysqli_error($conn));
+                    redir_fatal_error($redirTitle, "The admin {$admin[0]['username']} ({$admin[0]['email']}) couldn't be deleted from the database " . mysqli_error($conn));
                 }
             } else {
-                redir_warn_error($redirTitle, "El administrador(a) no fue encontrado " . mysqli_error($conn));
+                redir_warn_error($redirTitle, "Couldn't find the specified admin  " . mysqli_error($conn));
             }
         } else {
-            redir_warn_error($redirTitle, "$id no es un id válido.");
+            redir_warn_error($redirTitle, "$id is not a valid id.");
         }
     } elseif (isset($_POST['delete-all-orphaned-files'])) {
-        $redirTitle = 'Borrar todos los Archivos Huérfanos';
+        $redirTitle = 'Delete all Orphaned Files';
         $arr = SQL_GET_ORPHANED_FILES();
         $count = 0;
         $total = count($arr);
@@ -106,12 +107,12 @@ if (isset($conn)) {
             }
 
             $total_size = round_ddl($total_size / 1e+6);
-            redir_success_error($redirTitle, "$count de $total archivos huérfanos fueron borrados ($total_size MB).");
+            redir_success_error($redirTitle, "$count of $total orphaned files were deleted ($total_size MB).");
         } else {
-            redir_warn_error('No hay archivos huérfanos', '');
+            redir_warn_error('No orphaned files were found...', '');
         }
     } elseif (isset($_POST['delete-all-orphaned-types'])) {
-        $redirTitle = 'Borrar todos los Tipos Huérfanos';
+        $redirTitle = 'Delete all Orphaned Types';
         $arr = SQL_GET_ORPHANED_TYPES();
         $count = 0;
         $total = count($arr);
@@ -124,11 +125,11 @@ if (isset($conn)) {
                 }
             }
 
-            redir_success_error($redirTitle, "$count de $total tipos huérfanos fueron borrados.");
+            redir_success_error($redirTitle, "$count of $total orphaned types were deleted.");
         } else {
-            redir_warn_error('No hay tipos huérfanos', '');
+            redir_warn_error('No orphaned types were found', '');
         }
     } else {
-        redir_warn_error("Redirigido(a):", "No proporcionó ningun tipo de información para eliminar algun tipo de dato.");
+        redir_warn_error("Redirected", "No action was specified.");
     }
-} else die("No esta conectado a la base de datos");
+} else die("You are not connected to the database");

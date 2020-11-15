@@ -36,10 +36,10 @@ try {
                 <main>
                     <div class="container">
                         <object data="fetch.file.php?file=<?php echo $original; ?>" id="pdf-object">
-                            El navegador no soporta ver este tipo de archivo, descárguelo aquí:
+                            The browser does not support viewing this type of file, download the file here:
                             <a href="fetch.file.php?file=<?php echo $original; ?>&download"
                                 download="<?php echo $file['filename'] ?>">
-                                Descargar <?php echo $file['filename'] ?>
+                                Download <?php echo $file['filename'] ?>
                             </a>
                         </object>
                     </div>

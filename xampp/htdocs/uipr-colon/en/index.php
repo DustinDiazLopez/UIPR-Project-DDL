@@ -88,30 +88,30 @@ include_once('templates/header.php');
                 } elseif ($_GET['error'] == "no-pdf") {
                     echo showWarn(
                         "404:",
-                        "El archivo solicitado no parece existir..."
+                        "The requested file does not appear to exist..."
                     );
                 } elseif ($_GET['error'] == "no-item") {
                     echo showWarn(
                         "404:",
-                        "El articulo solicitado no parece existir..."
+                        "The requested item does not appear to exist..."
                     );
                 } elseif ($_GET['error'] == "403") {
                     echo showDanger(
                         "403:",
-                        "No tiene los privilegios para acceder esa área"
+                        "You don't have access to that area."
                     );
                 }
             } elseif (isset($_GET['deleted'])) {
-                echo showSuccess("Éxito - Se borró un artículo:", "Todavía tienes acceso a los PDFs relacionado con el artículo borrado.");
+                echo showSuccess("Success - An article was deleted:", "You still have access to the files related to the deleted article (Admin Panel > Data > Orphaned Files).");
             } elseif (isset($_GET['created'])) {
                 $t = json_decode($_GET['created']);
-                echo showSuccess("Éxito:", "Se creo el articulo \"$t\"");
+                echo showSuccess("Success:", "The item was created \"$t\"");
             }
             // IF NOTHING IS FOUND
             if (empty($items) || $items === NULL || count($items) == 0 || !array_filter($items)) {
                 echo '<div class="center-content">
                 <svg height="100%" width="100%" xmlns:xlink="http://www.w3.org/1999/xlink"><a xlink:href="add.php"> 
-                <text x="100" y="100" style="fill:black;font-size:50px;" transform="rotate(0,0,0)">Nada encontrado, añadir un articulo.</text> 
+                <text x="100" y="100" style="fill:black;font-size:50px;" transform="rotate(0,0,0)">Nothing found, add an item.</text> 
                 </a></svg></div>';
             } else {
                 foreach ($items as $item) include('templates/detailed.item.php');

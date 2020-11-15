@@ -3,6 +3,7 @@ include_once('../connect.php');
 include_once('utils/utils.php');
 
 authenticate(isset($allow_guests) ? $allow_guests : FALSE);
+
 ?>
 
 <!DOCTYPE html>
@@ -46,6 +47,7 @@ authenticate(isset($allow_guests) ? $allow_guests : FALSE);
                     <li class="nav-item">
                         <a class="nav-link" href="adminpanel.php"><i class="fas fa-tools"></i> Panel del Administrador</a>
                     </li>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-server"></i> Enlaces</a>
                         <div class="dropdown-menu">
@@ -60,7 +62,6 @@ authenticate(isset($allow_guests) ? $allow_guests : FALSE);
                             <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/license.php"><i class="far fa-copyright"></i> Licencia (<span style="font-family:courier new,courier,monospace; font-size:16px;">MIT</span>)</a>
                         </div>
                     </li>
-
                 <?php endif; ?>
             </ul>
             <span class="navbar-text">
@@ -73,11 +74,33 @@ authenticate(isset($allow_guests) ? $allow_guests : FALSE);
                 }
                 ?>
 
-                <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:green;" title="cerrar sessión">
-                    <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>
-                    <i class="fas fa-sign-out-alt"><span class="sr-only">cerrar su sessión</span></i>
-                </a>
+                <ul class="navbar-nav mr-auto">
+                <?php if (isset($lang) && isset($GLOBALS['AVAILABLE_LANGS'])): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-globe-americas"></i> <?php echo '<span class="cap">' . $GLOBALS['_LANG_ASSOC'][LANG] . '</span> (' . LANG . ')'; ?>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                            <?php for ($i = 0; $i < count($GLOBALS['AVAILABLE_LANGS']); $i++): ?>
+                                <a class="dropdown-item"
+                                   href="./../<?php echo $GLOBALS['AVAILABLE_LANGS'][$i]; ?>"><?php echo '<span class="cap">' . $GLOBALS['_LANG_ASSOC'][$GLOBALS['AVAILABLE_LANGS'][$i]] . '</span> (' . $GLOBALS['AVAILABLE_LANGS'][$i] . ')'; ?></a>
+                            <?php endfor; ?>
+                        </div>
+                    </li>
+                <?php endif; ?>
+
+                    <li>
+                        <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:green;" title="cerrar sessión">
+                            <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>
+                            <i class="fas fa-sign-out-alt"><span class="sr-only">cerrar su sessión</span></i>
+                        </a>
+                    </li>
+                </ul>
+
             </span>
+
         </div>
     </nav>
 

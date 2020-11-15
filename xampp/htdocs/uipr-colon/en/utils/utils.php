@@ -7,12 +7,12 @@ include_once('sql.utils.php');
 /**
  * What will appear in the header and the title of every page.
  */
-define('APP_NAME', 'Catálogo UIPR CMS');
+define('APP_NAME', 'UIPR Catalog CMS');
 
 /**
  * This will be used in the lang attribute of the html pages, and the date of the items.
  */
-define('LANG', 'es');
+define('LANG', 'en');
 
 
 /**
@@ -100,8 +100,8 @@ function validateDate($date, $format = 'Y-m-d')
  * @param $head_msg string (optional) the message to display (will use alt_key)
  * @param $empty_msg string (optional) the message to display when only space is provided
  */
-function validate_ddl(&$POST, $key, $alt_key, &$is_valid, &$error_buffer, $head_msg="Favor de proveer",
-                      $empty_msg="debe proveer al menos un cáracter, no espacios en blanco")
+function validate_ddl(&$POST, $key, $alt_key, &$is_valid, &$error_buffer, $head_msg="Missing Information",
+                      $empty_msg="must provide at least one character (no blank spaces)")
 {
     // checks if the key is not set
     if (!isset($POST[$key])) {
@@ -323,13 +323,13 @@ function validate_post_csv ($key, $alt_key, &$is_valid, &$error_buffer)
         $obj = split_clean_array_ddl($_POST[$key]);
         if ($obj === NULL) {
             $is_valid = FALSE;
-            $error_buffer[$key] .= "Provee al menos un $alt_key";
+            $error_buffer[$key] .= "Provide at least one $alt_key";
         } else {
             return $obj;
         }
     } else {
         $is_valid = FALSE;
-        $error_buffer[$key] .= "Provee al menos un $alt_key";
+        $error_buffer[$key] .= "Provide at least one $alt_key";
     }
     return NULL;
 }
@@ -350,7 +350,7 @@ function not_valid_class($boolean = 'do nothing')
  * @param boolean $boolean weather to print it or not
  * @param string $msg the message to display
  */
-function echo_invalid_feedback($boolean = false, $msg = 'Invalido')
+function echo_invalid_feedback($boolean = false, $msg = 'Invalid')
 {
     if ($boolean) echo "<div class=\"invalid-feedback\">$msg</div>";
 }
@@ -516,7 +516,7 @@ function authorsToCSV($authors, $atr='author_name')
  * @param string $format (optional) format of the date to return
  * @return string returns the formatted date as a string.
  */
-function formatDate($date, $yearOnly = false, $format = "%e de %B de %Y")
+function formatDate($date, $yearOnly = false, $format = "%B %e, %Y")
 {
     $currentLocale = setlocale(LC_ALL, 0);
     setlocale(LC_ALL, LANG);
@@ -900,46 +900,46 @@ $GLOBALS['_LANG'] = array(
 
 $GLOBALS['_LANG_ASSOC'] = array(
     'af' => 'afrikaans',    // afrikaans.
-    'ar' => 'árabe',        // árabe.
-    'bg' => 'búlgaro',      // búlgaro.
-    'ca' => 'catalán',      // catalán.
-    'cs' => 'checo',        // checo.
-    'da' => 'danés',        // danés.
-    'de' => 'alemán',       // alemán.
-    'el' => 'griego',       // griego.
-    'en' => 'inglés',       // inglés.
-    'es' => 'español',      // español.
-    'et' => 'estonio',      // estonio.
-    'fi' => 'finlandés',    // finlandés.
-    'fr' => 'francés',      // francés.
-    'gl' => 'gallego',      // gallego.
-    'he' => 'hebreo',       // hebreo.
+    'ar' => 'arabic',       // arabic.
+    'bg' => 'bulgarian',    // bulgarian.
+    'ca' => 'catalan',      // catalan.
+    'cs' => 'czech',        // czech.
+    'da' => 'danish',       // danish.
+    'de' => 'german',       // german.
+    'el' => 'greek',        // greek.
+    'en' => 'english',      // english.
+    'es' => 'spanish',      // spanish.
+    'et' => 'estonian',     // estonian.
+    'fi' => 'finnish',      // finnish.
+    'fr' => 'french',       // french.
+    'gl' => 'galician',     // galician.
+    'he' => 'hebrew',       // hebrew.
     'hi' => 'hindi',        // hindi.
-    'hr' => 'croata',       // croata.
-    'hu' => 'húngaro',      // húngaro.
-    'id' => 'indonesio',    // indonesio.
-    'it' => 'italiano',     // italiano.
-    'ja' => 'japonés',      // japonés.
-    'ko' => 'coreano',      // coreano.
-    'ka' => 'georgiano',    // georgiano.
-    'lt' => 'lituano',      // lituano.
-    'lv' => 'letón',        // letón.
-    'ms' => 'malayo',       // malayo.
-    'nl' => 'holandés',     // holandés.
-    'no' => 'noruego',      // noruego.
-    'pl' => 'pulir',        // pulir.
-    'pt' => 'portugués',    // portugués.
-    'ro' => 'rumano',       // rumano.
-    'ru' => 'ruso',         // ruso.
-    'sk' => 'eslovaco',     // eslovaco.
-    'sl' => 'esloveno',     // esloveno.
-    'sq' => 'albanés',      // albanés.
-    'sr' => 'serbio',       // serbio.
-    'sv' => 'sueco',        // sueco.
-    'th' => 'tailandés',    // tailandés.
-    'tr' => 'turco',        // turco.
-    'uk' => 'ucraniano',    // ucraniano.
-    'zh' => 'chino'         // chino.
+    'hr' => 'croatian',     // croatian.
+    'hu' => 'hungarian',    // hungarian.
+    'id' => 'indonesian',   // indonesian.
+    'it' => 'italian',      // italian.
+    'ja' => 'japanese',     // japanese.
+    'ko' => 'korean',       // korean.
+    'ka' => 'georgian',     // georgian.
+    'lt' => 'lithuanian',   // lithuanian.
+    'lv' => 'latvian',      // latvian.
+    'ms' => 'malay',        // malay.
+    'nl' => 'dutch',        // dutch.
+    'no' => 'norwegian',    // norwegian.
+    'pl' => 'polish',       // polish.
+    'pt' => 'portuguese',   // portuguese.
+    'ro' => 'romanian',     // romanian.
+    'ru' => 'russian',      // russian.
+    'sk' => 'slovak',       // slovak.
+    'sl' => 'slovenian',    // slovenian.
+    'sq' => 'albanian',     // albanian.
+    'sr' => 'serbian',      // serbian.
+    'sv' => 'swedish',      // swedish.
+    'th' => 'thai',         // thai.
+    'tr' => 'turkish',      // turkish.
+    'uk' => 'ukrainian',    // ukrainian.
+    'zh' => 'chinese'       // chinese.
 );
 
 

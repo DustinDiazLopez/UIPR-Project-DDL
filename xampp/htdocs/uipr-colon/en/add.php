@@ -1,5 +1,5 @@
 <?php
-$title_tag = 'Añadir un Artículo';
+$title_tag = 'Add an Item';
 include_once('../connect.php');
 include_once('utils/utils.php');
 authenticate();
@@ -10,7 +10,7 @@ $errors = $item = ['title' => '', 'type' => '', 'published_date' => '', 'authors
 $sql_errors = ['item' => '', 'authors' => '', 'subjects' => '', 'type' => '', 'image' => '', 'files' => '', 'item_has_subject' => '', 'file_has_item' => '', 'author_has_item' => ''];
 $valid_title = $valid_type = $valid_date = $valid_authors = $valid_subjects = $valid_description = $valid_image = $valid_files = '';
 $warning = false;
-$provide_char_msg = 'debe proveer al menos un cáracter (no espacio en blanco).';
+$provide_char_msg = 'you must provide at least one character (not white space).';
 
 if (isset($_POST['submit'])) {
     /* checks to see if the used checked year only button */
@@ -18,25 +18,25 @@ if (isset($_POST['submit'])) {
 
     $item['year_only'] = $yearOnly;
     /* VALIDATE START */
-    validate_ddl($_POST, 'title', 'título', $valid_title, $errors);
-    validate_ddl($_POST, 'type', 'tipo', $valid_type, $errors);
-    validate_ddl($_POST, 'published_date', 'fecha de publicación', $valid_date, $errors);
-    validate_ddl($_POST, 'authors', 'autores', $valid_date, $errors);
-    validate_ddl($_POST, 'subjects', 'sujetos', $valid_date, $errors);
-    validate_ddl($_POST, 'description', 'descripción', $valid_date, $errors);
+    validate_ddl($_POST, 'title', 'title', $valid_title, $errors);
+    validate_ddl($_POST, 'type', 'type', $valid_type, $errors);
+    validate_ddl($_POST, 'published_date', 'published date', $valid_date, $errors);
+    validate_ddl($_POST, 'authors', 'authors', $valid_date, $errors);
+    validate_ddl($_POST, 'subjects', 'subjects', $valid_date, $errors);
+    validate_ddl($_POST, 'description', 'description', $valid_date, $errors);
 
     // no errors are logged for image validation, if something fails it will be ignored.
     $image = validate_ddl_image($_POST, $valid_image);
     $files = validate_files_form_ddl($_FILES, $errors['files']);
 
-    // validate authros and subjects
-    $authors = validate_post_csv('authors', 'autor(a)', $valid_authors, $errors);
-    $subjects = validate_post_csv('subjects', 'sujeto', $valid_subjects, $errors);
+    // validate authors and subjects
+    $authors = validate_post_csv('authors', 'author', $valid_authors, $errors);
+    $subjects = validate_post_csv('subjects', 'subject', $valid_subjects, $errors);
 
     // validate date
     if ($valid_date) {
         if (!validateDate($_POST['published_date'])) {
-            $errors['published_date'] = 'Favor the proveer una fecha en el formato yyyy-mm-dd';
+            $errors['published_date'] = 'Please provide a valid date (yyyy-mm-dd)';
             $valid_date = false;
         }
     }
@@ -270,7 +270,7 @@ if (isset($_POST['submit'])) {
 include_once('templates/header.php');
 
 if (isset($form_errors) && $form_errors) {
-    echo showWarn('Error:', 'Errores se detectaron en la forma.');
+    echo showWarn('Error:', 'Errors were detected in the form.');
 }
 
 if (isset($errors_present) && $errors_present) {
@@ -315,16 +315,16 @@ if (isset($errors_present) && $errors_present) {
         <i class="fas fa-times"></i>
     </span>
     <div class="card-body">
-        <h5 class="card-title" id="progress-heading">Completar</h5>
-        <p class="card-text" id="progress-msg">Favor de completar la forma</p>
+        <h5 class="card-title" id="progress-heading">To complete</h5>
+        <p class="card-text" id="progress-msg">Please complete the following</p>
     </div>
     <ul class="list-group list-group-flush">
-        <li class="list-group-item list-group-item-danger" id="progress-title">Título</li>
-        <li class="list-group-item list-group-item-danger" id="progress-date">Fecha de Publicación</li>
-        <li class="list-group-item list-group-item-danger" id="progress-description">Descripción del artículo</li>
-        <li class="list-group-item list-group-item-danger" id="progress-author">Autores</li>
-        <li class="list-group-item list-group-item-danger" id="progress-subject">Sujetos</li>
-        <li class="list-group-item list-group-item-danger" id="progress-files">Archivos</li>
+        <li class="list-group-item list-group-item-danger" id="progress-title">Title</li>
+        <li class="list-group-item list-group-item-danger" id="progress-date">Publication Date</li>
+        <li class="list-group-item list-group-item-danger" id="progress-description">Description</li>
+        <li class="list-group-item list-group-item-danger" id="progress-author">Authors</li>
+        <li class="list-group-item list-group-item-danger" id="progress-subject">Subjects</li>
+        <li class="list-group-item list-group-item-danger" id="progress-files">Files</li>
     </ul>
 </div>
 
@@ -334,7 +334,7 @@ if (isset($errors_present) && $errors_present) {
 <div class="container-fluid">
     <form autocomplete="off" style="color:black;" action="#" method="POST" enctype="multipart/form-data" id="form">
         <div class="form-row" style="text-align: center;">
-            <h1>Añadir un Artículo</h1>
+            <h1>Add an Item</h1>
         </div>
 
         <!-- COL 1 START -->
@@ -343,14 +343,14 @@ if (isset($errors_present) && $errors_present) {
                 <!-- TITLE AND TYPE -->
                 <div class="form-row">
                     <div class="col-md-7 mb-3">
-                        <label for="title">Título</label>
-                        <input type="text" id="title" name="title" title="Título del artículo." placeholder="Don Quijote de la Mancha" class="form-control <?php not_valid_class($valid_title); ?>" value="<?php echo $item['title']; ?>" required>
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" title="Title of the item." placeholder="Don Quixote" class="form-control <?php not_valid_class($valid_title); ?>" value="<?php echo $item['title']; ?>" required>
                         <?php echo_invalid_feedback(!$valid_title, $errors['title']); ?>
                     </div>
                     <div class="col-md-5 mb-3 autocomplete">
-                        <label for="type"><span id="iconShowType"></span> Tipo
+                        <label for="type"><span id="iconShowType"></span> Type
                             <?php
-                            hint('Si desea un tipo no existente lo puede añadir a traves del Panel del Administrador > Data > Tipos');
+                            hint('If you want a non-existent type, you can add it through the Admin Panel > Data > Types');
                             ?>
 
                         </label>
@@ -371,14 +371,14 @@ if (isset($errors_present) && $errors_present) {
 
                 <!-- PUB DATE -->
                 <div class="form-row">
-                    <label for="published_date" class="col-5 col-form-label" id='pub-date-label'>Fecha de Publicación:</label>
+                    <label for="published_date" class="col-5 col-form-label" id='pub-date-label'>Publication Date:</label>
                     <div class="col-7 input-group">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input name="yearOnly" id="yearOnly" onclick="changePubDateToYear('pub-date-label')"
                                        type="checkbox"
-                                       aria-label="Checkbox for para demostrar en el articulo el año de publicacion solamente."
-                                       title="Sólo enseñar el año"
+                                       aria-label="Checkbox to only show the year of publication."
+                                       title="Just show the year"
                                         <?php echo isset($item['year_only']) && $item['year_only'] ? 'checked' : ''; ?>
                                 >
                             </div>
@@ -393,7 +393,7 @@ if (isset($errors_present) && $errors_present) {
 
                 <!-- DESCRIPTION -->
                 <div class="form-group">
-                    <label for="description">Descripción del artículo</label>
+                    <label for="description">Description</label>
                     <textarea width="1000px" class="form-control <?php not_valid_class($valid_description); ?>" id="description" name="description" aria-describedby="descriptionHelp" rows="3" required><?php echo $item['description']; ?></textarea>
                     <?php echo_invalid_feedback(!$valid_description, $errors['description']); ?>
                 </div>
@@ -403,17 +403,14 @@ if (isset($errors_present) && $errors_present) {
                 <!-- METADATA -->
                 <div class="form-group">
                     <label for="metadata">Metadata
-                        <?php hint('Información que no será visible, pero que se utilizará en la búsqueda (por ejemplo, texto completo del artículo, otros títulos, etc.). En otras palabras, cualquier información relacionada con el artículo.'); ?>
+                        <?php hint('Information that will not be visible, but that will be used in the search (e.g., full text of a file, other titles, etc.). In other words, any information related to the article.'); ?>
                     </label>
                     <textarea class="form-control" id="metadata" name="metadata" rows="3" aria-describedby="metaHelp"><?php echo $item['metadata']; ?></textarea>
                 </div>
                 <hr />
                 <!-- AUTHORS -->
                 <div class="form-row">
-                    <label for="authors">Autores
-                        <?php //hint('Favor no utilizar commas, especificar el nombre completo sin commas. Si se detectan commas, se eliminarán.'); 
-                        ?>
-                    </label>
+                    <label for="authors">Authors </label>
                     <div class="input-group mb-3">
                         <ul class="list-group container-fluid" id="readOnlyListViewAuthor">
 
@@ -426,15 +423,15 @@ if (isset($errors_present) && $errors_present) {
                                                                                                                                                             }
                                                                                                                                                             ?>" readonly required>
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Editar todos los autores."><i class="fas fa-users-cog"></i></button>
-                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Editar el último autor(a) entrado(a)."><i class="fas fa-user-cog"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Edit all authors."><i class="fas fa-users-cog"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Edit the last author"><i class="fas fa-user-cog"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control <?php not_valid_class($valid_authors); ?>" placeholder="Miguel de Cervante" aria-label="Nombre del autor" id="authorInput">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Añadir todos los autores separados por commas (CSV)"><i class="fas fa-users"></i></button>
-                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Añadir autor"><i class="fas fa-user-plus"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Add all authors separated by commas (CSV)"><i class="fas fa-users"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('authorInput', 'authors');parseReadonlyAuthors();" title="Add (last) author"><i class="fas fa-user-plus"></i></button>
                         </div>
                         <?php echo_invalid_feedback(!$valid_authors, $errors['authors']); ?>
                     </div>
@@ -444,10 +441,7 @@ if (isset($errors_present) && $errors_present) {
 
                 <!-- SUBJECTS -->
                 <div class="form-row">
-                    <label for="subjects">Sujetos
-                        <?php //hint('Favor no utilizar commas, especificar el sujeto sin commas. Si se detectan commas, se eliminarán.'); 
-                        ?>
-                    </label>
+                    <label for="subjects">Subject</label>
                     <div class="input-group mb-3">
                         <ul class="list-group container-fluid" id="readOnlyListViewSubject">
 
@@ -460,15 +454,15 @@ if (isset($errors_present) && $errors_present) {
                                                                                                                                                                 }
                                                                                                                                                                 ?>" readonly required>
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Editar todos los sujetos."><i class="fas fa-cogs"></i></button>
-                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Editar el último sujeto entrado."><i class="fas fa-cog"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Edit all subjects."><i class="fas fa-cogs"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="deleteLastReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Edit the last subject."><i class="fas fa-cog"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control <?php not_valid_class($valid_subjects); ?>" placeholder="Novela De Aventuras, Caballerías, Novela Realista" aria-label="Sujetos del articulo" id="subjectsInput">
+                        <input type="text" class="form-control <?php not_valid_class($valid_subjects); ?>" placeholder="Adventure Novel, Knighthood, Realistic Novel" aria-label="Subjects of the item" id="subjectsInput">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Añadir todos loss sujetos separados por commas (CSV)"><i class="fas fa-project-diagram"></i></button>
-                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Añadir sujeto"><i class="fab fa-hive"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="addAllToReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Add all subjects separated by commas (CSV)"><i class="fas fa-project-diagram"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="addToReadonly('subjectsInput', 'subjects');parseReadonlySubject();" title="Add (last) subject"><i class="fab fa-hive"></i></button>
                         </div>
                         <?php echo_invalid_feedback(!$valid_subjects, $errors['subjects']); ?>
                     </div>
@@ -483,17 +477,16 @@ if (isset($errors_present) && $errors_present) {
             <?php if (count($orphaned_files) > 0) : ?>
 
                 <div class="form-row" style="padding-top: 10px;">
-                    <label for="o-files">Seleccionar los Archivos Huérfanos
+                    <label for="o-files">Select Orphaned Files
                         <?php hint(
-                            'Aquí podrá seleccionar los archivos cual no tienen una relación (un archivo huérfano) con 
-                        un artículo. Si desea borrar estos archivos vaya al Panel del Administrador > Data > Archivos 
-                        Huérfanos'
+                            'Here you can select files which do not have a relationship (an orphaned file) with an 
+                            article. If you want to delete these files go to the Admin Panel > Data > Orphan Files'
                         ); ?>
                     </label>
 
                     <div class="input-group">
                         <div class="input-group-append">
-                            <label class="input-group-text" for="selectedFileInput">Seleccionar</label>
+                            <label class="input-group-text" for="selectedFileInput">Select</label>
                         </div>
                         <select class="custom-select" id="o-files">
                             <?php
@@ -505,7 +498,7 @@ if (isset($errors_present) && $errors_present) {
                         </select>
 
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" title="Añadir el archivo huérfano seleccionado" id="add-o-file-btn" onclick="addOrphanedFile();">
+                            <button class="btn btn-outline-secondary" type="button" title="Add the selected orphaned file" id="add-o-file-btn" onclick="addOrphanedFile();">
                                 <i class="fas fa-link"></i>
                             </button>
                         </div>
@@ -527,7 +520,12 @@ if (isset($errors_present) && $errors_present) {
                 <br>
 
                 <div class="form-row" style="display: none">
-                    <label for="o-files-selected">Archivos Huérfanos Seleccionados</label>
+                    <label for="o-files">Select Orphaned Files
+                        <?php hint(
+                            'Here you can select files which do not have a relationship (an orphaned file). 
+                                If you want to delete these files go to the Admin Panel > Data > Orphaned Files'
+                        ); ?>
+                    </label>
                     <input class="form-control" placeholder="" id="o-files-selected" name="orphaned-files" type="text" readonly>
                 </div>
             <?php endif; ?>
@@ -537,12 +535,11 @@ if (isset($errors_present) && $errors_present) {
 
             <!-- FILES -->
             <div class="form-row">
-                <label for="files">Seleccionar los Archivos
+                <label for="files">Select Files
                     <?php hint(
-                        'Puede seleccionar más de un archivo. El máximo tamaño combinado es de 40 megabytes. Este 
-                        límite está expuesto por el servidor Favor de referirse al README en los enlaces, la parte de 
-                        Configuring PHP & MySLQ (Step 0), en la sección de la configuración recomendada para PHP y 
-                        MySQL.'
+                        'You can select more than one file. The maximum combined size is 40 megabytes (by default). This limit is 
+                        set by the server. Please refer to the README in the links, Configuring PHP & MySLQ (Step 0) 
+                        section, and view the recommended configuration for PHP (the php.ini).'
                     ); ?>
                 </label>
 
@@ -552,8 +549,8 @@ if (isset($errors_present) && $errors_present) {
                         <input class="form-control btn <?php not_valid_class($valid_files); ?>" type="file" id="files" multiple="multiple" accept=".pdf" required>
                     </div>
                     <small class="form-text text-muted">
-                        Los archivos van a estar filtrados por PDFs, si quiere otro tipo de archivo tendrá que cambiar
-                        el filtro en su explorador de archivos (arriba de los botones Open y Cancel en Windows).
+                        The files will be filtered by PDFs, if you want another type of file you will have to change
+                        the filter in your file explorer (e.g., above the Open and Cancel buttons in Windows).
                     </small>
                     <?php echo_invalid_feedback(!$valid_files, $errors['files']); ?>
 
@@ -581,13 +578,13 @@ if (isset($errors_present) && $errors_present) {
             <div>
                 <!-- IMAGE -->
                 <div class="form-row">
-                    <label for="image">Imágen
-                        <?php hint('La imagen será la primera página del primer documento PDF.'); ?>
+                    <label for="image">Image
+                        <?php hint('The image will automatically selected from the fist (or lastly added) PDF.'); ?>
                     </label>
                     <div class="form-row">
                         <small class="form-text text-muted">
-                            Déjelo en blanco si desea utilizar una página del archivo. Si no aparece la imagen
-                            adecuada, recorra las páginas para restablecerla.
+                            Leave blank if you want to use a page from the uploaded files. If the correct image does
+                            not appear, scroll through the pages to reset it.
                         </small>
                         <input type="file" id="customImage" onchange="insertCustomImage(this)" accept="image/*" style="overflow: hidden;">
 
@@ -603,7 +600,7 @@ if (isset($errors_present) && $errors_present) {
                 <div class="form-row" style="padding-top: 10px;">
                     <div class="input-group">
                         <div class="input-group-append">
-                            <label class="input-group-text" for="selectedFileInput">Archivo</label>
+                            <label class="input-group-text" for="selectedFileInput">File</label>
                         </div>
                         <select class="custom-select" id="selectedFileInput" onchange="changeImage(
                                             document.getElementById('selectedFileInput').value,
@@ -613,7 +610,7 @@ if (isset($errors_present) && $errors_present) {
 
                         </select>
                         <div class="input-group-append">
-                            <label class="input-group-text" for="pageNumber">Página #</label>
+                            <label class="input-group-text" for="pageNumber">Page #</label>
                         </div>
                         <input type="number" class="form-control" min="1" value="1" id="pageNumber" onchange="changeImage(
                                             document.getElementById('selectedFileInput').value,
@@ -625,7 +622,7 @@ if (isset($errors_present) && $errors_present) {
                         <div class="input-group-append">
                             <button class="btn btn-outline-danger" type="button" onclick="clearImage();">
                                 <i class="far fa-trash-alt"></i>
-                                <span class="sr-only">borrar la imagen actual</span>
+                                <span class="sr-only">delete the current image</span>
                             </button>
                         </div>
 
@@ -638,14 +635,14 @@ if (isset($errors_present) && $errors_present) {
 
         <hr>
 
-        <button class="btn btn-success" type="submit" name="submit" id="submitButton" style="width:100%;height:auto;" onclick="allowreload=true;addAllToReadonly('authorInput', 'authors');addAllToReadonly('subjectsInput', 'subjects');" disabled>Agregar Artículo</button>
+        <button class="btn btn-success" type="submit" name="submit" id="submitButton" style="width:100%;height:auto;" onclick="allowreload=true;addAllToReadonly('authorInput', 'authors');addAllToReadonly('subjectsInput', 'subjects');" disabled>Add</button>
     </form>
 </div>
 
 <div id="overlay">
     <div class="floatCenter" id="loading-splash">
         <object data="images/processing.svg" type="image/svg+xml">
-            <img loading="lazy" alt="espere mientras procesamos la información" src="images/processing.gif" />
+            <img loading="lazy" alt="please wait until your information has uploaded and processed, you will be redirected to the home page." src="images/processing.gif" />
         </object>
     </div>
 </div>
@@ -668,7 +665,7 @@ if (isset($errors_present) && $errors_present) {
 </script>
 <script>
     $('#description').summernote({
-        placeholder: '<b>Don Quijote de la Mancha</b> es una novela escrita por el <u>español</u> <i>Miguel de Cervantes Saavedra</i>...',
+        placeholder: '<b>The Ingenious Gentleman Don Quixote of La Mancha</b>, or just <i>Don Quixote</i>, is a Spanish novel by <u>Miguel de Cervantes</u>...',
         tabsize: 4,
         height: 340,
         toolbar: [

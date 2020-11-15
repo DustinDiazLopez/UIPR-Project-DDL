@@ -11,34 +11,34 @@ function redir_error($title, $msg, $type)
 }
 
 print_r($_POST);
-$redirTitle = 'Crear Tipo:';
+$redirTitle = 'Create Type:';
 $errors = ['type' => ''];
 
 if (isset($_POST['type']) && isset($conn)) {
     $type = $_POST['type'];
 
     if (empty($type)) {
-        $errors['type'] = 'Tiene que proveer un tipo.';
+        $errors['type'] = 'You have to provide a type.';
     }
 
     if (array_filter($errors)) {
-        redir_error($redirTitle, "Corregir errores en la forma: {$errors['type']}", $type);
+        redir_error($redirTitle, "Correct errors in the form: {$errors['type']}", $type);
     } else {
         $createdType = query(SQL_INSERT_TYPE($type));
 
         if ($createdType === NULL) {
-            $errors['email'] = 'Un error desconocido ocurrió cuando creando el tipo.';
+            $errors['email'] = 'An unknown error occurred when creating the type.';
         }
 
         if ($createdType === FALSE) {
-            $errors['email'] = 'Ya existe un tipo con ese nombre.';
+            $errors['email'] = 'A type with that name already exists.';
         }
 
 
         if (array_filter($errors)) {
             redir_error($redirTitle, $errors['type'], $type);
         } else {
-            redir_success_error($redirTitle, "Se creó el tipo ($type)");
+            redir_success_error($redirTitle, "The type was created ($type)");
         }
     }
 }
