@@ -110,7 +110,7 @@
                     </td>
                     <td scope="row">
                         <form action="fetch.file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
-                            <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewTab" name="file"
+                            <input type="hidden" id="<?php echo $f['id']; ?>Download" name="file"
                                    value="<?php echo $encoded_id; ?>">
                             <button type="submit" class="btn btn-light" name="download" style="width:100%;height:100%;">
                                 <i class="fas fa-download"></i> <span
@@ -120,7 +120,7 @@
                     </td>
                     <td scope="row">
                         <form action="file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
-                            <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewTab" name="file"
+                            <input type="hidden" id="<?php echo $f['id']; ?>ViewTab" name="file"
                                    value="<?php echo $encoded_id; ?>">
                             <button type="submit" class="btn btn-light" name="view-file"
                                     style="width:100%;height:100%;"><i class="fas fa-external-link-alt"></i> <span
@@ -132,7 +132,7 @@
                         <form action="file.php" method="GET" style="padding:0px;margin:0px;"
                               onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")'
                               target="open-pdf-view-">
-                            <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewPopup" name="file"
+                            <input type="hidden" id="<?php echo $f['id']; ?>ViewPopup" name="file"
                                    value="<?php echo $encoded_id; ?>">
                             <button type="submit" class="btn btn-light" name="view-file"
                                     style="width:100%;height:100%;"><i class="far fa-window-restore"></i> <span

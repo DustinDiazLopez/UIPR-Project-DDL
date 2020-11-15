@@ -24,7 +24,7 @@ if (isset($_GET['pwd']) && !empty($_GET['pwd'])) {
 
 
     echo "<pre>USE UIPRCMSDDL;INSERT INTO `admin` (`email`, `username`, `password`) VALUES ('example@example.com', 'root', '$pwd');</pre>";
-    echo '<a href="index.php">Login</a>';
+    echo '<a href="index.php">Iniciar Sesión</a>';
     unset($_GET['pwd']);
     unset($pwd);
 } else {

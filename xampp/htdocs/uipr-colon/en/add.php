@@ -652,18 +652,16 @@ if (isset($errors_present) && $errors_present) {
         <?php foreach (query(SQL_GET_DOC_TYPES) as $type) echo '"' . htmlspecialchars($type['type']) . '",'; ?>
     ];
 </script>
-<script charset="utf-8" src="js/jquery-3.2.1.slim.min.js"></script>
-<script src="js/autocomplete.js"></script>
-<script type="text/javascript" src="js/pdf.js"></script>
-<script src="js/generic.js"></script>
-<script src="js/add.js"></script>
-<script src="js/summernote.min.js"></script>
+<script charset="utf-8" type="text/javascript" src="./../js/jquery-3.2.1.slim.min.js"></script>
+<script charset="utf-8" type="text/javascript" src="./../js/pdf.js"></script>
+<script charset="utf-8" type="text/javascript" src="./../js/generic.js"></script>
+<script charset="utf-8" type="text/javascript" src="./../js/summernote.min.js"></script>
+<script charset="utf-8" type="text/javascript" src="js/add.js"></script>
 <script>
     changePubDateToYear('pub-date-label');
     parseReadonlyAuthors();
     parseReadonlySubject();
-</script>
-<script>
+
     $('#description').summernote({
         placeholder: '<b>The Ingenious Gentleman Don Quixote of La Mancha</b>, or just <i>Don Quixote</i>, is a Spanish novel by <u>Miguel de Cervantes</u>...',
         tabsize: 4,

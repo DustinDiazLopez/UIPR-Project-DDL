@@ -105,7 +105,7 @@
                         </td>
                         <td scope="row">
                             <form action="fetch.file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
-                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewTab" name="file" value="<?php echo $encoded_id; ?>">
+                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>Download" name="file" value="<?php echo $encoded_id; ?>">
                                 <button type="submit" class="btn btn-light"  name="download" style="width:100%;height:100%;"><i class="fas fa-download"></i> <span class="sr-only">Descargar documento <?php echo $f['filename']; ?> en una pestaña nueva</span></button>
                             </form>
                         </td>

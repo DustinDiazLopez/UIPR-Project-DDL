@@ -1,5 +1,5 @@
 <?php
-$title_tag = 'Inicio';
+$title_tag = 'Home';
 $allow_guests = TRUE;
 
 include_once('templates/header.php');

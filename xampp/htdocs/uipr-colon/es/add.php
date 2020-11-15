@@ -655,12 +655,12 @@ if (isset($errors_present) && $errors_present) {
         <?php foreach (query(SQL_GET_DOC_TYPES) as $type) echo '"' . htmlspecialchars($type['type']) . '",'; ?>
     ];
 </script>
-<script charset="utf-8" src="js/jquery-3.2.1.slim.min.js"></script>
-<script src="js/autocomplete.js"></script>
-<script type="text/javascript" src="js/pdf.js"></script>
-<script src="js/generic.js"></script>
-<script src="js/add.js"></script>
-<script src="js/summernote.min.js"></script>
+<script charset="utf-8" type="text/javascript" src="./../js/jquery-3.2.1.slim.min.js"></script>
+<script charset="utf-8" type="text/javascript" src="./../js/pdf.js"></script>
+<script charset="utf-8" type="text/javascript" src="./../js/generic.js"></script>
+<script charset="utf-8" type="text/javascript" src="./../js/summernote.min.js"></script>
+<script charset="utf-8" type="text/javascript" src="js/add.js"></script>
+
 <script>
     changePubDateToYear('pub-date-label');
     parseReadonlyAuthors();

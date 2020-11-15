@@ -153,7 +153,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                                                 <form action="edit.row.php" method="POST" style="padding:0;margin:0;">
                                                                     <div class="modal-body">
                                                                         <div class="form-group">
-                                                                            <input type="hidden" id="userid" name="userid" aria-describedby="userid" value="<?php echo $obj['id']; ?>" required>
+                                                                            <input type="hidden" id="user<?php echo $obj['id']; ?>" name="userid" aria-describedby="userid" value="<?php echo $obj['id']; ?>" required>
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <label for="username">New Username</label>
@@ -277,7 +277,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                                     <div class="modal-body">
                                                         <div class="form-group">
                                                             <label for="edit-author-name">Author:</label>
-                                                            <input type="text" class="form-control" id="edit-author-name" name="edit-author-name" aria-describedby="edit author name" value="<?php echo $obj['author_name']; ?>" placeholder="<?php echo $obj['author_name']; ?>" required>
+                                                            <input type="text" class="form-control" id="edit-author-name<?php echo $obj['id']; ?>" name="edit-author-name" aria-describedby="edit author name" value="<?php echo $obj['author_name']; ?>" placeholder="<?php echo $obj['author_name']; ?>" required>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -338,7 +338,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                                     <div class="modal-body">
                                                         <div class="form-group">
                                                             <label for="edit-subject-name">Subject:</label>
-                                                            <input type="text" class="form-control" id="edit-subject-name" name="edit-subject-name" aria-describedby="edit subject name" value="<?php echo $obj['subject']; ?>" placeholder="<?php echo $obj['subject']; ?>" required>
+                                                            <input type="text" class="form-control" id="edit-subject-name<?php echo $obj['id']; ?>" name="edit-subject-name" aria-describedby="edit subject name" value="<?php echo $obj['subject']; ?>" placeholder="<?php echo $obj['subject']; ?>" required>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -617,19 +617,19 @@ $files = SQL_GET_ORPHANED_FILES();
                                         </td>
                                         <td scope="row">
                                             <form action="fetch.file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
-                                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewTab" name="file" value="<?php echo $encoded_id; ?>">
+                                                <input type="hidden" id="<?php echo $f['id']; ?>Download" name="file" value="<?php echo $encoded_id; ?>">
                                                 <button type="submit" class="btn btn-light"  name="download" style="width:100%;height:100%;"><i class="fas fa-download"></i> <span class="sr-only">Download <?php echo $f['filename']; ?></span></button>
                                             </form>
                                         </td>
                                         <td scope="row">
                                             <form action="file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
-                                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewTab" name="file" value="<?php echo $encoded_id; ?>">
+                                                <input type="hidden" id="<?php echo $f['id']; ?>ViewTab" name="file" value="<?php echo $encoded_id; ?>">
                                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="fas fa-external-link-alt"></i></button>
                                             </form>
                                         </td>
                                         <td scope="row">
                                             <form action="file.php" method="GET" style="padding:0px;margin:0px;" onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")' target="open-pdf-view-">
-                                                <input type="hidden" id="<?php echo $f['filename'] . $f['id']; ?>ViewPopup" name="file" value="<?php echo $encoded_id; ?>">
+                                                <input type="hidden" id="<?php echo $f['id']; ?>ViewPopup" name="file" value="<?php echo $encoded_id; ?>">
                                                 <button type="submit" class="btn btn-light" name="view-file" style="width:100%;height:100%;"><i class="far fa-window-restore"></i></button>
                                             </form>
                                         </td>
