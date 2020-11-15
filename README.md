@@ -1,6 +1,7 @@
 # UIPR CMS DDL
 
-The **`xampp`** folder contains all the PHP, HTML, and CSS files.
+The **`app`** folder contains all the source and configuration files. In the releases you can download the xampp or 
+lamp version to just drag and drop (and just do [Step 0](#step-0-configuring-php--mysql) & [Step 4](#step-4-creating-an-admin-user)).
 
 ## Prerequisites
 
@@ -15,11 +16,11 @@ Theoretically, it should work with `PHP5.5` or above, it is recommended to use `
 ```
 xampp (or var)/
 ├── htdocs (or www)/
-│   └── uipr-colon/
+│   └── source/
 │      ├── connect.php
 │      └── ...   
-└── colon-uipr-cms-ddl-files-and-config
-    └── mysql_uiprcmsddl_config.json
+└── ddl-config/
+    └── ddl-config.json
 ```
 
 ## Installation Process
@@ -59,7 +60,7 @@ max_file_uploads = 25
 ```
 
 
-#### Restart the Apache
+#### Restart Apache 
 
 For `XAMPP` just click `start` and `stop` in the GUI, but for `LAMP` (or Linux):
 
@@ -68,9 +69,9 @@ sudo systemctl restart apache2
 ```
 
 ### Step 1: The Config File
-Create a folder in `xampp` or `var` called `colon-uipr-cms-ddl-files-and-config` (it ***HAS*** to be that name, unless 
+Create a folder in `xampp` or `var` called `ddl-config` (it ***HAS*** to be that name, unless 
 you changed it in the source code),
-and in that folder create a JSON file called `mysql_uiprcmsddl_config.json`. Then add this JSON object to the file:
+and in that folder create a JSON file called `ddl-config.json`. Then add this JSON object to the file:
 
 ```json
 { 
@@ -150,7 +151,7 @@ function connect_obj()
 ### Step 3: Copying over the source code
 - Download the [latest release](https://github.com/DustinDiazLopez/UIPR-Project-DDL/releases).
 - In `htdocs` or `www` folder, create a new folder (e.g., `uipr-colon`), and copy over the files of the downloaded 
-release, and try to access, e.g., ` http://localhost/uipr-colon/hello.php `.It should display the PHP information.
+release, and try to access, e.g., ` http://localhost/source/hello.php `.It should display the PHP information.
 
     - This step might require more setup on `LAMP` (see [this](https://unix.stackexchange.com/a/174114) for setting 
     write permissions).

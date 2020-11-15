@@ -1,9 +1,9 @@
 <?php
-define('DDL_PATH', '../../colon-uipr-cms-ddl-files-and-config');
-//define('DDL_PATH', '../../../../../../colon-uipr-cms-ddl-files-and-config');
+
+define('DDL_PATH', './../../../ddl-config');
 
 // DO NOT CHANGE ANYTHING AFTER THIS LINE
-define('PATH_TO_CONFIG', DDL_PATH . "/mysql_uiprcmsddl_config.json");
+define('PATH_TO_CONFIG', DDL_PATH . "/ddl-config.json");
 define('PATH_TO_FILES_FOLDER', DDL_PATH . "/files/");
 
 if (!is_dir(PATH_TO_FILES_FOLDER))
