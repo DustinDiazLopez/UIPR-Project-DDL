@@ -55,11 +55,18 @@ authenticate(isset($allow_guests) ? $allow_guests : FALSE);
                             <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/newissue.php"><i class="fas fa-bug"></i> Reportar un Error</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/wiki.php"><i class="fas fa-book"></i> WIKI</a>
-                            <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/releases.php"><i class="fas fa-cloud-download-alt"></i> Descargar la Última Versión</a>
+                            <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/releases.php"><i class="fas fa-cloud-download-alt"></i> Última Versión</a>
                             <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/code.php"><i class="fab fa-github"></i> Código Fuente</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/readme.php"><i class="fas fa-book-open"></i> README</a>
                             <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/license.php"><i class="far fa-copyright"></i> Licencia (<span style="font-family:courier new,courier,monospace; font-size:16px;">MIT</span>)</a>
+                            <a class="dropdown-item" target="_blank" href="http://uipr.herokuapp.com/redir/releases.php?release=<?php echo urlencode(DDL_VERSION); ?>">
+                                <i class="fas fa-code-branch"></i>
+                                Versión Actual:
+                                <span style="font-family:courier new,courier,monospace; font-size:16px;">
+                                    <?php echo DDL_VERSION; ?>
+                                </span>
+                            </a>
                         </div>
                     </li>
                 <?php endif; ?>

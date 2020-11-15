@@ -4,6 +4,8 @@ include_once('sql.const.php');
 include_once('sql.operations.php');
 include_once('sql.utils.php');
 
+define('DDL_VERSION', 'v1.0');
+
 /**
  * Checks to see if the user has logged in, if not redirects to the login page, and if the user had tried to access a
  * url they will be redirected to that url once they've logged in.

@@ -1,3 +1,8 @@
 <?php
 include_once('../consts.php');
-redir_releases();
+
+if (isset($_GET['release']) && !empty($_GET['release']) ) {
+    redir_release(urldecode($_GET['release']);
+} else {
+    redir_releases();
+}

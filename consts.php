@@ -31,6 +31,11 @@ define('WIKI', '/wiki');
 define('RELEASES', '/releases');
 
 /**
+ * Subpath to a release
+ */
+define('RELEASE', RELEASES . '/tag');
+
+/**
  * Subpath to the README
  */
 define('README', '#readme');
@@ -79,6 +84,13 @@ function redir_wiki() {
  */
 function redir_releases() {
     redir_path(RELEASES);
+}
+
+/**
+ * Redirects to a release in {@link PATH} / {@link RELEASE}
+ */
+function redir_release($release) {
+    redir_path(RELEASE . '/' . $release);
 }
 
 /**

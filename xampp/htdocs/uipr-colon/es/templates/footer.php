@@ -1,7 +1,7 @@
 <div style="width: 100%; height: 100%">
     <footer class="bg-light">
         <div style="text-align: center;">
-            <p><a href="LICENSE">Licencia</a></p>
+            <p><a href="LICENSE">Copyright &copy; Dustin Díaz</a> (<?php echo DDL_VERSION; ?>)</p>
             <p>
                 <a href="#">Volver Arriba</a>
             </p>
