@@ -4,9 +4,11 @@
  * @param {string} str string to search in element
  * @param {string} targetClassName element's class to search in
  * @param {boolean} [capitalize=false] weather to capitalize the matched string
+ * @author Dustin Díaz
  */
 function highlight(str, targetClassName, capitalize=false) {
     if(str.length >= 2){
+
         $(`.${targetClassName}`).each(function(){
             let cap = '';
             if (capitalize === true) cap = 'style="text-transform: capitalize;"';
@@ -26,6 +28,7 @@ function highlight(str, targetClassName, capitalize=false) {
  * @param {string} target target element class
  * @param {boolean} split weather to split the word by white space
  * @param {boolean} capitalize weather to capitalize the matched word
+ * @author Dustin Díaz
  */
 function highlightHelper(str, target, split=false, capitalize=false) {
     let arr = [str];
@@ -40,6 +43,7 @@ function highlightHelper(str, target, split=false, capitalize=false) {
  * @param {string} str text to highlight
  * @param {boolean} split weather to split the word by white space
  * @param {boolean} capitalize weather to capitalize the matched word
+ * @author Dustin Díaz
  */
 function highlightTitles(str, split=true, capitalize=true) {
     highlightHelper(str, 'title', split, capitalize);
@@ -50,6 +54,7 @@ function highlightTitles(str, split=true, capitalize=true) {
  * @param {string} str text to highlight
  * @param {boolean} split weather to split the word by white space
  * @param {boolean} capitalize weather to capitalize the matched word
+ * @author Dustin Díaz
  */
 function highlightDescriptions(str, split=true, capitalize=false) {
     highlightHelper(str, 'description', split, capitalize);
@@ -60,6 +65,7 @@ function highlightDescriptions(str, split=true, capitalize=false) {
  * @param {string} str text to highlight
  * @param {boolean} split weather to split the word by white space
  * @param {boolean} capitalize weather to capitalize the matched word
+ * @author Dustin Díaz
  */
 function highlightFiles(str, split=true, capitalize=false) {
     highlightHelper(str, 'file', split, capitalize);
@@ -70,6 +76,7 @@ function highlightFiles(str, split=true, capitalize=false) {
  * @param {string} str text to highlight
  * @param {boolean} split weather to split the word by white space
  * @param {boolean} capitalize weather to capitalize the matched word
+ * @author Dustin Díaz
  */
 function highlightAll(str, split=true, capitalize=false) {
     highlightHelper(str, 'type', split, capitalize);
@@ -84,6 +91,7 @@ function highlightAll(str, split=true, capitalize=false) {
  * Returns the icon related to the input.
  * @param {string} str name of the icon.
  * @returns {string} returns the html for the icon.
+ * @author Dustin Díaz
  */
 function getIcon(str) {
     switch (str.toLowerCase()) {

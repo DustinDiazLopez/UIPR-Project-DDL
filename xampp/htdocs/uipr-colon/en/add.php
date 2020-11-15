@@ -477,7 +477,7 @@ if (isset($errors_present) && $errors_present) {
             <?php if (count($orphaned_files) > 0) : ?>
 
                 <div class="form-row" style="padding-top: 10px;">
-                    <label for="o-files">Select Orphaned Files
+                    <label for="o-files">Choose Orphaned Files
                         <?php hint(
                             'Here you can select files which do not have a relationship (an orphaned file) with an 
                             article. If you want to delete these files go to the Admin Panel > Data > Orphan Files'
@@ -486,7 +486,7 @@ if (isset($errors_present) && $errors_present) {
 
                     <div class="input-group">
                         <div class="input-group-append">
-                            <label class="input-group-text" for="selectedFileInput">Select</label>
+                            <label class="input-group-text" for="selectedFileInput">Choose</label>
                         </div>
                         <select class="custom-select" id="o-files">
                             <?php
@@ -520,7 +520,7 @@ if (isset($errors_present) && $errors_present) {
                 <br>
 
                 <div class="form-row" style="display: none">
-                    <label for="o-files">Select Orphaned Files
+                    <label for="o-files">Choose the Orphaned Files
                         <?php hint(
                             'Here you can select files which do not have a relationship (an orphaned file). 
                                 If you want to delete these files go to the Admin Panel > Data > Orphaned Files'
@@ -535,7 +535,7 @@ if (isset($errors_present) && $errors_present) {
 
             <!-- FILES -->
             <div class="form-row">
-                <label for="files">Select Files
+                <label for="files">Choose Files
                     <?php hint(
                         'You can select more than one file. The maximum combined size is 40 megabytes (by default). This limit is 
                         set by the server. Please refer to the README in the links, Configuring PHP & MySLQ (Step 0) 

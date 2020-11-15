@@ -659,7 +659,9 @@ function hideProgressHelper() {
     if (w <= 1000) {
         document.getElementById('stick-top').style.display = 'none';
     } else {
-        document.getElementById('stick-top').style.display = 'block';
+        if (!allowReload && (document.getElementById('stick-top').style.display !== 'none')) {
+            document.getElementById('stick-top').style.display = 'block';
+        }
     }
 }
 

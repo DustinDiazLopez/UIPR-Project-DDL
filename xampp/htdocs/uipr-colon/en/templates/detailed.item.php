@@ -58,7 +58,9 @@
     <br class="clearBoth"/>
 
     <!-- DESCRIPTION START -->
-    <p class="border-right-0 description"><?php echo cleanHTML($item['description']); ?></p>
+    <section class="description border-right-0">
+        <?php echo cleanHTML($item['description']); ?>
+    </section>
     <!-- DESCRIPTION END -->
 
 
@@ -176,7 +178,7 @@
                 <i class="fas fa-share-alt" title="Share <?php echo $item['title']; ?>"></i>
             </button>
             <?php if (isset($_SESSION['guest']) && $_SESSION['guest'] === FALSE): ?>
-                <input type="hidden" value="<?php echo $item['id']; ?>" id="editItem" name="editItem">
+                <input type="hidden" value="<?php echo $item['id']; ?>" id="editItem<?php echo $item['id']; ?>" name="editItem">
                 <button class="icon-btn edit" type="submit"><i class="fa fa-edit"
                                                                title="Edit <?php echo $item['title']; ?>."></i><span
                             class="sr-only"><?php echo 'Edit ' . $item['title']; ?></span></button>

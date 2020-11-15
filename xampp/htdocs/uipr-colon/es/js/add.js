@@ -137,7 +137,6 @@ function generateFileInputForImage() {
             fileId = `file-${i}`;
             element = document.getElementById(fileId);
             name = element.files[0].name;
-            console.log(element.files[0])
             if (name.endsWith('.pdf')) {
                 fileInputForThumbnail.innerHTML += `<option value='${fileId}'>${name}</option>`
             }
@@ -161,7 +160,6 @@ function generateFileInputForImage() {
 function updateImage(id = filesInput, fileIdx = 0, pageNumber=1) {
     file = id.files[fileIdx];
     if (file && file.name.endsWith('.pdf')) {
-        console.log(file.name);
         fileReader = new FileReader();
         fileReader.onload = function(ev) {
             PDFJS.getDocument(fileReader.result).then(function getPdfHelloWorld(pdf) {
@@ -181,7 +179,9 @@ function updateImage(id = filesInput, fileIdx = 0, pageNumber=1) {
                     });
                 });
             }, function(error) {
-                console.log(error);
+                if  (error.name !== "UnknownErrorException") {
+                    console.error(error);
+                }
                 clearImage();
                 updateImage(id, ++fileIdx, pageNumber); //recurse to next file if it fails (i.e., not a valid PDF structure)
             });
@@ -212,7 +212,6 @@ function updateFilesData(updateListView = true) {
                 case INPUT:
                     grandChild.name = `file-${i+1}`;
                     grandChild.id = `file-${i+1}`;
-                    console.log(grandChild.name);
                     break;
                 case SPAN:
                     grandChild.innerHTML =
@@ -240,7 +239,7 @@ function remove(idx) {
         updateFilesData(false);
         handleListView()
     } else {
-        console.log(idx + ' does not exist in fileList...');
+        console.error(idx + ' does not exist in fileList...');
     }
 }
 
@@ -666,7 +665,9 @@ function hideProgressHelper() {
     if (w <= 1000) {
         document.getElementById('stick-top').style.display = 'none';
     } else {
-        document.getElementById('stick-top').style.display = 'block';
+        if (!allowReload && (document.getElementById('stick-top').style.display !== 'none')) {
+            document.getElementById('stick-top').style.display = 'block';
+        }
     }
 }
 
@@ -682,7 +683,6 @@ function addOrphanedFile() {
         const selected = oFileElement.options[oFileElement.selectedIndex];
         const id = selected.value;
         const name = selected.innerText;
-        console.log(selected);
         oFileElement.remove(oFileElement.selectedIndex);
 
         if (oFileElement.options.length === 0) {
@@ -707,7 +707,6 @@ function removeOFileFromList(id, name) {
     if (index > -1) {
         // remove from readonly
         arr.splice(index, 1);
-        console.log(arr);
         inputOFiles.value = "";
         for (let i = 0; i < arr.length; i++) {
             if (inputOFiles.value === "") {
