@@ -611,7 +611,7 @@ $files = SQL_GET_ORPHANED_FILES();
 
                                             ?>" id="share-admin-<?php echo $f['id']; ?>">
                                             <button type="submit" class="btn btn-light" id="share-admin-btn-<?php echo $f['id']; ?>"
-                                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>', 'share-admin-btn-<?php echo $f['id']; ?>', true)"  onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
+                                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>', 'share-admin-btn-<?php echo $f['id']; ?>', true)">
                                                 <i class="fas fa-share-alt" onclick="copyValueToClipboard('share-admin-<?php echo $f['id']; ?>', 'share-admin-btn-<?php echo $f['id']; ?>', true)"></i> <span class="sr-only">Share <?php echo $f['filename']; ?>.</span>
                                             </button>
                                         </td>

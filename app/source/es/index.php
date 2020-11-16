@@ -18,8 +18,21 @@ include_once('templates/header.php');
             $searched_value = '';
             if (isset($_GET['q'])) {
                 $searched_value = htmlspecialchars($_GET['q']);
-            }
 
+                $only = 'all';
+                if (isset($_GET['only'])) {
+                    $only = $_GET['only'];
+                }
+
+                if (strlen($_GET['q']) > 1) {
+                    if (isset($conn)) {
+                        $items = search($conn, $_GET['q'], $only);
+                    }
+                } else {
+                    $invalid_search_len = 'Provee una consulta más larga';
+                    $valid_search = false;
+                }
+            }
             include('templates/search.php'); 
             ?>
         </div>

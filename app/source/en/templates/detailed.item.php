@@ -35,7 +35,7 @@
                 break;
         }
 
-        echo '<h5 title="Authors">' . $icon . '</span> <span class="authors">' . authorsToCSV($authors, 'author_name') . '</span>.</h5>';
+        echo '<h5 title="Authors">' . $icon . '</span> <span class="authors">' . addAndToEndOfCSV(authorsToCSV($authors, 'author_name')) . '</span>.</h5>';
         ?>
         <!-- AUTHORS END -->
 
@@ -103,15 +103,14 @@
                         ?>" id="share-<?php echo $f['id']; ?>">
                         <button type="submit" class="btn btn-light copy-btn" id="share-btn-<?php echo $f['id']; ?>"
                                 style="width:100%;height:100%;"
-                                onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', 'share-btn-<?php echo $f['id']; ?>', true)"
-                                onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
+                                onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', 'share-btn-<?php echo $f['id']; ?>', true)">
                             <i class="fas fa-share-alt"
                                onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', 'share-btn-<?php echo $f['id']; ?>', true)"></i>
                             <span class="sr-only">Share the file <?php echo $f['filename']; ?>.</span>
                         </button>
                     </td>
                     <td scope="row">
-                        <form action="fetch.file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
+                        <form action="fetch.file.php" method="GET" style="padding:0;margin:0;" target="_blank">
                             <input type="hidden" id="<?php echo $f['id']; ?>Download" name="file"
                                    value="<?php echo $encoded_id; ?>">
                             <button type="submit" class="btn btn-light" name="download" style="width:100%;height:100%;">
@@ -121,7 +120,7 @@
                         </form>
                     </td>
                     <td scope="row">
-                        <form action="file.php" method="GET" style="padding:0px;margin:0px;" target="_blank">
+                        <form action="file.php" method="GET" style="padding:0;margin:0;" target="_blank">
                             <input type="hidden" id="<?php echo $f['id']; ?>ViewTab" name="file"
                                    value="<?php echo $encoded_id; ?>">
                             <button type="submit" class="btn btn-light" name="view-file"
@@ -131,7 +130,7 @@
                         </form>
                     </td>
                     <td scope="row">
-                        <form action="file.php" method="GET" style="padding:0px;margin:0px;"
+                        <form action="file.php" method="GET" style="padding:0;margin:0;"
                               onsubmit='window.open("", "open-pdf-view-", "width=800,height=600,resizable=yes")'
                               target="open-pdf-view-">
                             <input type="hidden" id="<?php echo $f['id']; ?>ViewPopup" name="file"

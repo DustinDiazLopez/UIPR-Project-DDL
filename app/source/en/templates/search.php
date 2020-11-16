@@ -12,8 +12,9 @@
         <form>
             <label for="search-query">Search: <?php hint('Don\'t be specific. Avoid words like: the, of, a, and, etc. For example, instead of \'Harry Potter and the Sorcerer\'s Stone\', do \'Harry Potter Sorcerer Stone\'.'); ?></label>
             <div class="input-group mb-3">
-                <input type="text" class="form-control" id="search-query" name="q" required
+                <input type="text" class="form-control <?php isset($valid_search) ? not_valid_class($valid_search) : ''; ?>" id="search-query" name="q" required
                        value="<?php if (!empty($searched_value)) echo $searched_value; ?>">
+                <?php isset($valid_search) && isset($invalid_search_len) ? echo_invalid_feedback(!$valid_search, $invalid_search_len) : ''; ?>
             </div>
 
             <!-- RADIO START -->

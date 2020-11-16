@@ -687,6 +687,19 @@ function SQL_FILES_ID_BY_ITEM_ID($id)
 }
 
 /**
+ * Generates the SQL command needed to find the item given a file id
+ * @param integer $id file id
+ * @return string SQL command to find the item id of a file.
+ * @author Dustin Díaz
+ */
+function SQL_ITEM_ID_BY_FILE_ID($id)
+{
+    return SQL_ITEM_ID_BY_FILE_ID . $id;
+}
+
+
+
+/**
  * Generates the SQL command needed to find the subjects given an item id
  * @param integer $id item id
  * @return string SQL command to find the subjects of an item.

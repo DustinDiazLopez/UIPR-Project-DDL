@@ -374,10 +374,26 @@ function authorsToCSV($authors, $atr='author_name')
     $len = count($authors);
     for ($i = 0; $i < $len; $i++) {
         $str = $str . trim($authors[$i][$atr]);
-        if ($i != $len - 1) $str = $str . ',';
+        if ($i != $len - 1) $str = $str . ', ';
     }
 
     return $str;
+}
+
+function addAndToEndOfCSV($csv) {
+    switch (LANG) {
+        case 'es':
+            $subject = ' y ';
+            break;
+        case 'en':
+            $subject = ', and ';
+            break;
+        default:
+            return $csv;
+    }
+
+
+    return strReplaceLastStr(', ', $subject, $csv);
 }
 
 /**
@@ -608,10 +624,33 @@ function shareURL($id, $path='/file.php?file=') {
     global $head_share;
     global $url_share;
     $url = $url_share;
+
+
+    $cut = strpos($url, '?');
+    if ($cut !== FALSE) {
+        $url = substr($url, 0, $cut);
+    }
+
+    $cut = strpos($url, 'file.php');
+    if ($cut !== FALSE) {
+        $url = substr($url, 0, $cut);
+    }
+
+    $cut = strpos($url, 'index.php');
+    if ($cut !== FALSE) {
+        $url = substr($url, 0, $cut);
+    }
+
+    $cut = strpos($url, 'adminpanel.php');
+    if ($cut !== FALSE) {
+        $url = substr($url, 0, $cut);
+    }
+
     $basename = basename($_SERVER['REQUEST_URI'], '?');
+
     if (strpos($basename, '.php')) {
         $pos2 = strpos($url, $basename);
-        if ($pos2) {
+        if ($pos2 !== FALSE) {
             $url = substr($url, 0, $pos2);
         }
     }

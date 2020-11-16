@@ -58,6 +58,7 @@ define('SQL_GET_ADMIN_BY_EMAIL', 'SELECT `id`, `username`, `email`, `password` F
 
 // get ids by item id
 define("SQL_FILES_ID_BY_ITEM_ID", "SELECT `file_id` FROM `file_has_item` WHERE `item_id` = ");
+define("SQL_ITEM_ID_BY_FILE_ID", "SELECT `item_id` FROM `file_has_item` WHERE `file_id` = ");
 define("SQL_SUBJECTS_ID_BY_ITEM_ID", "SELECT `subject_id` FROM `item_has_subject` WHERE `item_id` = ");
 define("SQL_AUTHORS_ID_BY_ITEM_ID", "SELECT `author_id` FROM `author_has_item` WHERE `item_id` = ");
 define("SQL_IMAGE_ID_BY_ITEM_ID", "SELECT `image_id` FROM `item` WHERE `id` = ");

@@ -12,8 +12,9 @@
         <form>
             <label for="search-query">Buscar: <?php hint('No sea demasiado específico. Evite palabras como: la, de, a, el, etc. Por ejemplo, en lugar de \'El Grito de Lares\', haz \'Grito Lares\'.'); ?></label>
             <div class="input-group mb-3">
-                <input type="text" class="form-control" id="search-query" name="q" required
+                <input type="text" class="form-control <?php isset($valid_search) ? not_valid_class($valid_search) : ''; ?>" id="search-query" name="q" required
                        value="<?php if (!empty($searched_value)) echo $searched_value; ?>">
+                <?php isset($valid_search) && isset($invalid_search_len) ? echo_invalid_feedback(!$valid_search, $invalid_search_len) : ''; ?>
             </div>
 
             <!-- RADIO START -->

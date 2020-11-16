@@ -16,6 +16,14 @@ function strReplaceFirstStr($prefix, $to, $string)
     return preg_replace($prefix, $to, $string, 1);
 }
 
+function strReplaceLastStr($search, $replace, $subject){
+    $pos = strrpos($subject, $search);
+    if($pos !== false){
+        $subject = substr_replace($subject, $replace, $pos, strlen($search));
+    }
+    return $subject;
+}
+
 /**
  * Removes all special characters in a string.
  *

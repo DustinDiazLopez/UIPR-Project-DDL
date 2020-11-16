@@ -34,7 +34,7 @@
                 break;
         }
 
-        echo '<h5 title="Autores">' . $icon . '</span> <span class="authors">' . authorsToCSV($authors, 'author_name') . '</span>.</h5>';
+        echo '<h5 title="Autores">' . $icon . '</span> <span class="authors">' . addAndToEndOfCSV(authorsToCSV($authors, 'author_name')) . '</span>.</h5>';
         ?>
         <!-- AUTHORS END -->
 
@@ -101,7 +101,7 @@
 
                             ?>" id="share-<?php echo $f['id']; ?>">
                             <button type="submit" class="btn btn-light copy-btn" id="share-btn-<?php echo $f['id']; ?>"
-                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', 'share-btn-<?php echo $f['id']; ?>', true)" onmouseover="changeIcon(this)" onmouseout="revertIcon(this)">
+                                    style="width:100%;height:100%;" onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', 'share-btn-<?php echo $f['id']; ?>', true)">
                                 <i class="fas fa-share-alt" onclick="copyValueToClipboard('share-<?php echo $f['id']; ?>', 'share-btn-<?php echo $f['id']; ?>', true)"></i> <span class="sr-only">Compartir el documento <?php echo $f['filename']; ?>.</span>
                             </button>
                         </td>

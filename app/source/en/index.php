@@ -17,6 +17,20 @@ include_once('templates/header.php');
             $searched_value = '';
             if (isset($_GET['q'])) {
                 $searched_value = htmlspecialchars($_GET['q']);
+
+                $only = 'all';
+                if (isset($_GET['only'])) {
+                    $only = $_GET['only'];
+                }
+
+                if (strlen($_GET['q']) > 1) {
+                    if (isset($conn)) {
+                        $items = search($conn, $_GET['q'], $only);
+                    }
+                } else {
+                    $invalid_search_len = 'Please provide a longer search query';
+                    $valid_search = false;
+                }
             }
 
             include('templates/search.php'); 
@@ -29,17 +43,7 @@ include_once('templates/header.php');
             <?php
 
             // custom search
-            if (isset($_GET['q'])) {
-                $only = 'all';
-                if (isset($_GET['only'])) {
-                    $only = $_GET['only'];
-                }
-
-                if (isset($conn)) {
-                    $items = search($conn, $_GET['q'], $only);
-                }
-
-            } elseif (isset($_GET['author-search'])) {
+            if (isset($_GET['author-search'])) {
                 if (isset($_GET['author'])) {
                     $author = escapeMySQL($_GET['author']);
                     $total = SQL_GET_ITEM_COUNT_AUTHOR($author);

@@ -68,22 +68,6 @@ if (isset($_GET['q']) && isset($only) && !empty($only)) {
         btn.style.opacity = "0.5";
         btn.copied = true;
     }
-
-    const copyIcon = '<i class="far fa-copy"><span class="sr-only">Copy the link of the file</span></i>';
-    const shareIcon = '<i class="fas fa-share-alt"><span class="sr-only">Share the link to the file</span></i>';
-
-    function changeIcon(btn) {
-        if (!btn.copied) {
-            btn.innerHTML = copyIcon;
-
-        }
-    }
-
-    function revertIcon(btn) {
-        if (!btn.copied) {
-            btn.innerHTML = shareIcon;
-        }
-    }
 </script>
 
 </body>

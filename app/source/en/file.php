@@ -18,6 +18,16 @@ try {
         if (count($file) > 0)  {
             $file = $file[0];
             $file['filename'] = htmlspecialchars($file['filename']);
+
+            try {
+                $has_item = TRUE;
+                $item = SQL_GET_ITEM_BY_ID(
+                    query(SQL_ITEM_ID_BY_FILE_ID($file['id']))[0]['item_id']
+                )[0];
+            } catch (Exception $ignored) {
+                $has_item = FALSE;
+            }
+
 ?>
             <!DOCTYPE html>
             <html lang="<?php echo LANG ?>" dir="ltr">
@@ -47,9 +57,14 @@ try {
                         </object>
 
                         <div class="overlay">
-                            <a style="color: white;text-shadow: 1.5px 1.5px gray;" href="./../../" id="back-btn" title="return home">
-                                <i class="fas fa-angle-double-left"></i>
+                            <a href="./" id="back-btn" title="Return Home"><i class="fas fa-home icon"></i></a>
+
+                            <?php if($has_item === TRUE): ?>
+                            <a href="<?php echo shareURL($item['id'], '/item.view.php?item='); ?>" id="back-btn"
+                               title="Go to the related item '<?php echo $item['title']; ?>'">
+                                <?php echo str_replace('class="', 'class="icon ', icon($item['type'])); ?>
                             </a>
+                            <?php endif; ?>
                         </div>
                     </div>
 
