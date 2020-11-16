@@ -116,7 +116,7 @@ include_once('templates/header.php');
                 } elseif ($_GET['error'] == "no-item") {
                     echo showWarn(
                         "404:",
-                        "El articulo solicitado no parece existir..."
+                        "El articulo solicitado no parece existir o fue editado..."
                     );
                 } elseif ($_GET['error'] == "403") {
                     echo showDanger(

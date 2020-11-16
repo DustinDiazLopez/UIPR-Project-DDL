@@ -19,8 +19,11 @@ if ((isset($_GET['item']) && !empty($_GET['item'])) || (isset($_POST['item']) &&
     }
 
     $item = SQL_GET_ITEM_BY_ID(intval($id));
-    //$file = SQL_GET_FILE(intval((($_GET['file']))));
     if (count($item) > 0) $item = $item[0];
+
+    if (empty($item['title'])) {
+        unset($item);
+    }
 }
 
 if (isset($item)) {
