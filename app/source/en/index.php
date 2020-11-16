@@ -114,6 +114,11 @@ include_once('templates/header.php');
                         "403:",
                         "You don't have access to that area."
                     );
+                } elseif ($_GET['error'] == "no-edit") {
+                    echo showDanger(
+                        "400:",
+                        "No item was specified to edit"
+                    );
                 }
             } elseif (isset($_GET['deleted'])) {
                 echo showSuccess("Success - An article was deleted:", "You still have access to the files related to the deleted article (Admin Panel > Data > Orphaned Files).");

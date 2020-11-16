@@ -40,6 +40,8 @@ if ((isset($_POST['editItem']) && !empty($_POST['editItem'])) || (isset($_GET['e
     } else {
         header('Location: index.php?error=invalid-item-id');
     }
+} else {
+    header('Location: index.php?error=no-edit');
 }
 
 include_once('../connect.php');
@@ -786,21 +788,13 @@ if (isset($errors_present) && $errors_present) {
         parseReadonlyAuthors();
         parseReadonlySubject();
         const _eFiles = <?php echo $e_current_files_count; ?>;
-        for (let i = 0; i < _eFiles; i++) {
-            addExistingFile();
-        }
-
+        for (let i = 0; i < _eFiles; i++) addExistingFile();
+        validate();
         $('#description').summernote({
             placeholder: '<b>Don Quijote de la Mancha</b> es una novela escrita por el <u>español</u> <i>Miguel de Cervantes Saavedra</i>...',
-            tabsize: 4,
-            height: 340,
-            toolbar: [
-                ['font', ['bold', 'underline', 'italic', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol']],
-                ['table', ['table']],
-                ['insert', ['link']],
-            ]
+            tabsize: __DDL_TEXTAREA_TAB_SIZE__ ,
+            height: __DDL_TEXTAREA_HEIGHT__ ,
+            toolbar: __DDL_TEXTAREA_TOOLBAR__
         });
     </script>
 

@@ -660,18 +660,12 @@ if (isset($errors_present) && $errors_present) {
     changePubDateToYear('pub-date-label');
     parseReadonlyAuthors();
     parseReadonlySubject();
-
+    validate();
     $('#description').summernote({
         placeholder: '<b>The Ingenious Gentleman Don Quixote of La Mancha</b>, or just <i>Don Quixote</i>, is a Spanish novel by <u>Miguel de Cervantes</u>...',
-        tabsize: 4,
-        height: 340,
-        toolbar: [
-            ['font', ['bold', 'underline', 'italic', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol']],
-            ['table', ['table']],
-            ['insert', ['link']],
-        ]
+        tabsize: __DDL_TEXTAREA_TAB_SIZE__ ,
+        height: __DDL_TEXTAREA_HEIGHT__ ,
+        toolbar: __DDL_TEXTAREA_TOOLBAR__
     });
 </script>
 

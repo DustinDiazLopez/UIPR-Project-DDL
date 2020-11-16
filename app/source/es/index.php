@@ -123,6 +123,11 @@ include_once('templates/header.php');
                         "403:",
                         "No tiene los privilegios para acceder esa área"
                     );
+                } elseif ($_GET['error'] == "no-edit") {
+                    echo showDanger(
+                        "400:",
+                        "No especificó qué artículo editar"
+                    );
                 }
             } elseif (isset($_GET['deleted'])) {
                 echo showSuccess("Éxito - Se borró un artículo:", "Todavía tienes acceso a los PDFs relacionado con el artículo borrado.");

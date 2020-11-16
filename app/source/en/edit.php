@@ -40,6 +40,8 @@ if ((isset($_POST['editItem']) && !empty($_POST['editItem'])) || (isset($_GET['e
     } else {
         header('Location: index.php?error=invalid-item-id');
     }
+} else {
+    header('Location: index.php?error=no-edit');
 }
 
 include_once('../connect.php');
@@ -777,6 +779,7 @@ if (isset($errors_present) && $errors_present) {
     <script charset="utf-8" type="text/javascript" src="./../js/jquery-3.2.1.slim.min.js"></script>
     <script charset="utf-8" type="text/javascript" src="./../js/pdf.js"></script>
     <script charset="utf-8" type="text/javascript" src="./../js/generic.js"></script>
+    <script charset="utf-8" type="text/javascript" src="./../js/textarea.config.js"></script>
     <script charset="utf-8" type="text/javascript" src="./../js/summernote.min.js"></script>
     <script charset="utf-8" type="text/javascript" src="js/edit.js"></script>
 
@@ -785,21 +788,13 @@ if (isset($errors_present) && $errors_present) {
         parseReadonlyAuthors();
         parseReadonlySubject();
         const _eFiles = <?php echo $e_current_files_count; ?>;
-        for (let i = 0; i < _eFiles; i++) {
-            addExistingFile();
-        }
-
+        for (let i = 0; i < _eFiles; i++) addExistingFile();
+        validate();
         $('#description').summernote({
             placeholder: '<b>The Ingenious Gentleman Don Quixote of La Mancha</b>, or just <i>Don Quixote</i>, is a Spanish novel by <u>Miguel de Cervantes</u>...',
-            tabsize: 4,
-            height: 340,
-            toolbar: [
-                ['font', ['bold', 'underline', 'italic', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol']],
-                ['table', ['table']],
-                ['insert', ['link']],
-            ]
+            tabsize: __DDL_TEXTAREA_TAB_SIZE__ ,
+            height: __DDL_TEXTAREA_HEIGHT__ ,
+            toolbar: __DDL_TEXTAREA_TOOLBAR__
         });
     </script>
 

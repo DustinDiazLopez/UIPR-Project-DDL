@@ -664,19 +664,12 @@ if (isset($errors_present) && $errors_present) {
     changePubDateToYear('pub-date-label');
     parseReadonlyAuthors();
     parseReadonlySubject();
-</script>
-<script>
+    validate();
     $('#description').summernote({
         placeholder: '<b>Don Quijote de la Mancha</b> es una novela escrita por el <u>español</u> <i>Miguel de Cervantes Saavedra</i>...',
-        tabsize: 4,
-        height: 340,
-        toolbar: [
-            ['font', ['bold', 'underline', 'italic', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol']],
-            ['table', ['table']],
-            ['insert', ['link']],
-        ]
+        tabsize: __DDL_TEXTAREA_TAB_SIZE__ ,
+        height: __DDL_TEXTAREA_HEIGHT__ ,
+        toolbar: __DDL_TEXTAREA_TOOLBAR__
     });
 </script>
 
