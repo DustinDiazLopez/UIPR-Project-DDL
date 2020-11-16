@@ -1,8 +1,8 @@
 {
   "host": "localhost",
   "port": "3306",
-  "username": "dustin",
+  "username": "root",
   "password": "password",
   "database": "UIPRCMSDDL",
-  "salt": "epIHEZHeJQyBIry"
+  "salt": "exampleSalt"
 }

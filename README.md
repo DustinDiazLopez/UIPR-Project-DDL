@@ -70,8 +70,8 @@ sudo systemctl restart apache2
 
 ### Step 1: The Config File
 Create a folder in `xampp` or `var` called `ddl-config` (it ***HAS*** to be that name, unless 
-you changed it in the source code),
-and in that folder create a JSON file called `ddl-config.json`. Then add this JSON object to the file:
+you changed it in the source code), in that folder create a folder called `files`, and a JSON file called 
+`ddl-config.json`. Then add this JSON object to the file:
 
 ```json
 { 
@@ -140,7 +140,8 @@ function connect_obj()
 ### Step 2: Setting up the Database
 - Download the SQL script from the [latest release](https://github.com/DustinDiazLopez/UIPR-Project-DDL/releases).
 
-    - Either insert or paste the `.sql` script in phpMyAdmin (refer to this [link](https://stackoverflow.com/questions/13955988/insert-sql-file-into-your-mysql-database)),
+    - Either insert or paste the `.sql` (inside the `ddl-config` folder) script in phpMyAdmin (refer to this 
+    [link](https://stackoverflow.com/questions/13955988/insert-sql-file-into-your-mysql-database)),
     - or execute the following command (in the MySQL shell):
     ```SQL
     mysql> source path_to_sql
@@ -149,18 +150,18 @@ function connect_obj()
 ---
 
 ### Step 3: Copying over the source code
-- Download the [latest release](https://github.com/DustinDiazLopez/UIPR-Project-DDL/releases).
-- In `htdocs` or `www` folder, create a new folder (e.g., `uipr-colon`), and copy over the files of the downloaded 
-release, and try to access, e.g., ` http://localhost/source/hello.php `.It should display the PHP information.
+- In `htdocs` or `www` folder, create a new folder (e.g., `ddl-cms`), and copy over the files of the downloaded 
+release, and try to access, e.g., ` http://localhost/ddl-cms/en/hello.php `.It should display the PHP information.
 
-    - This step might require more setup on `LAMP` (see [this](https://unix.stackexchange.com/a/174114) for setting 
+    - This step will require more setup on `LAMP` (see [this](https://unix.stackexchange.com/a/174114) for setting 
     write permissions).
+        - Give permissions to the `ddl-config` folder, and to the `ddl-cms` folder
 
     - If you wish to use the `html` folder or any other folder, please change
-the first line in `connect.php` (`uipr-colon/connect.php`) to match the new file structure.
+the first line in `connect.php` (`ddl-cms/connect.php`) to match the new file structure.
 
     ```PHP
-    define('DDL_PATH', '../../colon-uipr-cms-ddl-files-and-config');
+    define('DDL_PATH', './../../../ddl-config');
     ```
 
 ---
@@ -171,17 +172,11 @@ the first line in `connect.php` (`uipr-colon/connect.php`) to match the new file
 - Now pass in as the argument `pwd` (e.g., `hello.php?pwd=your_password`). This will return the hashed version of the
 inputted text, using the hash algorithm (by default `SHA-526`) specified in the config file of `step 1`. It should
 return something like:
-    ```text
-    r4nwUWpjef1wJgwfW4WgSim2P0qskuBFmYQ/p56LZDONtVZiS6CHNBji25G9CTc/kOAjkvwnxeJw4Wr8CuTjS0
-    ```
-
-- Now use the following SQL command, replacing the `<hashed_password>` with whatever you got back, and then finally, 
-execute the SQL command.
 
     ```SQL
-    INSERT INTO `admin` (`email`, `username`, `password`) VALUES ('example@example.com', 'username', '<hashed_password>');
+    INSERT INTO `admin` (`email`, `username`, `password`) VALUES ('<email>', '<username>', '<hashed_password>');
     ```
 
-- You should now have access to the system (go to `login.php`).
+- Once you've inserted the outputted SQL command, you should have access to the system (go to `login.php`).
 
 ---

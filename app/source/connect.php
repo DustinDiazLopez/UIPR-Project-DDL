@@ -7,23 +7,16 @@ define('PATH_TO_CONFIG', DDL_PATH . "/ddl-config.json");
 define('PATH_TO_FILES_FOLDER', DDL_PATH . "/files/");
 
 if (!is_dir(PATH_TO_FILES_FOLDER))
-    if (!mkdir(PATH_TO_FILES_FOLDER))
-        echo 'Please create a directory ' . PATH_TO_FILES_FOLDER . ' from current path.';
+    echo 'ERR 1: Please create the directory ' . PATH_TO_FILES_FOLDER . ' from current path.<br>';
 
 if (!is_dir(DDL_PATH))
-    if (!mkdir(DDL_PATH))
-        echo 'Please create a directory ' . DDL_PATH . ' from current path.';
+    echo 'ERR 2: Please create the directory ' . DDL_PATH . ' from current path.<br>';
 
-if (!file_exists(PATH_TO_CONFIG)) {
-    $put = file_put_contents(PATH_TO_CONFIG, '{ "host": "localhost", "port": "3306", "username": "dustin", "password": "password", "database": "UIPRCMSDDL", "salt": "epIHEZHeJQyBIry" }');
-    if ($put === FALSE)
-        echo 'Please create a json config file ' . PATH_TO_CONFIG . ' inside ' . DDL_PATH;
+if (!file_exists(PATH_TO_CONFIG))
+    echo 'ERR 3: Please create the json config file ' . PATH_TO_CONFIG . ' inside ' . DDL_PATH . '<br>';
 
-}
 
 $config = json_decode(file_get_contents(PATH_TO_CONFIG), true);
-
-// SHA-526
 $config['salt'] = '$6$rounds=5000$' . $config['salt'] . '$';
 
 /**
