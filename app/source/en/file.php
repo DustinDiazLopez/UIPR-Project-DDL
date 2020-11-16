@@ -59,7 +59,7 @@ try {
                         <div class="overlay">
                             <a href="./" id="back-btn" title="Return Home"><i class="fas fa-home icon"></i></a>
 
-                            <?php if($has_item === TRUE): ?>
+                            <?php if(isset($item) && isset($item['title']) && $has_item === TRUE && !empty($item['title'])): ?>
                             <a href="<?php echo shareURL($item['id'], '/item.view.php?item='); ?>" id="back-btn"
                                title="Go to the related item '<?php echo $item['title']; ?>'">
                                 <?php echo str_replace('class="', 'class="icon ', icon($item['type'])); ?>
