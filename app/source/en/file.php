@@ -27,7 +27,10 @@ try {
                 <link rel="icon" href="./../favicon.ico">
                 <link rel="stylesheet" href="./../css/file.css">
                 <link rel="stylesheet" href="./../css/selection.color.css">
+                <link rel="stylesheet" href="./../css/fa/css/all.css"
+
                 <title><?php echo $file['filename'] ?></title>
+
             </head>
 
             <body>
@@ -42,7 +45,15 @@ try {
                                 Download <?php echo $file['filename'] ?>
                             </a>
                         </object>
+
+                        <div class="overlay">
+                            <a style="color: white;text-shadow: 1.5px 1.5px gray;" href="./../../" id="back-btn" title="return home">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                        </div>
                     </div>
+
+
                 </main>
             </body>
 

@@ -47,6 +47,7 @@ a:active {
     background-color: var(--yellow);
 }
 
+
 ::selection {
     background: var(--yellow);
     color: var(--green);

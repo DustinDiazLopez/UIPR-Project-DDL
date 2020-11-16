@@ -209,7 +209,6 @@ $GLOBALS['_LANG_ASSOC'] = array(
     'zh' => 'chino'         // chino.
 );
 
-
 $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 
 $GLOBALS['AVAILABLE_LANGS'] = array();

@@ -2,7 +2,6 @@
 include_once('../connect.php');
 include_once('utils/utils.php');
 
-
 try {
     if ((isset($_GET['file']) && !empty($_GET['file'])) || (isset($_POST['file']) && !empty($_POST['file']))) {
         $original = '';
@@ -27,6 +26,7 @@ try {
                 <link rel="icon" href="./../favicon.ico">
                 <link rel="stylesheet" href="./../css/file.css">
                 <link rel="stylesheet" href="./../css/selection.color.css">
+                <link rel="stylesheet" href="./../css/fa/css/all.css"
                 <title><?php echo $file['filename'] ?></title>
             </head>
 
@@ -42,6 +42,13 @@ try {
                                 Descargar <?php echo $file['filename'] ?>
                             </a>
                         </object>
+
+                        <div class="overlay">
+                            <a style="color: white;text-shadow: 1px 1px black;" href="./../../" id="back-btn"
+                               title="Volver al Inicio">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                        </div>
                     </div>
                 </main>
             </body>

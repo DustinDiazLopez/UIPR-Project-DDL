@@ -116,7 +116,7 @@ include_once('templates/loading.php');
                 <?php endif; ?>
 
                     <li>
-                        <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:green;"
+                        <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:var(--green);"
                            title="logout">
                             <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>
                             <i class="fas fa-sign-out-alt"><span class="sr-only">Close session</span></i>

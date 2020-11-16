@@ -102,7 +102,7 @@ authenticate(isset($allow_guests) ? $allow_guests : FALSE);
                 <?php endif; ?>
 
                     <li>
-                        <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:green;" title="cerrar sessión">
+                        <a href="logout.php" class="btn btn-outline-warning" style="font-weight:bold;color:var(--green);" title="cerrar sessión">
                             <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>
                             <i class="fas fa-sign-out-alt"><span class="sr-only">cerrar su sessión</span></i>
                         </a>

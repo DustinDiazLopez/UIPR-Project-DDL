@@ -815,3 +815,14 @@ $GLOBALS['_LANG'] = array(
     'uk', // ukrainian.
     'zh'  // chinese.
 );
+
+$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+
+$GLOBALS['AVAILABLE_LANGS'] = array();
+
+foreach (scandir('.') as  $item) {
+    if (is_dir('.' . DIRECTORY_SEPARATOR . $item) && in_array($item, $GLOBALS['_LANG'])) {
+        $GLOBALS['AVAILABLE_LANGS'][] = $item;
+    }
+}
+

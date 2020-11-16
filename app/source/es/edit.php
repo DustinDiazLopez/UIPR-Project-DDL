@@ -367,7 +367,6 @@ if (isset($errors_present) && $errors_present) {
 
 ?>
 
-    <link rel="stylesheet" href="./../css/autocomplete.css">
     <link rel="stylesheet" href="./../css/add.css">
     <link rel="stylesheet" href="./../css/summernote.min.css">
 

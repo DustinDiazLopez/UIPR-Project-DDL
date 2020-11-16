@@ -4,14 +4,16 @@ include_once('utils/utils.php');
 
 function viewFile($file) {
     if(file_exists($file['path'])) {
+
         header('Content-Description: File Transfer');
+        header('Content-Disposition: inline; filename="'.(basename($file['path'])) . '"');
         header('Content-Type: '. $file['type']);
-        header('Content-Disposition: inline; filename='.basename($file['path']));
         header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Pragma: public');
         header('Content-Length: ' . $file['size']);
+
         ob_clean();
         flush();
         readfile($file['path']);
@@ -23,7 +25,7 @@ function downloadFile($file) {
     if(file_exists($file['path'])) {
         header('Content-Description: File Transfer');
         header('Content-Type: '. $file['type']);
-        header('Content-Disposition: attachment; filename='.basename($file['path']));
+        header('Content-Disposition: attachment; filename="'.(basename($file['path'])) . '"');
         header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');

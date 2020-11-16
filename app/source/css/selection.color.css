@@ -1,7 +1,14 @@
+:root {
+    --green: #008066;
+    --yellow: #FED557;
+}
+
 ::selection {
-    background: #fff2a8;
+    background: var(--yellow);
+    color: var(--green);
 }
 
 ::-moz-selection {
-    background: #fff2a8;
+    background: var(--yellow);
+    color: var(--green);
 }

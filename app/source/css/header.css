@@ -1,10 +1,15 @@
+:root {
+    --green: #008066;
+    --yellow: #FED557;
+}
+
 .cap {
     text-transform: capitalize;
 }
 
 a:link {
     text-decoration: none;
-    color: rgba(0, 150, 0, 255) !important;
+    color: var(--green) !important;
 }
 
 a:visited {
@@ -20,11 +25,11 @@ a:active {
 }
 
 .brand {
-    background: #dbd123 !important;
+    background: var(--yellow) !important;
 }
 
 .brand-text {
-    color: #04b800 !important;
+    color: var(--green) !important;
 }
 
 form {
@@ -46,7 +51,7 @@ form {
 
 @keyframes highlight {
     0% {
-        background-color: green;
+        background-color: var(--green);
     }
 
     100% {
@@ -55,8 +60,8 @@ form {
 }
 
 .highlight{
-    color: green;
-    background-color: yellow;
+    color: var(--green);
+    background-color: var(--yellow);
 }
 
 
