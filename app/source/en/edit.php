@@ -157,7 +157,8 @@ if (isset($_POST['submit'])) {
             /* INSERT ITEM START */
 
             $item_id = INSERT(
-                SQL_INSERT_ITEM(
+                SQL_INSERT_ITEM_W_ID(
+                    $item['id'],
                     $upload_item['title'],
                     $type_id,
                     $image_id,
@@ -169,6 +170,8 @@ if (isset($_POST['submit'])) {
                 '',
                 $sql_errors['item']
             );
+
+            $item_id = $item['id'];
 
             /* INSERT ITEM END */
 

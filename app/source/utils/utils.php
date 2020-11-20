@@ -460,6 +460,18 @@ function redir_error($title, $msg, $username, $email)
 }
 
 /**
+ * see {@link redir_fatal_error()}
+ * @param string $title the title of the failure
+ * @param string $msg the message of the failure
+ * @param string $type the type
+ * @author Dustin Díaz
+ */
+function redir_error_type($title, $msg, $type)
+{
+    redir_fatal_error($title, "$msg&type=$type");
+}
+
+/**
  * Redirects back to a location with messages on the url (needs to be handled, refer to adminpanel.php)
  * @param string $title title of the error
  * @param string $msg the message

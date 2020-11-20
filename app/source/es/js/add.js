@@ -565,24 +565,24 @@ function changePubDateToYear(id) {
 
 
 $(document).ready(
-    /**
-     * When document loads this function inits the keydown function for when the user preses the ENTER key.
-     */
-    function() {
-        $(window).keydown(
-            /**
-             * Consumes the keydown event (to avoid accidental submission)
-             * @param event the keydown event.
-             * @returns {boolean} returns false to the keydown function
-             * @author Dustin Díaz
-             */
-            function(event) {
-                if (event.keyCode === 13 && !allowReload) {
-                    event.preventDefault();
-                    return false;
-                }
-            });
-    });
+/**
+ * When document loads this function inits the keydown function for when the user preses the ENTER key.
+ */
+function() {
+    $(window).keydown(
+        /**
+         * Consumes the keydown event (to avoid accidental submission)
+         * @param event the keydown event.
+         * @returns {boolean} returns false to the keydown function
+         * @author Dustin Díaz
+         */
+        function(event) {
+            if (event.keyCode === 13 && !allowReload) {
+                event.preventDefault();
+                return false;
+            }
+        });
+});
 
 /**
  * Prompts the user to confirm reload or resubmission of page.

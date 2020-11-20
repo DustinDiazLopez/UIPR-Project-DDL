@@ -1,4 +1,6 @@
 <?php
+$background_color = 'rgba(255, 255, 255, 0.75)';
+include_once('templates/loading.php');
 include_once('../connect.php');
 include_once('utils/utils.php');
 session_start();
@@ -91,7 +93,7 @@ if (isset($_POST['guest'])) {
             </div>
             <?php if (isset($_GET['se'])) : ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?php echo 'Se ha cerrado la sesión por inactividad.'; ?>
+                    <?php echo 'Se ha cerrado su sesión por inactividad.'; ?>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -100,7 +102,7 @@ if (isset($_POST['guest'])) {
 
             <?php if (isset($_GET['noauth'])) : ?>
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <?php echo 'Favor de iniciar la sesión o continuar como invitado(a) para acceder el enlace pedido'; ?>
+                    <?php echo 'Favor de iniciar la sesión o continuar como invitado(a) para acceder el enlace pedido.'; ?>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -108,28 +110,47 @@ if (isset($_POST['guest'])) {
             <?php endif; ?>
 
             <?php if (isset($_POST['submit']) && array_filter($errors)) : ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?php foreach ($errors as $error) echo "$error"; ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                <?php foreach ($errors as $error): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?php echo "$error"; ?>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                <?php endforeach; ?>
             <?php endif; ?>
             <div class="form-group">
                 <label for="email">Correo Electrónico <strong>o</strong> Nombre de Usuario</label>
-                <input type="text" class="form-control" id="email" name="email" placeholder="su" value="<?php echo $email === '' ? 'colon' : htmlspecialchars($email); ?>" required>
+                <input type="text" class="form-control" id="email" name="email" placeholder="Usuario" value="<?php echo $email === '' ? '' : htmlspecialchars($email); ?>">
             </div>
             <div class="form-group">
                 <label for="pwd">Contraseña</label>
-                <input type="password" class="form-control" name="pwd" id="pwd" placeholder="password" value="hello-password" required>
+                <input type="password" class="form-control" name="pwd" id="pwd" placeholder="Contraseña" value="">
             </div>
             <div class="btn-group" role="group" aria-label="Basic example" style="width: 100%">
-                <button type="submit" name="guest" value="guest" class="btn btn-outline-secondary" style="width: 100%">Continuar como Invitado(a) <i class="fas fa-hiking"></i></button>
-                <button type="submit" name="submit" value="submit" class="btn btn-outline-primary" style="width: 100%">Iniciar Sesión <i class="fas fa-sign-in-alt"></i></button>
+                <button type="submit" name="guest" value="guest" class="btn btn-outline-secondary" style="width: 100%">
+                    Continuar como <b>Invitado(a)</b> <i class="fas fa-hiking"></i>
+                </button>
+                <button type="submit" name="submit" value="submit" id="login" class="btn btn-outline-primary" style="width: 100%">
+                    Iniciar Sesión <i class="fas fa-sign-in-alt"></i>
+                </button>
             </div>
 
         </form>
     </main>
+
+    <script charset="utf-8" type="text/javascript" src="./../js/jquery-3.2.1.slim.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(window).keydown(function(event){
+                if(event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById('login').click();
+                    return true;
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

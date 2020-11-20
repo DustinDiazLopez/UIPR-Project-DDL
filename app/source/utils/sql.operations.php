@@ -190,6 +190,28 @@ function SQL_INSERT_ITEM($title, $type_id, $image_id, $pub_date, $year_only, $de
 }
 
 /**
+ * SQL script for an insert to the item table.
+ * Please see {@link query()}
+ * @param $id integer the id of the item
+ * @param $title string the title of the item
+ * @param $type_id integer the type id of the item
+ * @param $image_id integer the image id of the item
+ * @param $pub_date string the published date of the item (yyyy-mm-dd)
+ * @param $year_only boolean weather to only show the year or the whole $pub_date
+ * @param $description string the description of the item
+ * @param $metadata string the metadata of the item
+ * @return array|bool|null
+ * returns NULL if an error occurs while fetching the objects (unlikely)
+ * returns true or false on success or failure
+ * returns the array of objects fetched.
+ * @author Dustin Díaz
+ */
+function SQL_INSERT_ITEM_W_ID($id, $title, $type_id, $image_id, $pub_date, $year_only, $description, $metadata)
+{
+    return (sprintf(SQL_INSERT_ITEM_W_ID, $id, $title, $type_id, $image_id, $pub_date, $year_only, $description, $metadata));
+}
+
+/**
  * SQL script for an insert to the item_has_subject table.
  * Please see {@link query()}
  * @param $item_id integer the item id

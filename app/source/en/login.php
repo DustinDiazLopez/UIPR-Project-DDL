@@ -1,4 +1,6 @@
 <?php
+$background_color = 'rgba(255, 255, 255, 0.75)';
+include_once('templates/loading.php');
 include_once('../connect.php');
 include_once('utils/utils.php');
 session_start();
@@ -83,7 +85,6 @@ if (isset($_POST['guest'])) {
 </head>
 
 <body>
-
     <main>
         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
             <div class="form-group">
@@ -91,7 +92,7 @@ if (isset($_POST['guest'])) {
             </div>
             <?php if (isset($_GET['se'])) : ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?php echo 'The session has been closed due to inactivity.'; ?>
+                    <?php echo 'You\'ve been logged out due to inactivity.'; ?>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -100,7 +101,7 @@ if (isset($_POST['guest'])) {
 
             <?php if (isset($_GET['noauth'])) : ?>
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <?php echo 'Please login or continue as a guest to access the requested link.'; ?>
+                    <?php echo 'Please login, or continue as a guest to access the requested link.'; ?>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -108,28 +109,46 @@ if (isset($_POST['guest'])) {
             <?php endif; ?>
 
             <?php if (isset($_POST['submit']) && array_filter($errors)) : ?>
+                <?php foreach ($errors as $error): ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?php foreach ($errors as $error) echo "$error"; ?>
+                    <?php echo "$error"; ?>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <?php endforeach; ?>
             <?php endif; ?>
             <div class="form-group">
                 <label for="email">Email <strong>or</strong> Username</label>
-                <input type="text" class="form-control" id="email" name="email" placeholder="su" value="<?php echo $email === '' ? 'colon' : htmlspecialchars($email); ?>" required>
+                <input type="text" class="form-control" id="email" name="email" placeholder="Username" value="<?php echo $email === '' ? '' : htmlspecialchars($email); ?>">
             </div>
             <div class="form-group">
                 <label for="pwd">Password</label>
-                <input type="password" class="form-control" name="pwd" id="pwd" placeholder="password" value="hello-password" required>
+                <input type="password" class="form-control" name="pwd" id="pwd" placeholder="Password" value="">
             </div>
             <div class="btn-group" role="group" aria-label="Basic example" style="width: 100%">
-                <button type="submit" name="guest" value="guest" class="btn btn-outline-secondary" style="width: 100%">Continue as <b>Guest</b> <i class="fas fa-hiking"></i></button>
-                <button type="submit" name="submit" value="submit" class="btn btn-outline-primary" style="width: 100%">Login <i class="fas fa-sign-in-alt"></i></button>
+                <button type="submit" name="guest" value="guest" class="btn btn-outline-secondary" style="width: 100%">
+                    Continue as <b>Guest</b> <i class="fas fa-hiking"></i>
+                </button>
+                <button type="submit" name="submit" id="login" value="submit" class="btn btn-outline-primary" style="width: 100%">
+                    Login <i class="fas fa-sign-in-alt"></i>
+                </button>
             </div>
-
         </form>
     </main>
+
+    <script charset="utf-8" type="text/javascript" src="./../js/jquery-3.2.1.slim.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(window).keydown(function(event){
+                if(event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById('login').click();
+                    return true;
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

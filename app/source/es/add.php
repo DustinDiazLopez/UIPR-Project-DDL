@@ -658,6 +658,7 @@ if (isset($errors_present) && $errors_present) {
 <script charset="utf-8" type="text/javascript" src="./../js/pdf.js"></script>
 <script charset="utf-8" type="text/javascript" src="./../js/generic.js"></script>
 <script charset="utf-8" type="text/javascript" src="./../js/summernote.min.js"></script>
+<script charset="utf-8" type="text/javascript" src="./../js/textarea.config.js"></script>
 <script charset="utf-8" type="text/javascript" src="js/add.js"></script>
 
 <script>

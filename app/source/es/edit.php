@@ -157,7 +157,8 @@ if (isset($_POST['submit'])) {
             /* INSERT ITEM START */
 
             $item_id = INSERT(
-                SQL_INSERT_ITEM(
+                SQL_INSERT_ITEM_W_ID(
+                    $item['id'],
                     $upload_item['title'],
                     $type_id,
                     $image_id,
@@ -169,6 +170,8 @@ if (isset($_POST['submit'])) {
                 '',
                 $sql_errors['item']
             );
+
+            $item_id = $item['id'];
 
             /* INSERT ITEM END */
 
@@ -327,6 +330,17 @@ if (isset($_POST['submit'])) {
 
             // ...
             /* SQL ERROR CHECK END */
+
+            die(SQL_INSERT_ITEM_W_ID(
+                $item['id'],
+                $upload_item['title'],
+                $type_id,
+                $image_id,
+                $upload_item['published_date'],
+                $yearOnly,
+                $upload_item['description'],
+                $upload_item['metadata']
+            ));
         }
     }
 }
@@ -781,6 +795,7 @@ if (isset($errors_present) && $errors_present) {
     <script charset="utf-8" type="text/javascript" src="./../js/pdf.js"></script>
     <script charset="utf-8" type="text/javascript" src="./../js/generic.js"></script>
     <script charset="utf-8" type="text/javascript" src="./../js/summernote.min.js"></script>
+    <script charset="utf-8" type="text/javascript" src="./../js/textarea.config.js"></script>
     <script charset="utf-8" type="text/javascript" src="js/edit.js"></script>
 
     <script>

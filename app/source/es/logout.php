@@ -2,7 +2,7 @@
 
 $se = '?';
 if (isset($_GET['se'])) {
-    $se = '&se';
+    $se .= '&se';
 }
 
 if (isset($_GET['noauth'])) {

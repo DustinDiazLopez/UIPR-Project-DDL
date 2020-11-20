@@ -92,6 +92,7 @@ define('SQL_INSERT_IMAGE', "INSERT INTO `image` (`type`, `size`, `image`) VALUES
 define('SQL_INSERT_AUTHOR', "INSERT INTO `author` (`author_name`) VALUES ('%s')");
 define('SQL_INSERT_SUBJECT', "INSERT INTO `subject` (`subject`) VALUES ('%s')");
 define('SQL_INSERT_ITEM', "INSERT INTO `item` (`title`, `type_id`, `image_id`, `published_date`, `year_only`, `description`, `meta`) VALUES ('%s', %d, %s, '%s', %d, '%s', '%s')");
+define('SQL_INSERT_ITEM_W_ID', "INSERT INTO `item` (`id`, `title`, `type_id`, `image_id`, `published_date`, `year_only`, `description`, `meta`) VALUES (%d, '%s', %d, %s, '%s', %d, '%s', '%s')");
 define('SQL_INSERT_ITEM_HAS_SUBJECT', "INSERT INTO `item_has_subject` (`item_id`, `subject_id`) VALUES (%d, %d)");
 define('SQL_INSERT_FILE_HAS_ITEM', "INSERT INTO `file_has_item` (`file_id`, `item_id`) VALUES (%d, %d)");
 define('SQL_INSERT_AUTHOR_HAS_ITEM', "INSERT INTO `author_has_item` (`item_id`, `author_id`) VALUES (%d, %d)");
