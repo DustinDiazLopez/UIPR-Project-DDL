@@ -124,7 +124,7 @@ function redir_license() {
 function echoPath($subPath, $title='No Title', $in_progress=FALSE, $color='white', $color_in_progress='#ffcccb') {
     $append = '';
     if ($in_progress === TRUE) {
-        $append = "<span style=\"background: $color_in_progress;\">(Nothing Yet)</span>";
+        $append = "<span style=\"background: $color_in_progress;\">(In Porgress)</span>";
     }
     echo "<li><a target=\"_blank\" href=\"" . PATH . "$subPath\"><span style=\"background: $color;\">$title</span></a> $append</li>";
 }
@@ -137,9 +137,9 @@ function echoPaths($msg='Site is no longer under development.') {
     echo '<hr/>';
     echo "<p>$msg</p>";
     echo '<ol>';
-    echoPath(USER_DOC_PATH, 'User Documentation', TRUE);
+    echoPath(USER_DOC_PATH, 'User Documentation', TRUE, 'white', 'lightblue');
     echoPath(NEW_ISSUE, 'Submit an Issue', FALSE, 'yellow');
-    echoPath(WIKI, 'The Application\'s Wiki', TRUE);
+    //echoPath(WIKI, 'The Application\'s Wiki', TRUE);
     echoPath(RELEASES, 'Download the latest releases');
     echoPath(README, 'View the README (prerequisites and installation process)');
     echoPath(SOURCE_CODE_PATH, 'Source Code');
