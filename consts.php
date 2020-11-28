@@ -121,10 +121,10 @@ function redir_license() {
  * @param string $color background color for the <b>$title</b>
  * @param string $color_in_progress the background color of the '(Nothing Yet)'
  */
-function echoPath($subPath, $title='No Title', $in_progress=FALSE, $color='white', $color_in_progress='#ffcccb') {
+function echoPath($subPath, $title='No Title', $in_progress=FALSE, $color='white', $color_in_progress='#ffcccb', $text='In Progress') {
     $append = '';
     if ($in_progress === TRUE) {
-        $append = "<span style=\"background: $color_in_progress;\">(In Porgress)</span>";
+        $append = "<span style=\"background: $color_in_progress;\">($text)</span>";
     }
     echo "<li><a target=\"_blank\" href=\"" . PATH . "$subPath\"><span style=\"background: $color;\">$title</span></a> $append</li>";
 }
@@ -133,11 +133,11 @@ function echoPath($subPath, $title='No Title', $in_progress=FALSE, $color='white
  * Displays a list of links to various parts of the github project.
  * @param string $msg The message to display on-top of the list
  */
-function echoPaths($msg='Site is no longer under development.') {
+function echoPaths($msg='Development Finished (11/16/2020)') {
     echo '<hr/>';
     echo "<p>$msg</p>";
     echo '<ol>';
-    echoPath(USER_DOC_PATH, 'User Documentation', TRUE, 'white', 'lightblue');
+    echoPath(USER_DOC_PATH, 'User Documentation', TRUE, 'white', 'lightgreen', 'Done');
     echoPath(NEW_ISSUE, 'Submit an Issue', FALSE, 'yellow');
     //echoPath(WIKI, 'The Application\'s Wiki', TRUE);
     echoPath(RELEASES, 'Download the latest releases');
