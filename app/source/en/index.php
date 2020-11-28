@@ -132,6 +132,7 @@ include_once('templates/header.php');
                 <svg height="100%" width="100%" xmlns:xlink="http://www.w3.org/1999/xlink"><a xlink:href="add.php"> 
                 <text x="100" y="100" style="fill:black;font-size:50px;" transform="rotate(0,0,0)">Nothing found, add an item.</text> 
                 </a></svg></div>';
+
             } else {
                 foreach ($items as $item) include('templates/detailed.item.php');
                 include_once ('templates/pagination.php');

@@ -35,7 +35,7 @@ function highlightHelper(str, target, split=false, capitalize=false) {
     if (split)
         arr = str.split(' ');
     for (let i = 0; i < arr.length; i++)
-        highlight(arr[i], target, capitalize)
+        highlight(arr[i], target, capitalize);
 }
 
 /**

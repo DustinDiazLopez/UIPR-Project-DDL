@@ -2,6 +2,10 @@
 include_once('../connect.php');
 include_once('utils/utils.php');
 
+if (isset($_POST['editItem']) && !empty($_POST['editItem'])) {
+    header('Location: edit.php?editItem=' . $_POST['editItem']);
+}
+
 authenticate();
 
 $errors = ['title' => '', 'type' => '', 'published_date' => '', 'authors' => '', 'subjects' => '', 'description' => '', 'metadata' => '', 'files' => ''];
@@ -9,6 +13,7 @@ $valid_title = $valid_type = $valid_date = $valid_authors = $valid_subjects = $v
 
 if ((isset($_POST['editItem']) && !empty($_POST['editItem'])) || (isset($_GET['editItem']) && !empty($_GET['editItem']))) {
     $post_id = isset($_POST['editItem']) ? intval($_POST['editItem']) :  intval($_GET['editItem']);
+
     if ($post_id > 0) {
         $item = SQL_GET_ITEM_BY_ID_META($post_id);
         if (count($item) > 0) {

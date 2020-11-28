@@ -441,9 +441,9 @@ function listToCSV($list)
  * @param string $color (optional) the color of the icon.
  * @author Dustin Díaz
  */
-function hint($msg, $color = 'green')
+function hint($msg, $color = 'green', $icon = 'far fa-question-circle')
 {
-    echo "<a style=\"color:$color;\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"$msg\"><i class=\"far fa-question-circle\"></i></a>";
+    echo "<a style=\"color:$color;\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"$msg\"><i class=\"$icon\"></i></a>";
 }
 
 /**

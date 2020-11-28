@@ -258,7 +258,7 @@ if (isset($_POST['submit'])) {
             // redirect on no errors
             if (!$errors_present) {
                 $t = json_decode($item['title']);
-                header("Location: index.php#$item_id?created=$t}]");
+                header("Location: index.php#$item_id?created=$t");
             } // esleif ->>>> after the include header the errors will appear.
 
             // ...

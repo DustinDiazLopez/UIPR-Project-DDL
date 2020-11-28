@@ -13,4 +13,4 @@ const __DDL_TEXTAREA_TOOLBAR__ = [
 ];
 
 const __DDL_TEXTAREA_HEIGHT__ = 340;
-const __DDL_TEXTAREA_TAB_SIZE__ = 4
+const __DDL_TEXTAREA_TAB_SIZE__ = 4;

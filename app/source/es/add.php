@@ -258,7 +258,7 @@ if (isset($_POST['submit'])) {
             // redirect on no errors
             if (!$errors_present) {
                 $t = json_decode($item['title']);
-                header("Location: index.php#$item_id?created=$t}]");
+                header("Location: index.php#$item_id?created=$t");
             } // esleif ->>>> after the include header the errors will appear.
 
             // ...
@@ -343,7 +343,7 @@ if (isset($errors_present) && $errors_present) {
                 <div class="form-row">
                     <div class="col-md-7 mb-3">
                         <label for="title">Título</label>
-                        <input type="text" id="title" name="title" title="Título del artículo." placeholder="Don Quijote de la Mancha" class="form-control <?php not_valid_class($valid_title); ?>" value="<?php echo $item['title']; ?>" required>
+                        <input type="text" id="title" name="title" title="Título del artículo." maxlength="250" placeholder="Don Quijote de la Mancha" class="form-control <?php not_valid_class($valid_title); ?>" value="<?php echo $item['title']; ?>" required>
                         <?php echo_invalid_feedback(!$valid_title, $errors['title']); ?>
                     </div>
                     <div class="col-md-5 mb-3 autocomplete">
@@ -363,7 +363,6 @@ if (isset($errors_present) && $errors_present) {
                             ?>
                         </select>
 
-
                     </div>
                 </div>
 
@@ -374,12 +373,7 @@ if (isset($errors_present) && $errors_present) {
                     <div class="col-7 input-group">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                                <input name="yearOnly" id="yearOnly" onclick="changePubDateToYear('pub-date-label')"
-                                       type="checkbox"
-                                       aria-label="Checkbox for para demostrar en el articulo el año de publicacion solamente."
-                                       title="Sólo enseñar el año"
-                                        <?php echo isset($item['year_only']) && $item['year_only'] ? 'checked' : ''; ?>
-                                >
+                                <input name="yearOnly" id="yearOnly" onclick="changePubDateToYear('pub-date-label')" type="checkbox" aria-label="Checkbox for para demostrar en el articulo el año de publicacion solamente." title="Sólo enseñar el año" <?php echo isset($item['year_only']) && $item['year_only'] ? 'checked' : ''; ?>>
                             </div>
                         </div>
                         <input type="date" name="published_date" id="published_date" class="form-control <?php not_valid_class($valid_date); ?>" value="<?php echo $item['published_date']; ?>" required>
@@ -668,8 +662,8 @@ if (isset($errors_present) && $errors_present) {
     validate();
     $('#description').summernote({
         placeholder: '<b>Don Quijote de la Mancha</b> es una novela escrita por el <u>español</u> <i>Miguel de Cervantes Saavedra</i>...',
-        tabsize: __DDL_TEXTAREA_TAB_SIZE__ ,
-        height: __DDL_TEXTAREA_HEIGHT__ ,
+        tabsize: __DDL_TEXTAREA_TAB_SIZE__,
+        height: __DDL_TEXTAREA_HEIGHT__,
         toolbar: __DDL_TEXTAREA_TOOLBAR__
     });
 </script>

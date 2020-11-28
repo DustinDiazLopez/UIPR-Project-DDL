@@ -28,7 +28,7 @@ function _FileList(items) {
     items = [].concat.apply([], [items]);
     // check if every element of array is an instance of `File`
     if (items.length && !items.every(function(file) {
-        return file instanceof File
+        return file instanceof File;
     })) {
         throw new TypeError("expected argument to FileList is File or array of File objects");
     }
@@ -37,7 +37,7 @@ function _FileList(items) {
     let dt = new ClipboardEvent("").clipboardData || new DataTransfer();
     // add `File` objects to `DataTransfer` `.items`
     for (let i = 0; i < items.length; i++) {
-        dt.items.add(items[i])
+        dt.items.add(items[i]);
     }
     return dt.files;
 }
@@ -71,7 +71,7 @@ function insertCustomImage(event) {
           inputImageShow.value = showImage.src;
           imageSet = true;
 
-        }
+        };
         reader.readAsDataURL(event.files[0]);
     }
 
@@ -96,7 +96,7 @@ filesInput.onchange = function(e) {
     updateFilesData();
 
     if (!imageSet) updateImage();
-}
+};
 
 /**
  * Clears everything related to the image.
@@ -140,7 +140,7 @@ function generateFileInputForImage() {
             element = document.getElementById(fileId);
             name = element.files[0].name;
             if (name.endsWith('.pdf')) {
-                fileInputForThumbnail.innerHTML += `<option value='${fileId}'>${name}</option>`
+                fileInputForThumbnail.innerHTML += `<option value='${fileId}'>${name}</option>`;
             }
         } catch (ignored) {}
     }
@@ -242,7 +242,7 @@ function remove(idx) {
     if (idx >= 0 && idx <= fileListChildren.length) {
         fileListChildren[idx].parentNode.removeChild(fileListChildren[idx]);
         updateFilesData(false);
-        handleListView()
+        handleListView();
     } else {
         console.error(idx + ' does not exist in fileList...');
     }
@@ -268,7 +268,7 @@ function handleListView(handle = true) {
             let warnDiv = document.getElementById('size-warning');
             clearImage();
 
-            let element = undefined;
+            let element;
             for (let i = 1; i <= counter; i++) {
                 element = document.getElementById(`file-${i}`);
                 try {
@@ -406,7 +406,7 @@ function parseReadonly(input, readonly, listView, rmElementIdx=-1) {
                 <span class="badge badge-dark badge-pill hover-times" onclick="parseReadonly('${input}', '${readonly}', '${listView}', ${i})">
                     <i class="fas fa-times"></i>
                 </span>
-            </li>`
+            </li>`;
         }
     }
 
@@ -481,9 +481,9 @@ function addAllToReadonly(input, output) {
 
     for (let i = 0; i < arr.length; i++) {
         if (readonly.value === "") {
-            readonly.value += `${arr[i].trim()}`
+            readonly.value += `${arr[i].trim()}`;
         } else {
-            readonly.value += `, ${arr[i].trim()}`
+            readonly.value += `, ${arr[i].trim()}`;
         }
     }
 
@@ -530,9 +530,9 @@ function addToReadonly(input, output) {
     field.value = "";
     for (let i = 0; i < arr.length; i++) {
         if (field.value === "") {
-            field.value += `${arr[i].trim()}`
+            field.value += `${arr[i].trim()}`;
         } else {
-            field.value += `, ${arr[i].trim()}`
+            field.value += `, ${arr[i].trim()}`;
         }
     }
 
@@ -698,7 +698,7 @@ const inputOFiles = document.getElementById('o-files-selected');
 const oFileElement = document.getElementById('o-files');
 const addOFileBtn = document.getElementById('add-o-file-btn');
 
-/**
+/** 
  * Adds a file link to the list of files (and the hidden input)
  * @author Dustin Díaz
  */
@@ -728,7 +728,7 @@ function addOrphanedFile() {
  * @author Dustin Díaz
  */
 function removeOFileFromList(id, name) {
-    let arr = inputOFiles.value.split(',')
+    let arr = inputOFiles.value.split(',');
     for (let i = 0; i < arr.length; i++) arr[i] = arr[i].trim();
     const index = arr.indexOf(id);
 
@@ -777,5 +777,5 @@ function genOrphanedListItem(id, name) {
                 <i class="fas fa-unlink"></i>
             </button>
         </div>
-    </li>`
+    </li>`;
 }

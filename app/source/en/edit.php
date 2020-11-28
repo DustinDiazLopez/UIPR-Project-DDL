@@ -2,6 +2,10 @@
 include_once('../connect.php');
 include_once('utils/utils.php');
 
+if (isset($_POST['editItem']) && !empty($_POST['editItem'])) {
+    header('Location: edit.php?editItem=' . $_POST['editItem']);
+}
+
 authenticate();
 
 $errors = ['title' => '', 'type' => '', 'published_date' => '', 'authors' => '', 'subjects' => '', 'description' => '', 'metadata' => '', 'files' => ''];
