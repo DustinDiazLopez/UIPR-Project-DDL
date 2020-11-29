@@ -64,7 +64,7 @@ if (isset($_GET['q']) && isset($only) && !empty($only)) {
         copyText.style.display = "none";
 
         let btn = document.getElementById(btnId)
-        btn.innerHTML = `<i class="fas fa-check"></i> ` + (showText ? 'Copiado' : '');
+        btn.innerHTML = `<i class="fas fa-check"></i> ` + (showText ? 'Copied' : '');
         btn.style.opacity = "0.5";
         btn.copied = true;
     }

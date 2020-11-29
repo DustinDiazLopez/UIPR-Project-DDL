@@ -43,7 +43,16 @@ include_once('templates/header.php');
             <?php
 
             // custom search
-            if (isset($_GET['author-search'])) {
+            if (isset($_GET['q'])) {
+                $only = 'all';
+                if (isset($_GET['only'])) {
+                    $only = $_GET['only'];
+                }
+                if (isset($conn)) {
+                    $items = search($conn, $_GET['q'], $only);
+                }
+
+            } elseif (isset($_GET['author-search'])) {
                 if (isset($_GET['author'])) {
                     $author = escapeMySQL($_GET['author']);
                     $total = SQL_GET_ITEM_COUNT_AUTHOR($author);
@@ -71,7 +80,6 @@ include_once('templates/header.php');
                 if (isset($_GET['type'])) {
                     $type = escapeMySQL($_GET['type']);
                     $total = SQL_GET_ITEM_COUNT_TYPE($type);
-                    var_dump($total);
                     if ($total > 0) {
                         include ('templates/pagination.setter.php');
                         $items = SQL_GET_ITEMS_BY_TYPE_ID($type, $_APPEND_LIMITER);

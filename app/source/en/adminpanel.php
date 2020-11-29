@@ -259,7 +259,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <th scope="row"><?php echo $obj['id']; ?></th>
                                         <td><?php echo $obj['author_name']; ?></td>
                                         <td>
-                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editAuthor<?php echo $obj['id']; ?>"><i class="fas fa-pencil-alt"></i></button>
+                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editAuthor<?php echo $obj['id']; ?>"><span class="sr-only">edit author <?php echo $obj['author_name'];?> </span><i class="fas fa-pencil-alt"></i></button>
                                         </td>
                                     </tr>
 
@@ -320,7 +320,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <th scope="row"><?php echo $obj['id']; ?></th>
                                         <td><?php echo $obj['subject']; ?></td>
                                         <td>
-                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editSubject<?php echo $obj['id']; ?>"><i class="fas fa-pencil-alt"></i></button>
+                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editSubject<?php echo $obj['id']; ?>"><span class="sr-only">edit subject <?php echo $obj['subject'];?> </span><i class="fas fa-pencil-alt"></i></button>
                                         </td>
                                     </tr>
 
@@ -386,7 +386,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                             <th scope="row"><?php echo $type['id']; ?></th>
                                             <td><?php echo $type['type']; ?></td>
                                             <td>
-                                                <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editType<?php echo $type['id']; ?>"><i class="fas fa-pencil-alt"></i></button>
+                                                <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editType<?php echo $type['id']; ?>"><span class="sr-only">edit type <?php echo $type['type'];?> </span><i class="fas fa-pencil-alt"></i></button>
                                             </td>
                                         </tr>
 
@@ -477,10 +477,10 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <th scope="row"><?php echo $type['id']; ?></th>
                                         <td><?php echo $type['type']; ?></td>
                                         <td>
-                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editOrphanedType<?php echo $type['id']; ?>Modal"><i class="fas fa-pencil-alt"></i></button>
+                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editOrphanedType<?php echo $type['id']; ?>Modal"><span class="sr-only">edit orpahned type <?php echo $type['type'];?> </span><i class="fas fa-pencil-alt"></i></button>
                                         </td>
                                         <td>
-                                            <button type="submit" class="btn btn-danger" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteOprhanedType<?php echo $type['id']; ?>Modal"><i class="fas fa-eraser"></i></button>
+                                            <button type="submit" class="btn btn-danger" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteOprhanedType<?php echo $type['id']; ?>Modal"><span class="sr-only">delete orpahned type <?php echo $type['type'];?> </span><i class="fas fa-eraser"></i></button>
                                         </td>
                                     </tr>
 
@@ -634,7 +634,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                             </form>
                                         </td>
                                         <td scope="row">
-                                            <button type="submit" class="btn btn-danger" name="delete-file" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteFile<?php echo $f['id']; ?>"><i class="fas fa-trash-alt"></i></button>
+                                            <button type="submit" class="btn btn-danger" name="delete-file" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteFile<?php echo $f['id']; ?>"><span class="sr-only">edit orpahned type <?php echo $type['type'];?> </span><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                     <!-- FILE ROW END -->

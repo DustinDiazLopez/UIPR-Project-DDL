@@ -80,7 +80,6 @@ include_once('templates/header.php');
                 if (isset($_GET['type'])) {
                     $type = escapeMySQL($_GET['type']);
                     $total = SQL_GET_ITEM_COUNT_TYPE($type);
-                    var_dump($total);
                     if ($total > 0) {
                         include ('templates/pagination.setter.php');
                         $items = SQL_GET_ITEMS_BY_TYPE_ID($type, $_APPEND_LIMITER);

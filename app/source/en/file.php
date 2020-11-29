@@ -37,8 +37,7 @@ try {
                 <link rel="icon" href="./../favicon.ico">
                 <link rel="stylesheet" href="./../css/file.css">
                 <link rel="stylesheet" href="./../css/selection.color.css">
-                <link rel="stylesheet" href="./../css/fa/css/all.css"
-
+                <link rel="stylesheet" href="./../css/fa/css/all.css">
                 <title><?php echo $file['filename'] ?></title>
 
             </head>

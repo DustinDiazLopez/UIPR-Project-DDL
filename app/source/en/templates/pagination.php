@@ -1,6 +1,6 @@
 
 <?php if (isset($page) && isset($pages)): ?>
-<nav aria-describedby="paginación">
+<nav aria-describedby="pagination">
     <ul class="pagination justify-content-center">
         <?php if ($page > 1) { ?>
             <li class="page-item">

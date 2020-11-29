@@ -56,6 +56,7 @@ if (isset($_GET['q']) && isset($only) && !empty($only)) {
         $('[data-toggle="tooltip"]').tooltip()
     })
 
+
     function copyValueToClipboard(inputId, btnId, showText) {
         let copyText = document.getElementById(inputId);
         copyText.style.display = "block";

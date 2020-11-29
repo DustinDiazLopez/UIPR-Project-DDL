@@ -27,12 +27,15 @@
                 if (isset($_GET['only'])) {
                     switch ($_GET['only']) {
                         case 'title':
+                            $all = "";
                             $title = $checked_text;
                             break;
                         case 'description':
+                            $all = "";
                             $description = $checked_text;
                             break;
                         case 'file':
+                            $all = "";
                             $file = $checked_text;
                             break;
                         default:

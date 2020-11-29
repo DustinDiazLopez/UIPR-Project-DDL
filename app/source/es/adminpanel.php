@@ -259,7 +259,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <th scope="row"><?php echo $obj['id']; ?></th>
                                         <td><?php echo $obj['author_name']; ?></td>
                                         <td>
-                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editAuthor<?php echo $obj['id']; ?>"><i class="fas fa-pencil-alt"></i></button>
+                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editAuthor<?php echo $obj['id']; ?>"><span class="sr-only">editar autor <?php echo $obj['author_name'];?> </span><i class="fas fa-pencil-alt"></i></button>
                                         </td>
                                     </tr>
 
@@ -320,7 +320,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <th scope="row"><?php echo $obj['id']; ?></th>
                                         <td><?php echo $obj['subject']; ?></td>
                                         <td>
-                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editSubject<?php echo $obj['id']; ?>"><i class="fas fa-pencil-alt"></i></button>
+                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editSubject<?php echo $obj['id']; ?>"><span class="sr-only">editar sujeto <?php echo $obj['subject'];?> </span><i class="fas fa-pencil-alt"></i></button>
                                         </td>
                                     </tr>
 
@@ -386,7 +386,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                             <th scope="row"><?php echo $type['id']; ?></th>
                                             <td><?php echo $type['type']; ?></td>
                                             <td>
-                                                <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editType<?php echo $type['id']; ?>"><i class="fas fa-pencil-alt"></i></button>
+                                                <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editType<?php echo $type['id']; ?>"><span class="sr-only">editar tipo <?php echo $type['type'];?> </span><i class="fas fa-pencil-alt"></i></button>
                                             </td>
                                         </tr>
 
@@ -451,7 +451,7 @@ $files = SQL_GET_ORPHANED_FILES();
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteAllOrphanedTypesTitle">Borrar <strong>TODOS</strong> los Tipos Huerfanos:</h5>
+                                            <h5 class="modal-title" id="deleteAllOrphanedTypesTitle">Borrar <strong>TODOS</strong> los Tipos Huérfanos:</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -477,10 +477,10 @@ $files = SQL_GET_ORPHANED_FILES();
                                         <th scope="row"><?php echo $type['id']; ?></th>
                                         <td><?php echo $type['type']; ?></td>
                                         <td>
-                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editOrphanedType<?php echo $type['id']; ?>Modal"><i class="fas fa-pencil-alt"></i></button>
+                                            <button type="submit" class="btn btn-primary" style="width:100%;height:100%;" data-toggle="modal" data-target="#editOrphanedType<?php echo $type['id']; ?>Modal"><span class="sr-only">editar el tipo huérfano <?php echo $type['type'];?> </span><i class="fas fa-pencil-alt"></i></button>
                                         </td>
                                         <td>
-                                            <button type="submit" class="btn btn-danger" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteOprhanedType<?php echo $type['id']; ?>Modal"><i class="fas fa-eraser"></i></button>
+                                            <button type="submit" class="btn btn-danger" style="width:100%;height:100%;" data-toggle="modal" data-target="#deleteOprhanedType<?php echo $type['id']; ?>Modal"><span class="sr-only">borrar el tipo huérfano <?php echo $type['type'];?> </span><i class="fas fa-eraser"></i></button>
                                         </td>
                                     </tr>
 
