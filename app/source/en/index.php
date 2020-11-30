@@ -131,8 +131,7 @@ include_once('templates/header.php');
             } elseif (isset($_GET['deleted'])) {
                 echo showSuccess("Success - An article was deleted:", "You still have access to the files related to the deleted article (Admin Panel > Data > Orphaned Files).");
             } elseif (isset($_GET['created'])) {
-                $t = json_decode($_GET['created']);
-                echo showSuccess("Success:", "The item was created \"$t\"");
+                echo showSuccess("Success:", "An item was created.");
             }
             // IF NOTHING IS FOUND
             if (empty($items) || $items === NULL || count($items) == 0 || !array_filter($items)) {

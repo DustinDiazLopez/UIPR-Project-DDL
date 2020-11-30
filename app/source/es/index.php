@@ -131,8 +131,7 @@ include_once('templates/header.php');
             } elseif (isset($_GET['deleted'])) {
                 echo showSuccess("Éxito - Se borró un artículo:", "Todavía tienes acceso a los PDFs relacionado con el artículo borrado.");
             } elseif (isset($_GET['created'])) {
-                $t = json_decode($_GET['created']);
-                echo showSuccess("Éxito:", "Se creo el articulo \"$t\"");
+                echo showSuccess("Éxito:", "Un artículo fue creado");
             }
             // IF NOTHING IS FOUND
             if (empty($items)) {

@@ -1,7 +1,7 @@
 <?php
 include_once('../connect.php');
 include_once('utils/utils.php');
-
+authenticate(TRUE);
 
 try {
     if ((isset($_GET['file']) && !empty($_GET['file'])) || (isset($_POST['file']) && !empty($_POST['file']))) {

@@ -54,9 +54,44 @@ function cleanStr($string)
 function search($conn, $q, $only='all') {
 
     $keyword = mysqli_real_escape_string($conn, $q);
-    $clean_keyword = cleanStr($keyword);
-    $clean_sep = explode(' ', $clean_keyword);
+    $clean_keyword = trim($keyword);
+    $clean_sep = explode(' ', trim($clean_keyword));
+    $clean_sep = array_unique($clean_sep, SORT_REGULAR);
 
+    $clean_sep_count = count($clean_sep);
+    if ($clean_sep_count > 0) {
+        for ($i = 0; $i < $clean_sep_count; $i++) {
+            $str = cleanStr($clean_sep[$i]);
+            $arr = explode(' ', $str);
+            
+            if (count($arr) === 1) {
+                $clean_sep[$i] = $str;
+            } else {
+                $added = FALSE;
+                foreach($arr as $partial_word) {
+                    if (strlen($partial_word) >= 2) {
+                        if (!$added) {
+                            $clean_sep[$i] = $partial_word;
+                            $added = TRUE;
+                        } else {
+                            $clean_sep[] = $partial_word;
+                        }
+                    }
+                }
+            }
+        }
+
+        for ($i = 0; $i < count($clean_sep); $i++) {
+            $str = trim($clean_sep[$i]);
+            if (!empty($str)) {
+                $clean_sep[$i] = $str;
+            } 
+        }
+    } else {
+        $clean_sep = [];
+    }
+
+;    var_dump($clean_sep);
 
     $only = strtolower($only);
 
@@ -76,15 +111,15 @@ function search($conn, $q, $only='all') {
         case 'titulo':
         case 'title':
             $query = query($sql . " AND (`i`.`title` = '$keyword')");
-            if (count($query) == 0) {
+            if (!is_array($query) || (is_array($query) && count($query) == 0)) {
                 $search = "(`i`.`title` LIKE '%{$keyword}%')";
                 $query = query(str_replace('FROM', ", $search as hits FROM", $sql) . " AND $search ORDER BY hits");
-                if (count($query) == 0) {
+                if (!is_array($query) || (is_array($query) && count($query) == 0)) {
                     $search = "(`i`.`title` LIKE '%{$clean_keyword}%')";
                     $query = query(str_replace('FROM', ", $search as hits FROM", $sql) . " AND $search ORDER BY hits");
                 }
 
-                if (count($query) == 0) {
+                if (!is_array($query) || (is_array($query) && count($query) == 0)) {
                     $append = ' AND (';
                     $clean_sep = array_unique($clean_sep, SORT_REGULAR);
                     foreach ($clean_sep as $word) {
@@ -103,9 +138,25 @@ function search($conn, $q, $only='all') {
             $search = "((`i`.`description` LIKE '%{$keyword}%') + (`i`.`meta` LIKE '%{$keyword}%'))";
             $query = query(str_replace('FROM', ", $search as hits FROM", $sql) . " AND $search ORDER BY hits");
 
-            if (count($query) == 0) {
-                $search = "((`i`.`description` LIKE '%{$clean_keyword}%') + (`i`.`meta` LIKE '%{$clean_keyword}%'))";
+            if (!is_array($query) || (is_array($query) && count($query) == 0)) {
+                $search = "((`i`.`description` LIKE '%{$clean_keyword}%') OR (`i`.`meta` LIKE '%{$clean_keyword}%'))";
                 $query = query(str_replace('FROM', ", $search as hits FROM", $sql) . " AND $search ORDER BY hits");
+            }
+
+            if (!is_array($query) || (is_array($query) && count($query) == 0)) {
+                $append = ' AND (';
+                foreach ($clean_sep as $word) {
+                    $append .= "((`i`.`description` LIKE '%{$word}%') AND (`i`.`meta` LIKE '%{$word}%')) AND ";
+                }
+                $query = query($sql . $append . ' FALSE)');
+            }
+
+            if (!is_array($query) || (is_array($query) && count($query) == 0)) {
+                $append = ' AND (';
+                foreach ($clean_sep as $word) {
+                    $append .= "((`i`.`description` LIKE '%{$word}%') AND (`i`.`meta` LIKE '%{$word}%')) OR ";
+                }
+                $query = query($sql . $append . ' FALSE)');
             }
             break;
         case 'archivo':
@@ -113,11 +164,30 @@ function search($conn, $q, $only='all') {
             $search = "(`f`.`filename` LIKE '%{$keyword}%')";
             $query = query(str_replace('FROM', ", $search as hits FROM", GET_FILES_ITEM_ID . $types) . " AND $search ORDER BY hits");
 
-            if (count($query) == 0) {
+            if (!is_array($query) || (is_array($query) && count($query) == 0)) {
                 $search = "(`f`.`filename` LIKE '%{$clean_keyword}%')";
                 $query = query(str_replace('FROM', ", $search as hits FROM", GET_FILES_ITEM_ID . $types) . " AND $search ORDER BY hits");
             }
 
+            if (!is_array($query) || (is_array($query) && count($query) == 0)) {
+                $append = ' AND (';
+                foreach ($clean_sep as $word) {
+                    if (!empty(trim($word))) {
+                        $append .= "(`f`.`filename` LIKE '%{$word}%') AND ";
+                    }
+                }
+                $query = query($sql . $append . ' FALSE)');
+            }
+
+            if (!is_array($query) || (is_array($query) && count($query) == 0)) {
+                $append = ' AND (';
+                foreach ($clean_sep as $word) {
+                    if (!empty(trim($word))) {
+                        $append .= "(`f`.`filename` LIKE '%{$word}%') OR ";
+                    }
+                }
+                $query = query($sql . $append . ' FALSE)');
+            }
             break;
         default:
             $search = "(`i`.`description` LIKE '%{$keyword}%' 
@@ -131,7 +201,7 @@ function search($conn, $q, $only='all') {
 
             $query = query(str_replace('FROM', ", $search as hits FROM", $sql) . " AND $search ORDER BY hits");
 
-            if (count($query) == 0) {
+            if (!is_array($query) || (is_array($query) && count($query) == 0)) {
                 $search = "(`i`.`description` LIKE '%{$clean_keyword}%' 
                     OR `i`.`meta` LIKE '%{$clean_keyword}%' 
                     OR `i`.`title` LIKE '%{$clean_keyword}%'
@@ -144,15 +214,8 @@ function search($conn, $q, $only='all') {
                 $query = query(str_replace('FROM', ", $search as hits FROM", $sql) . " AND $search ORDER BY hits");
             }
 
-            if (count($query) == 0) {
+            if (!is_array($query) || (is_array($query) && count($query) == 0)) {
                 $sql_2 = $sql . ' AND (';
-                $clean_sep = array_unique($clean_sep, SORT_REGULAR);
-
-                for ($i = 0; $i < count($clean_sep); $i++) {
-                    if (empty($clean_sep[$i])) {
-                        unset($clean_sep[$i]);
-                    }
-                }
 
                 foreach ($clean_sep as $word) {
                     $sql_2 .= "
@@ -176,8 +239,11 @@ function search($conn, $q, $only='all') {
             break;
     }
 
-    $query = array_unique($query, SORT_REGULAR);
-    if (count($query) == 0) return NULL;
-    echo '<p style="color:red;">' . mysqli_error($conn) . '</p>';
+    if ($query !== NULL) {
+        $query = array_unique($query, SORT_REGULAR);
+        if (!is_array($query) || (is_array($query) && count($query) == 0)) return NULL;
+        echo '<p style="color:red;">' . mysqli_error($conn) . '</p>';
+    }
+
     return $query;
 }

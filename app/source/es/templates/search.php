@@ -10,7 +10,7 @@
 <div class="tab-content" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-keyword" role="tabpanel" aria-labelledby="nav-keyword-tab">
         <form>
-            <label for="search-query">Buscar: <?php hint('No sea demasiado específico. Evite palabras como: la, de, a, el, etc. Por ejemplo, en lugar de \'El Grito de Lares\', haz \'Grito Lares\'.'); ?></label>
+            <label for="search-query">Buscar: <?php hint('No sea demasiado específico. Evite palabras como: la, de, a, el, etc. Por ejemplo, en lugar de \'El Grito de Lares\', haz \'Grito Lares\'. Otros ejemplos, en lugar de ‘título’, haz ‘tulo’, en lugar de ‘después’, haz ‘despu’. O solo utilizar una palabra clave específica, por ejemplo, en lugar de ‘Quijote Mancha’, haz ‘Quijote’. Mejor siempre buscar por todos. '); ?></label>
             <div class="input-group mb-3">
                 <input type="text" class="form-control <?php isset($valid_search) ? not_valid_class($valid_search) : ''; ?>" id="search-query" name="q" required
                        value="<?php if (!empty($searched_value)) echo $searched_value; ?>">

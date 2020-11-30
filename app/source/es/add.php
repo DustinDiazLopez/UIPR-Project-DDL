@@ -257,8 +257,7 @@ if (isset($_POST['submit'])) {
 
             // redirect on no errors
             if (!$errors_present) {
-                $t = json_decode($item['title']);
-                header("Location: index.php#$item_id?created=$t");
+                header("Location: index.php?created#$item_id");
             } // esleif ->>>> after the include header the errors will appear.
 
             // ...
@@ -270,12 +269,12 @@ if (isset($_POST['submit'])) {
 include_once('templates/header.php');
 
 if (isset($form_errors) && $form_errors) {
-    echo showWarn('Error:', 'Errores se detectaron en la forma.');
+    echo showWarn('Error:', 'Errores se detectaron en la forma o el archivo no se pudo subir (¿tamaño muy grande?) ');
 }
 
 if (isset($errors_present) && $errors_present) {
 
-    echo showDanger('SQL ERROR:', "There were unexpected insertion errors");
+    echo showDanger('SQL ERROR:', "There were unexpected insertion errors ");
 
     // check if it was a upload file error
     if (!empty($sql_errors['files'])) {

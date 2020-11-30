@@ -84,7 +84,7 @@ function validate_files_form_ddl($FILES, &$error_buffer, $ignore_no_files = FALS
     if ($len > 0) {
 
         if (isset($_POST['number-of-files']) && (intval($_POST['number-of-files']) !== $len)) {
-            error_log('Number of files specified do not match actual number. This value is not longer used the number of files are calculated automatically.');
+            error_log('Number of files specified do not match actual number. This value is no longer used the number of files are calculated automatically.');
         }
 
         return validate_ddl_files($FILES, $files, $error_buffer);

@@ -622,7 +622,7 @@ const pHeading = document.getElementById('progress-heading');
  */
 function validate() {
     document.getElementById('iconShowType').innerHTML = getIcon(document.getElementById('type').value);
-    const files = counter > 0;
+    const files = counter > 0 || document.getElementById('orphanedFileList').children.length > 0;
     const title = document.getElementById('title').value.trim().length > 0;
     const description = document.getElementById('description').value.trim().length > 0;
     const date = document.getElementById('published_date').value.trim().length > 0;

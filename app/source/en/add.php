@@ -257,8 +257,7 @@ if (isset($_POST['submit'])) {
 
             // redirect on no errors
             if (!$errors_present) {
-                $t = json_decode($item['title']);
-                header("Location: index.php#$item_id?created=$t");
+                header("Location: index.php?created#$item_id");
             } // esleif ->>>> after the include header the errors will appear.
 
             // ...
@@ -270,7 +269,7 @@ if (isset($_POST['submit'])) {
 include_once('templates/header.php');
 
 if (isset($form_errors) && $form_errors) {
-    echo showWarn('Error:', 'Errors were detected in the form.');
+    echo showWarn('Error:', 'Errors were detected in the form or the file failed to upload (size too big?).');
 }
 
 if (isset($errors_present) && $errors_present) {

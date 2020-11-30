@@ -1,6 +1,7 @@
 <?php
 include_once('../connect.php');
 include_once('utils/utils.php');
+authenticate(TRUE);
 
 function viewFile($file) {
     if(file_exists($file['path'])) {
