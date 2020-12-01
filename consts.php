@@ -6,6 +6,11 @@
 define('DEV_SITE', 'http://34.66.186.123/');
 
 /**
+ * URL to the video
+ */
+define('VIDEO_LINK', 'https://youtu.be/GeIcJaHDPwg');
+
+/**
  * URL to the project
  */
 define('PATH', 'https://github.com/DustinDiazLopez/UIPR-Project-DDL');
@@ -49,6 +54,7 @@ define('SOURCE_CODE_PATH', '');
  * Subpath to the license
  */
 define('LICENSE_PATH', '/blob/main/LICENSE');
+
 
 /**
  * Redirects to a subpath of {@link PATH}
@@ -137,7 +143,7 @@ function echoPaths($msg='Development Finished (11/16/2020)') {
     echo '<hr/>';
     echo "<p>$msg</p>";
     echo '<ol>';
-    echoPath(USER_DOC_PATH, 'User Documentation', TRUE, 'white', 'lightgreen', 'Done');
+    echoPath(USER_DOC_PATH, 'User Documentation');
     echoPath(NEW_ISSUE, 'Submit an Issue', FALSE, 'yellow');
     //echoPath(WIKI, 'The Application\'s Wiki', TRUE);
     echoPath(RELEASES, 'Download the latest releases');
