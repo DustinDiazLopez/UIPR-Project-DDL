@@ -91,8 +91,6 @@ function search($conn, $q, $only='all') {
         $clean_sep = [];
     }
 
-;    var_dump($clean_sep);
-
     $only = strtolower($only);
 
     $q_types = query(SQL_GET_DOC_TYPES);

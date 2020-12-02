@@ -653,6 +653,11 @@ function shareURL($id, $path='/file.php?file=') {
         $url = substr($url, 0, $cut);
     }
 
+    $cut = strpos($url, 'item.view.php');
+    if ($cut !== FALSE) {
+        $url = substr($url, 0, $cut);
+    }
+
     $cut = strpos($url, 'adminpanel.php');
     if ($cut !== FALSE) {
         $url = substr($url, 0, $cut);
