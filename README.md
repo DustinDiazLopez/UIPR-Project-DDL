@@ -155,7 +155,13 @@ release, and try to access, e.g., ` http://localhost/ddl-cms/en/hello.php `.It s
 
     - This step will require more setup on `LAMP` (see [this](https://unix.stackexchange.com/a/174114) for setting 
     write permissions).
-        - Give permissions to the `ddl-config` folder, and to the `ddl-cms` folder
+        - Give permissions to the `ddl-config` folder, and to the `ddl-cms` folder:
+        ```sh
+        sudo chown -R www-data:www-data /var/ddl-config && \
+        sudo chmod -R g+rw /var/ddl-config/ && \
+        sudo chown -R www-data:www-data /var/www/html/ddl-cms && \
+        sudo chmod -R g+rw /var/www/html/ddl-cms
+        ```
 
     - If you wish to use the `html` folder or any other folder, please change
 the first line in `connect.php` (`ddl-cms/connect.php`) to match the new file structure.
