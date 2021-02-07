@@ -167,7 +167,7 @@ release, and try to access, e.g., ` http://localhost/ddl-cms/en/hello.php `.It s
 the first line in `connect.php` (`ddl-cms/connect.php`) to match the new file structure.
 
     ```PHP
-    define('DDL_PATH', './../../../ddl-config');
+    define('DDL_PATH', '/path/to/ddl-config');
     ```
 
 ---
