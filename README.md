@@ -84,7 +84,7 @@ you changed it in the source code), in that folder create a folder called `files
 }
 ```
 
-Change `exampleSalt` to a silly string of characters, e.g., `JILASHdfjskfhalskjdjLKJFHsfhlkjsdjhld` (go crazy!), 
+Change `exampleSalt` to a silly string of characters, e.g., `mHjsDfAkJfHtRk`, 
 and change the rest of the information (`host`, `port`, `username`, `password`) to match your MySQL configuration.
 
 #### WARNING!!!
