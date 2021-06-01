@@ -3,7 +3,7 @@
 /**
  * URL of the dev site
  */
-define('DEV_SITE', 'http://157.230.93.254/demo');
+define('DEV_SITE', 'http://34.125.128.42/');
 
 /**
  * URL to the video
